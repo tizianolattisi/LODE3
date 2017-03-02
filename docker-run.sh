@@ -29,6 +29,15 @@ docker run --name "$MONGODB_NAME" -v "$datadir:/data/db" -d -p 27017:27017 mongo
 
 sleep 5
 
+# load secret keys JWT_SECRET and SENDGRID_API_KEY from the untracked file secret.sh
+if [ -f ./docker/secret.sh ]; then
+    . ./docker/secret.sh
+else
+    #
+    JWT_SECRET="*"
+    SENDGRID_API_KEY="*"
+fi
+
 # lode annotation
 docker build --rm=true --file=docker/Dockerfile -t "unitn.it/${NODEJS_NAME}_img" .
 docker run -e "TZ=Europe/Rome" --rm --name "$NODEJS_NAME" --link "$MONGODB_NAME" -p 8080:8080 -i -t "unitn.it/${NODEJS_NAME}_img"
