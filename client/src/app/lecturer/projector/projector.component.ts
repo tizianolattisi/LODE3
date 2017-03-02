@@ -14,6 +14,7 @@ export class ProjectorComponent {
 
   changeSlide(page: number) {
     this.storeService.setCurrentSlide(page);
+    // TODO: notify via socket.io
   }
 
 }
