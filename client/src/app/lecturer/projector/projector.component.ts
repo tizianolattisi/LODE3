@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {StoreService} from "../../shared/store.service";
+import {AnnotationManager} from "../../annotation/AnnotationManager";
+import {NoteTool} from "../../annotation/tools/NoteTool";
 
 @Component({
   selector: 'app-projector',
@@ -8,13 +10,17 @@ import {StoreService} from "../../shared/store.service";
 })
 export class ProjectorComponent {
 
-  constructor(public storeService: StoreService) {
+  constructor(public storeService: StoreService, public am: AnnotationManager) {
 
   }
 
   changeSlide(page: number) {
     this.storeService.setCurrentSlide(page);
-    // TODO: notify via socket.io
+
+    var note = this.am.newNote(page);
+    note.type = NoteTool.TYPE;
+    note.data = "change-slide";
+    this.am.saveNote(note);
   }
 
 }
