@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectorComponent } from './projector/projector.component';
 import {FormsModule} from "@angular/forms";
-import { SlideViewerComponent } from './slide-viewer/slide-viewer.component';
+import {SlideModule} from "../slide/slide.module";
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    SlideModule
   ],
-  declarations: [ProjectorComponent, SlideViewerComponent]
+  declarations: [ProjectorComponent]
 })
 export class LecturerModule { }

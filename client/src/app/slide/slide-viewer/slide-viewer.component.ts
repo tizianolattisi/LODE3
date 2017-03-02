@@ -87,4 +87,5 @@ export class SlideViewerComponent implements OnInit {
     }
     this.renderPage(page);
   }
+
 }
