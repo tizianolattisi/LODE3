@@ -1,0 +1,108 @@
+@import "../pdf-editor/pdf-editor.component.scss";
+
+.annotation-toolbar {
+  display: flex;
+  background-color: $editor-bg;
+  width: 100%;
+  height: 100%;
+}
+
+.annotation-toolbar-box {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.border {
+  align-self: center;
+  height: 90%;
+  margin-left: 0.5rem;
+  border: 1px solid $mid-grey;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+  background: $light-grey;
+}
+
+.ann-container {
+  box-sizing: border-box;
+  padding-right: 0.5rem;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.ann-content {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  color: $dark;
+  margin: 1rem;
+  transition: background 0.3s;
+
+  &:hover {
+    background: $light-grey;
+  }
+}
+
+.ann-type-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  border-radius: 100%;
+  border: 0.2rem solid $primary-color;
+  align-self: center;
+  margin-right: 0.5rem;
+}
+
+.ann-details {
+  font-size: 0.8rem;
+}
+
+.ann-highlight {
+  background: $primary-color;
+}
+
+.divider {
+  width: 95%;
+  border: 1px solid $mid-grey;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.circular-button-del {
+  margin: 0;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+}
+
+/* Scroll Bar */
+
+.ann-container::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.ann-container::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #eeeeee;
+}
+
+.ann-container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #bdbdbd;
+}
+
+.ann-container::-webkit-scrollbar-thumb:hover {
+  border-radius: 10px;
+  background: #9E9E9E;
+}

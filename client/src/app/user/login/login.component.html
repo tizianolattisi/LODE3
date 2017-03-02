@@ -1,0 +1,97 @@
+<div class="box">
+
+    <div *ngIf="currentPage == 0" class="form-page">
+        <div class="box-form">
+            <h2>Login</h2>
+            <form [formGroup]="loginForm" (ngSubmit)="doLogin(loginForm.value)">
+                <div *ngIf="message" class="message-box"
+                     [ngClass]="{'positive-message': success, 'negative-message': !success}">
+                    <span>{{message}}</span>
+                </div>
+                <div class="form-element">
+                    <input type="email" placeholder="Email" [formControl]="loginForm.controls['email']">
+                    <div class="validation-message"
+                         *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
+                        <span>Email required</span>
+                    </div>
+                </div>
+                <div class="form-element">
+                    <input type="password" placeholder="Password" [formControl]="loginForm.controls['password']">
+                    <div class="validation-message"
+                         *ngIf="(loginForm.controls['password'].dirty || loginForm.controls['password'].touched) && !loginForm.controls['password'].valid">
+                        <span>Password required</span>
+                    </div>
+                </div>
+
+                <div class="button-box content-right">
+                    <button type="submit" class="action-btn" [disabled]="!loginForm.valid">Login <i
+                            class="mdi mdi-18px mdi-login-variant"></i></button>
+                </div>
+            </form>
+
+            <div class="space-bar"></div>
+
+            <div class="link-box">
+                <a (click)="showPage(1)">Password forgot? Click here</a>
+                <a (click)="showPage(2)">Account Confirmation email not received? Click here</a>
+            </div>
+            <div class="sign-up-box">
+                <a (click)="goToSignUp()"><b>Don't have an account yet? Click here</b></a>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="currentPage == 1" class="form-page">
+        <div class="button-box space-bottom">
+            <a (click)="showPage(0)"><i class="mdi mdi-arrow-left"></i>Go to login</a>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="doPasswordForgot(loginForm.value)">
+            <div class="form-element">
+                <label>Insert your registered email address</label>
+                <input class="input-darker" type="email" placeholder="Email"
+                       [formControl]="loginForm.controls['email']">
+                <div class="input-error"
+                     *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
+                    <span>Email required</span>
+                </div>
+            </div>
+
+            <div class="button-box">
+                <button class="action-btn" [disabled]="!loginForm.controls['email'].valid" type="submit">
+                    Recover password
+                </button>
+            </div>
+        </form>
+        <div *ngIf="message" class="message-box"
+             [ngClass]="{'positive-message': success, 'negative-message': !success}">
+            <span>{{message}}</span>
+        </div>
+    </div>
+
+    <div *ngIf="currentPage == 2" class="form-page">
+        <div class="button-box space-bottom">
+            <a (click)="showPage(0)"><i class="mdi mdi-arrow-left"></i>Go to login</a>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="doEmailConfirm(loginForm.value)">
+            <div class="form-element">
+                <label>Insert the email address</label>
+                <input class="input-darker" type="email" placeholder="Email"
+                       [formControl]="loginForm.controls['email']">
+                <div class="input-error"
+                     *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
+                    <span>Email required</span>
+                </div>
+            </div>
+
+            <div class="button-box">
+                <button class="action-btn" [disabled]="!loginForm.controls['email'].valid" type="submit">
+                    Request account confirm link
+                </button>
+            </div>
+        </form>
+        <div *ngIf="message" class="message-box"
+             [ngClass]="{'positive-message': success, 'negative-message': !success}">
+            <span>{{message}}</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+@import "../viewer-toolbar/viewer-toolbar.component.scss";
+
+.color-picker-btn-bg {
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.stroke-width-field-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+
+  input[type="number"] {
+    border: 0;
+    border-bottom: 2px solid $dark;
+    margin-right: 0.2em;
+    height: 60%;
+    text-align: center;
+    font-size: 1.02rem;
+    font-weight: 600;
+    padding: 0;
+  }
+}
+
+.tool-button-selected {
+  background: $primary-color-darker;
+  color: white;
+}
+
+.cp-hide {
+  visibility: hidden;
+}
+
+#cp-canvas {
+  position: absolute;
+  margin-top: 1rem;
+  border-radius: 2px;
+  border: 0.25rem solid $light;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}

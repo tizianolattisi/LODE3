@@ -1,0 +1,29 @@
+<div class="extended">
+
+    <button class="circular-button btn-bg-color" (click)="playPause()">
+        <span class="mdi mdi-18px"
+              [ngClass]="{'mdi-play': htmlVideoElement && htmlVideoElement.paused, 'mdi-pause': htmlVideoElement && !htmlVideoElement.paused}">
+        </span>
+    </button>
+
+    <button class="circular-button btn-bg-color" (click)="mute()">
+        <span class="mdi mdi-18px"
+              [ngClass]="{'mdi-volume-off': htmlVideoElement && htmlVideoElement.muted, 'mdi-volume-high': htmlVideoElement && !htmlVideoElement.muted}">
+        </span>
+    </button>
+    <div class="spacer"></div>
+    <span *ngIf="htmlVideoElement" style="align-self: center">{{htmlVideoElement.currentTime | secToTime}}</span>
+    <span *ngIf="htmlVideoElement" style="align-self: center">&nbsp;-&nbsp;</span>
+    <span *ngIf="htmlVideoElement" style="align-self: center">{{htmlVideoElement.duration | secToTime}}</span>
+    <button class="circular-button btn-bg-color" (click)="fullscreen()">
+        <span class="mdi mdi-arrow-expand-all mdi-18px">
+        </span>
+    </button>
+    <div>
+        <select *ngIf="htmlVideoElement" [(ngModel)]="htmlVideoElement.playbackRate" class="select">
+            <option *ngFor="let rate of RATE_VALUES" [ngValue]="rate.value">
+                {{rate.name}}
+            </option>
+        </select>
+    </div>
+</div>

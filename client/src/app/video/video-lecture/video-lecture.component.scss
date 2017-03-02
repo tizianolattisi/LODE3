@@ -1,0 +1,113 @@
+@import "../../../style/colors.scss";
+
+.vl-main-box {
+  display: flex;
+  flex-direction: column;
+  height: 95.5vh;
+}
+
+.vl-upper-box {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  background: $light;
+}
+
+.vl-middle-box {
+  box-sizing: border-box;
+  padding: 2rem;
+  background: $light-grey;
+}
+
+.vl-timeline-box {
+  border-radius: 2px;
+  margin: 1.5rem 1rem 1.5rem 1rem;
+  background: $light-grey;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.vl-lower-box {
+  box-sizing: border-box;
+  background: $light-grey;
+}
+
+.vl-loader-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vl-container {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  width: 50%;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.vl-box {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+
+  .vl-elem {
+    display: flex;
+    height: 100%;
+  }
+}
+
+@-moz-document url-prefix() {
+  .vl-box {
+    padding: 2rem;
+  }
+
+  .vl-upper-box {
+    padding: 1rem;
+  }
+}
+
+.all-width {
+  width: 100%;
+}
+
+.all-height {
+  height: 100%;
+}
+
+.viewer-toolbar {
+  margin-top: 0.5rem;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+video-toolbar {
+  box-sizing: border-box;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+video-box {
+  width: 100%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.go-to-editor-btn {
+  height: 2rem;
+}

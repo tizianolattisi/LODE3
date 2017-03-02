@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Slide Annotations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+
+  <base href="/">
+
+  <!-- Styles -->
+
+  <link rel="stylesheet" href="../src/style/style.css">
+  <link rel="stylesheet" href="../src/style/form-style.css">
+  <link href="../node_modules/mdi/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="../node_modules/pdfjs-dist/web/pdf_viewer.css">
+  <link rel="stylesheet" href="../node_modules/quill/dist/quill.snow.css">
+  <link rel="stylesheet" href="../node_modules/katex/dist/katex.min.css">
+
+  <!-- Load libraries -->
+
+  <!-- Socket.io -->
+  <script src="../node_modules/socket.io-client/socket.io.js"></script>
+
+  <!-- PDFJS -->
+  <script src="../node_modules/pdfjs-dist/build/pdf.js"></script>
+  <script src="../node_modules/pdfjs-dist/web/pdf_viewer.js"></script>
+  <script src="../node_modules/fabric/dist/fabric.js"></script>
+
+  <!-- Quill -->
+  <script src="../node_modules/quill/dist/quill.min.js"></script>
+  <script src="../node_modules/katex/dist/katex.min.js"></script>
+
+  <!-- File Saver -->
+  <script src="../node_modules/file-saver/FileSaver.min.js"></script>
+  <script src="../node_modules/jwt-decode/build/jwt-decode.min.js"></script>
+
+  <script>
+    {% if pdfHash %}
+    window.dataPdfHash = "{{ pdfHash }}";
+    {% endif %}
+    {% if course %}
+    window.dataCourse = "{{ course }}";
+    {% endif %}
+    {% if lecture %}
+    window.dataLecture = "{{ lecture }}";
+    {% endif %}
+  </script>
+
+</head>
+<body>
+  <app-root>
+    <!-- Loading animation -->
+    <div class="loader-pencil-content">
+      <svg id="loader-pencil" xmlns="http://www.w3.org/2000/svg" width="667" height="182"
+           viewBox="0 0 677.34762 182.15429">
+        <g>
+          <path id="body-pencil"
+                d="M128.273 0l-3.9 2.77L0 91.078l128.273 91.076 549.075-.006V.008L128.273 0zm20.852 30l498.223.006V152.15l-498.223.007V30zm-25 9.74v102.678l-49.033-34.813-.578-32.64 49.61-35.225z">
+          </path>
+          <path id="line" d="M134.482 157.147v25l518.57.008.002-25-518.572-.008z">
+          </path>
+        </g>
+      </svg>
+    </div>
+  </app-root>
+</body>
+</html>

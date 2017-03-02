@@ -1,0 +1,68 @@
+@import "../../../style/colors.scss";
+
+.note-card {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  width: 16rem;
+  margin: 1rem;
+  padding: 0.5rem;
+  background: $bg-note;
+  max-height: 250px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  transition: 0.3s;
+
+  h4 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &:hover {
+    z-index: 2;
+  }
+}
+
+@-moz-document url-prefix() {
+  .note-card {
+    height: 165px;
+  }
+}
+
+.note-card-highlight {
+  background: $bg-note-highlight;
+  transition: 0.3s;
+}
+
+.note-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 0.5rem;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.note-text {
+  width: 100%;
+}
+
+.note-action {
+  display: flex;
+  flex-direction: column;
+}
+
+.circular-btn-note {
+  margin: 0 0 0.3rem;
+  width: 24px;
+  height: 24px;
+}
+
+.empty-note-text {
+  color: #bdbdbd;
+  font-style: italic;
+}
+
+.quill-read-only-content {
+  width: 100%;
+  height: 100%;
+}

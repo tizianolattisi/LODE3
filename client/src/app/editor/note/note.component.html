@@ -1,0 +1,38 @@
+<div #noteCard class="note-card"
+     [ngClass]="{'note-card-highlight': (isOpen || highlightNote)}">
+    <div class="note-content">
+        <h4 *ngIf="note.data.title">{{note.data.title}}</h4>
+
+        <div *ngIf="note.data.text" class="note-text quill-read-only-content" [quill]="note.data.text">
+        </div>
+        <div *ngIf="!note.data.text"><i>Empty note</i></div>
+    </div>
+
+    <div class="note-action">
+
+        <div class="tooltip-wrapper">
+            <button class="circular-button circular-btn-note"
+                    (click)="deleteNote(note.uuid, note.pageNumber)">
+                <i class="mdi mdi-delete mdi-18px"></i>
+            </button>
+            <div class="tooltip tooltip-right">Delete Note</div>
+        </div>
+
+        <div class="tooltip-wrapper">
+            <button class="circular-button circular-btn-note"
+                    (click)="openNote(note.uuid, note.pageNumber)">
+                <i class="mdi mdi-open-in-new mdi-18px"></i>
+            </button>
+            <div class="tooltip tooltip-right">Open Note</div>
+        </div>
+
+        <div class="tooltip-wrapper" *ngIf="note.time && storeService.course">
+            <button class="circular-button circular-btn-note"
+                    (click)="seeVideo(note)">
+                <i class="mdi mdi-video mdi-18px"></i>
+            </button>
+            <div class="tooltip tooltip-right">See related video</div>
+        </div>
+    </div>
+</div>
+

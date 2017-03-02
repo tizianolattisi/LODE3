@@ -1,0 +1,74 @@
+<div class="toolbar-box">
+
+    <div class="tool-box">
+        <div class="tooltip-wrapper">
+            <button class="circular-button circular-btn-toolbar"
+                    [ngClass]="{'tool-button-selected': selectedTool == 'default'}"
+                    (click)="selectDefaultTool()">
+                <i class="mdi mdi-cursor-default mdi-18px"></i>
+            </button>
+            <div class="tooltip"><span>Default Tool</span>
+            </div>
+        </div>
+        <div *ngFor="let t of am.annotationTools | async | dictionaryToArray" class="tooltip-wrapper">
+            <button class="circular-button circular-btn-toolbar"
+                    id="ann-{{t.tool.getType()}}-btn"
+                    [ngClass]="{'tool-button-selected': selectedTool == t.tool.getType()}"
+                    (click)="selectTool(t.tool.getType())">
+                <i class="mdi mdi-18px" [ngClass]="t.iconClass"></i>
+                <span *ngIf="!t.iconClass">{{t.text}}</span>
+            </button>
+            <div class="tooltip" *ngIf="t.text"><span>{{t.text}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="tool-box">
+        <div class="color-picker-btn-wrapper">
+            <div (click)="showHideColorPicker()" class="color-picker-btn-bg" [style.background]="am.currentColor">
+            </div>
+            <canvas [ngClass]="{'cp-hide': colorPickerHide}" id="cp-canvas" #cpCanvas width="230" height="140"></canvas>
+        </div>
+        <div class="tooltip-wrapper">
+            <div class="stroke-width-field-wrapper">
+                <input class="number-input"
+                       type="number" pattern="[0-9]*(\.[0-9]+)?" min="0"
+                       [(ngModel)]="am.currentStrokeWidth" title="Stroke width">
+                <i class="mdi mdi-format-line-weight mdi-18px" id="ann-stroke-width-icon"></i>
+            </div>
+            <div class="tooltip tooltip-right"><span>Stroke/Text Width</span></div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="tool-box">
+
+        <div class="tooltip-wrapper">
+            <button class="circular-button circular-btn-toolbar"
+                    [ngClass]="{'tool-button-selected': am.isTextSelectionMode}"
+                    (click)="switchTextSelectionMode()">
+                <i class="mdi mdi-textbox mdi-18px"></i>
+            </button>
+            <div class="tooltip">
+                <span *ngIf="!am.isTextSelectionMode">Enable text<br>selection</span>
+                <span *ngIf="am.isTextSelectionMode">Disable text<br>selection</span>
+            </div>
+        </div>
+
+        <div class="tooltip-wrapper">
+            <button class="circular-button circular-btn-toolbar" (click)="clearSelection()">
+                <i class="mdi mdi-select-off mdi-18px"></i>
+            </button>
+            <div class="tooltip tooltip-right"><span>Deselect all<br>annotations</span></div>
+        </div>
+        <div class="tooltip-wrapper">
+            <button class="circular-button circular-btn-toolbar"
+                    (click)="deleteSelectedAnnotations()">
+                <i class="mdi mdi-delete mdi-18px"></i>
+            </button>
+            <div class="tooltip tooltip-right"><span>Delete selected<br>annotations</span></div>
+        </div>
+    </div>
+</div>

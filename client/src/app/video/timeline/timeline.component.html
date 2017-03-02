@@ -1,0 +1,18 @@
+<div class="extended">
+
+    <div #timeline class="timeline" (click)="goToTime($event)">
+        <div class="timeline-past" #timelinePast>
+        </div>
+
+        <div class="slide-placeholder" *ngFor="let slide of slides" [style.left]="getItemPositionOnTimeline(slide)">
+        </div>
+
+        <div class="note-placeholder" *ngFor="let a of annotations | filterNotes"
+             (click)="goToNote($event, a)"
+             [ngClass]="{'note-placeholder-highlighted': highlightedPoint == a.uuid}"
+             [style.left]="getItemPositionOnTimeline(a)">
+            <i class="mdi mdi-comment-text-outline"></i>
+        </div>
+    </div>
+
+</div>

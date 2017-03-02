@@ -1,0 +1,124 @@
+@import "../../../style/colors.scss";
+
+.bar {
+  display: flex;
+  width: 100%;
+  height: 15rem;
+}
+
+.show-bar {
+  position: relative;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  width: 100%;
+  background: $light-2;
+  overflow-x: auto;
+  transition: 0.3s;
+}
+
+.action-bar {
+  background: $light-2;
+}
+
+.hide {
+  display: none;
+}
+
+/* SLIDES */
+
+.slide {
+  width: 13rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border: 1px solid $light-1;
+  border-radius: 2px;
+  background: white;
+  padding: 0.5rem;
+  margin: 1rem;
+
+  img {
+    height: 80%;
+  }
+
+  span {
+    height: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    background: $light-1;
+  }
+}
+
+.current-slide {
+  background: $azure-2;
+  color: white;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+  &:hover {
+
+  }
+}
+
+/* Notes */
+
+.new-note-btn {
+  margin: 1rem;
+  background: white;
+
+  &:hover {
+    background: $light-1;
+  }
+}
+
+/* Toggle button */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 4rem;
+  height: 100%;
+  background: $light;
+  border-radius: 2px;
+
+  .icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: white;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    height: 50%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $primary-color;
+    transition: .3s;
+
+  }
+
+  .off {
+    transform: translateY(100%);
+  }
+
+  .color-dark {
+    color: $grey;
+  }
+}
+
+

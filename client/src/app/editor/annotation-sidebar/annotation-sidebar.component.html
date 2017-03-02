@@ -1,0 +1,32 @@
+<div class="annotation-toolbar">
+    <div class="annotation-toolbar-box">
+        <div class="header">
+            <b>ANNOTATIONS</b>
+        </div>
+        <div class="ann-container" #annBox>
+            <div *ngFor="let pageAnns of am.allAnnotations | async; let i = index">
+                <div *ngIf="pageAnns && !isEmpty(pageAnns)">
+                    <div *ngFor="let ann of pageAnns | dictionaryToArray"
+                         (click)="selectAnnotation(ann.uuid, ann.pageNumber)">
+                        <div class="ann-content">
+                            <div class="ann-type-icon">
+                                <i class="mdi mdi-24px" [ngClass]="toolService.getToolIconClass(ann.type)"></i>
+                            </div>
+                            <div>
+                                <b>Page {{ann.pageNumber}}</b>
+                                <div class="ann-details">{{ann.type}} (id: {{ann.uuid}})</div>
+                            </div>
+                            <button class="circular-button circular-button-del"
+                                    (click)="deleteAnnotation(ann.uuid, ann.pageNumber)">
+                                <i class="mdi mdi-delete mdi-18px"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="border">
+    </div>
+</div>

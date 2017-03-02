@@ -1,0 +1,44 @@
+<div class="toolbar-box">
+
+
+    <div class="tool-box" *ngIf="pdfviewer">
+        <!-- Search -->
+        <button class="circular-button circular-btn-toolbar" (click)="showInputSearch= !showInputSearch">
+            <i class="mdi mdi-magnify mdi-18px"></i></button>
+        <span *ngIf="showInputSearch">
+            <input title="Search Input" type="text" [ngModel]="searchText" (ngModelChange)="doSearch($event)"
+                   (keyup.enter)="nextSearchMatch()">
+            <i *ngIf="searchText" (click)="prevSearchMatch()" class="mdi mdi-chevron-left mdi-18px"></i>
+            <i *ngIf="searchText" (click)="nextSearchMatch()" class="mdi mdi-chevron-right mdi-18px"></i>
+        </span>
+    </div>
+    <div *ngIf="pdfviewer" class="divider"></div>
+
+    <!-- Page Selector -->
+    <div class="tool-box">
+        <button class="circular-button circular-btn-toolbar" (click)="prevPage()">
+            <i class="mdi mdi-chevron-left mdi-18px"></i>
+        </button>
+
+        <input class="number-input" type="number" pattern="[0-9]*"
+               [(ngModel)]="currentPage" (keyup.enter)="changePage(currentPage)">
+        <span *ngIf="totalPages">
+            <span>&nbsp;of&nbsp;</span>
+            <b>{{totalPages}}</b>
+        </span>
+
+        <button class="circular-button circular-btn-toolbar" (click)="nextPage()">
+            <i class="mdi mdi-chevron-right mdi-18px"></i>
+        </button>
+    </div>
+    <div *ngIf="pdfviewer" class="divider"></div>
+    <div class="tool-box" *ngIf="pdfviewer">
+
+        <!-- Page width selector -->
+        <select [(ngModel)]="pdfviewer.currentScaleValue" class="width-select">
+            <option *ngFor="let scale of SCALE_VALUES" [ngValue]="scale.value">
+                {{scale.name}}
+            </option>
+        </select>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<header>
+    <div class="header-box left-side">
+        <div routerLink="/" class="icon-box">
+            <div class="icon"></div>
+        </div>
+        <span routerLink="/" class="app-title">Annotations</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="header-box right-side">
+
+        <div *ngIf="!userData.email">
+            <a class="sign-up-btn" routerLink="/user/signup">Sign Up</a>
+            <button class="header-button" routerLink="/user/login">Login</button>
+        </div>
+        <div *ngIf="userData.email">
+            <span class="user-email">{{userData.email}}</span>
+            <button class="header-button-circular circular-button logout" (click)="doLogout()"><i
+                    class="mdi mdi-logout-variant mdi-18px"></i></button>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="page-content">
+        <router-outlet>
+            <div *ngIf="loading" class="main-loader-box loader-center">
+                <div class="loader loader-default-size"></div>
+            </div>
+        </router-outlet>
+    </div>
+</main>

@@ -1,0 +1,41 @@
+<div class="bar">
+    <div class="show-bar" [ngClass]="{'hide': !showSlides}" #slidesBox>
+        <div class="slide"
+             *ngFor="let slide of slides; let i = index"
+             [slideIndex]="i"
+             [ngClass]="{'current-slide': storeService.getCurrentSlideIndex() == i}">
+            <img (click)="goToSlide(i)"
+                 [src]="slide.thumbnailUrl" alt="slide.title">
+            <span>{{slide.title}}</span>
+        </div>
+    </div>
+    <div class="show-bar" [ngClass]="{'hide': showSlides}" #notesBox>
+        <note-bar #noteBar [verticalPosition]="false"
+                  (noteClicked)="highlightTimeline($event)"
+                  [openInEditMode]="false"></note-bar>
+    </div>
+    <div class="action-bar" [ngClass]="{'hide': showSlides}">
+        <button class="circular-button new-note-btn" (click)="newNote()">
+            <i class="mdi mdi-18px mdi-plus"></i>
+        </button>
+    </div>
+    <div>
+        <div class="switch" (click)="showSlides = !showSlides">
+            <div class="slider"
+                 [ngClass]="{'off': !showSlides}"></div>
+            <div class="icons">
+                <i class="mdi mdi-presentation mdi-24px"
+                   [ngClass]="{'color-dark': !showSlides}"></i>
+                <i class="mdi mdi-comment-multiple-outline mdi-24px"
+                   [ngClass]="{'color-dark': showSlides}"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<note-editor
+        *ngFor="let uuid of am.openNotesUuid | async;let i = index"
+        [noteUuid]="uuid"
+        [notePage]="am.openNotesPageNumber[i]"
+        [editMode]="am.openNotesEditMode[i]">
+</note-editor>

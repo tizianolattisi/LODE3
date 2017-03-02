@@ -1,0 +1,118 @@
+<div class="editor-box">
+    <div class="editor-header">
+        <div class="editor-header-box">
+            <viewer-toolbar [pdfviewer]="PDFViewer"></viewer-toolbar>
+        </div>
+        <div class="spacer"></div>
+        <div class="editor-header-box">
+            <annotation-toolbar>
+            </annotation-toolbar>
+        </div>
+    </div>
+
+    <div class="editor-content">
+        <div class="editor-content-page ec-column ec-center" *ngIf="pdfLoadingFail">
+            <div>Fail to load the PDF document.</div>
+        </div>
+        <div class="editor-content-page" [ngClass]="{'pdf-editor-not-visible': pdfLoadingFail}">
+            <div class="left-sidebar-btns">
+                <div class="bar-button" [ngClass]="{'btn-active': lefSidebarTab == 1}" (click)="switchLeftSidebar(1)">
+                    <i class="mdi mdi-24px mdi-notification-clear-all"></i>
+                </div>
+                <div class="bar-button" [ngClass]="{'btn-active': lefSidebarTab == 2}" (click)="switchLeftSidebar(2)">
+                    <i class="mdi mdi-24px mdi-download"></i>
+                </div>
+                <div *ngIf="videoUrl" class="bar-button" [ngClass]="{'btn-active': lefSidebarTab == 3}"
+                     (click)="switchLeftSidebar(3)">
+                    <i class="mdi mdi-24px mdi-video"></i>
+                </div>
+
+            </div>
+            <div class="left-sidebar left-sidebar-open" *ngIf="lefSidebarTab == 1">
+                <annotation-sidebar></annotation-sidebar>
+            </div>
+            <div class="left-sidebar left-sidebar-open" *ngIf="lefSidebarTab == 2">
+                <div class="pdf-download-box">
+                    <h4>Download a PDF with all the slides and the annotations</h4>
+                    <div class="pdf-download-sub-box" *ngIf="downloadPdfStatus != 1">
+                        <button (click)="downloadPdf()">Download <i class="mdi mdi-18px mdi-download"></i></button>
+                    </div>
+                    <div class="pdf-download-sub-box" *ngIf="downloadPdfStatus == -1">
+                        <div>Ops... something goes wrong...</div>
+                    </div>
+                    <div class="pdf-download-sub-box" *ngIf="downloadPdfStatus == 1">
+                        <div class="loader loader-default-size"></div>
+                        <div class="text">Preparing your PDF... this may take a while...</div>
+                    </div>
+                    <div class="pdf-download-sub-box" *ngIf="downloadPdfStatus == 2">
+                        <h4>Complete!</h4>
+                        <div>
+                            <i>(Remember, annotations are not visible in Browser's PDF reader)</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="left-sidebar left-sidebar-open" *ngIf="videoUrl && (lefSidebarTab == 3)">
+                <div>
+                    <h4>Video player</h4>
+                    <div class="sidebar-video-box">
+                        <video-toolbar [htmlVideoElement]="storeService.htmlVideoElement | async"></video-toolbar>
+                        <timeline [hidePlaceholders]="true"></timeline>
+                        <button (click)="showHideVideo()">
+                            <span *ngIf="hideVideo">
+                                <i class="mdi mdi-18px mdi-video"></i>
+                                <span>Show Video Box</span>
+                            </span>
+                            <span *ngIf="!hideVideo">
+                                <i class="mdi mdi-18px mdi-video-off"></i>
+                                <span>Hide Video Box</span>
+                            </span>
+                        </button>
+                        <button (click)="goToVideo()">Go to Video Page</button>
+                    </div>
+                </div>
+            </div>
+            <div class="pdf-editor-box">
+                <div #pdfViewer id="viewerContainer">
+                    <div id="viewer" class="pdfViewer">
+                        <div class="page"></div>
+                    </div>
+                    <div class="note-bar" [ngClass]="{'note-bar-closed': lefSidebarTab > 0}">
+                        <note-bar [openInEditMode]="true" [verticalPosition]="true"
+                                  [currentPage]="PDFViewerCurrentPage"
+                                  (noteClicked)="selectNoteOnCanvas($event)"></note-bar>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <note-editor
+                *ngFor="let uuid of am.openNotesUuid | async;let i = index"
+                [noteUuid]="uuid"
+                [notePage]="am.openNotesPageNumber[i]"
+                [editMode]="am.openNotesEditMode[i]">
+        </note-editor>
+    </div>
+</div>
+
+<div class="mini-box-container">
+
+    <div class="mini-box loading-box" *ngIf="pdfLoading">
+        <div class="vl-loader-box">
+            <span>Loading...</span>
+            <div>
+                <div class="loader loader-default-size"></div>
+                <div class="pdf-size-text">{{pdfSizeMb | number:'.2-2'}} Mb</div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="videoUrl" class="mini-box mini-video-box" [ngClass]="{'mini-box-hidden': hideVideo}">
+        <video-box [videoUrl]="videoUrl" (videoHtmlElement)="onVideoHtmlReady($event)"></video-box>
+    </div>
+
+    <div class="mini-box error-box" *ngIf="am.errorMessage">
+        <i class="mdi mdi-24px mdi-exclamation"></i>
+        <span>&nbsp;{{am.errorMessage}}</span>
+    </div>
+</div>
