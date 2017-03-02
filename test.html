@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<form action="http://127.0.0.1:8080/lecturer" method="post">
+    <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/segue_userFiles/2016Programmazione2/Clonazione2016.pptx.pdf" hidden>
+    <button type="submit">Open projector</button>
+</form>
+<form action="http://127.0.0.1:8080/video" method="post">
+    <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/segue_userFiles/2016Programmazione2/Clonazione2016.pptx.pdf" hidden>
+    <input type="text" name="course" value="LinguaggiDiProgrammazione" hidden>
+    <input type="text" name="lecture" value="12-12-CopyConstructor" hidden>
+    <button type="submit">Go to video lecture</button>
+</form>
+<form action="http://127.0.0.1:8080/editor" method="post">
+    <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/segue_userFiles/2016Programmazione2/Clonazione2016.pptx.pdf" hidden>
+    <button type="submit">Take notes</button>
+</form>
+</body>
+</html>

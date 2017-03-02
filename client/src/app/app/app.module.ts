@@ -19,6 +19,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {ToolService} from "../annotation/tool.service";
+import {LecturerModule} from "../lecturer/lecturer.module";
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import {ToolService} from "../annotation/tool.service";
     UserModule,
     EditorModule,
     VideoModule,
+    LecturerModule,
     BrowserModule,
     FormsModule,
     HttpModule

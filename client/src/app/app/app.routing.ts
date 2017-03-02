@@ -9,6 +9,7 @@ import {CodeParamGuard} from "./code-param-guard";
 import {PdfEditorComponent} from "../editor/pdf-editor/pdf-editor.component";
 import {AuthGuard} from "./auth-guard";
 import {VideoLectureComponent} from "../video/video-lecture/video-lecture.component";
+import {ProjectorComponent} from "../lecturer/projector/projector.component";
 
 export const appRoutes: Routes = [
     {
@@ -36,5 +37,12 @@ export const appRoutes: Routes = [
         component: VideoLectureComponent,
         canActivate: [AuthGuard]
     },
+  {
+    path: 'lecturer',
+    children: [
+      {path: '', redirectTo: 'projector', pathMatch: 'full'},
+      {path: 'projector', component: ProjectorComponent, canActivate: [AuthGuard]}
+      ]
+  },
     {path: '**', component: PageNotFoundComponent}
 ];
