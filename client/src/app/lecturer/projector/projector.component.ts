@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {StoreService} from "../../shared/store.service";
 
 @Component({
   selector: 'app-projector',
@@ -7,8 +8,12 @@ import {Component} from '@angular/core';
 })
 export class ProjectorComponent {
 
-  constructor() {
+  constructor(public storeService: StoreService) {
 
+  }
+
+  changeSlide(page: number) {
+    this.storeService.setCurrentSlide(page);
   }
 
 }

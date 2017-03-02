@@ -1,2 +1,5 @@
-<p>slide-viewer</p>
 <app-slide-viewer class="vl-elem"></app-slide-viewer>
+<viewer-toolbar [currentPage]="storeService.currentSlide | async"
+                [totalPages]="storeService.getSlideTotalPages()"
+                (pageSelected)="changeSlide($event)">
+</viewer-toolbar>
