@@ -10,11 +10,12 @@ import {Response} from "express";
 const entrypointRouterPublic: Router = Router();
 
 /**
- * Entry point of the web application editor.
+ * Entry point of the web applications editor and lecturer
  * It provide an html page with injected all the information
- * needed from the web application to make the editor work.
+ * needed from the web application.
  */
-entrypointRouterPublic.post('/editor', (req, res, next) => {
+
+function editorAndLecturerEntryPoint(req, res, next){
 
     let pdfUrl: string = req.body.pdfUrl;
 
@@ -31,7 +32,9 @@ entrypointRouterPublic.post('/editor', (req, res, next) => {
         });
     }
 
-});
+}
+entrypointRouterPublic.post('/editor', editorAndLecturerEntryPoint);
+entrypointRouterPublic.post('/lecturer', editorAndLecturerEntryPoint);
 
 /**
  * Entry point of the web application video lecture.
