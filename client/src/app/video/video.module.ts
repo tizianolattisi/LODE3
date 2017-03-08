@@ -12,7 +12,7 @@ import {FormsModule} from "@angular/forms";
     FormsModule,
     SharedModule
   ],
-  declarations: [SlideNoteBarComponent, SlideViewerComponent, VideoLectureComponent, SlideDirective],
+  declarations: [SlideNoteBarComponent, VideoLectureComponent, SlideDirective],
   exports: [VideoLectureComponent]
 })
 export class VideoModule { }

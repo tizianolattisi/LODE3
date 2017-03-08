@@ -15,6 +15,7 @@ import {VideoBoxComponent} from "../video/video-box/video-box.component";
 import {VideoToolbarComponent} from "../video/video-toolbar/video-toolbar.component";
 import {TimelineComponent} from "../video/timeline/timeline.component";
 import {FormsModule} from "@angular/forms";
+import {SlideViewerComponent} from "../video/slide-viewer/slide-viewer.component";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import {FormsModule} from "@angular/forms";
   ],
   declarations: [
     ViewerToolbarComponent,
+    SlideViewerComponent,
     NoteBarComponent,
     NoteEditorComponent,
     NoteComponent,
@@ -38,6 +40,7 @@ import {FormsModule} from "@angular/forms";
     SecToTimePipe
   ], exports: [
     ViewerToolbarComponent,
+    SlideViewerComponent,
     NoteBarComponent,
     NoteEditorComponent,
     NoteComponent,
