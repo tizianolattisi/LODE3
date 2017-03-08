@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {AnnotationManager} from "../../annotation/AnnotationManager";
 
 @Component({
   selector: 'video-toolbar',
@@ -15,15 +16,22 @@ export class VideoToolbarComponent {
     {value: 2.0, name: '2.0x'}
   ];
 
+
+  constructor(public am: AnnotationManager) {
+  }
+
   playPause() {
 
     if (this.htmlVideoElement) {
       if (!this.htmlVideoElement.paused) {
         this.htmlVideoElement.pause();
+        this.am.newLog("player", "play", 0);
       } else {
         this.htmlVideoElement.play();
+        this.am.newLog("player", "play", 1);
       }
     }
+
   }
 
   fullscreen() {

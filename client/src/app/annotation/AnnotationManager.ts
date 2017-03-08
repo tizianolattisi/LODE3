@@ -18,6 +18,8 @@ import {AnnotationToolbarComponent} from "../editor/annotation-toolbar/annotatio
 import {StaticCanvas as IStaticCanvas,Canvas as ICanvas, Object as IObject, IEvent as IEvent, Group as IGroup} from "fabric";
 import DeltaStatic = Quill.DeltaStatic;
 import {ToolService} from "./tool.service";
+import {LogManager} from "./LogManager";
+import {LogAnnotation} from "./model/LogAnnotation";
 
 declare var fabric:any;
 
@@ -26,7 +28,7 @@ declare var fabric:any;
  * It initialize also the Annotation toolbar
  */
 @Injectable()
-export class AnnotationManager implements NoteManager {
+export class AnnotationManager implements NoteManager, LogManager {
 
     static DEFAULT_TOOL_TYPE: string = 'default';
 
@@ -697,10 +699,47 @@ export class AnnotationManager implements NoteManager {
         }
     }
 
+    /*
+     * Log manager
+     */
 
-    /* -----
-     * Note Manager
-     ----- */
+    newLog(type: string, subtype: string, value: number): BaseAnnotation {
+        let log: LogAnnotation = {
+          type: type,
+          action: subtype,
+          value: value
+        }
+        let note: BaseAnnotation = {
+          uuid: generateUUID(),
+          pageNumber: 1,
+          type: 'log',
+          data: log
+        };
+
+        // if available, add the video time relative to the lesson
+        let time = this.storeService.getCurrentTime();
+        if (time && time > 0 && this.videoStartDate) {
+          note.timestamp = this.getVideoDateRelativeToLesson(time, this.videoStartDate);
+        }
+
+        this.storage.addAnnotation(this.documentId, note);
+        // set actual video time
+        note.time = time;
+
+      /*if (!this._allAnnotations.getValue()[1]) {
+        this._allAnnotations.getValue()[1] = {};
+      }
+      this._allAnnotations.getValue()[1][note.uuid] = note;
+      this._allAnnotations.next(this._allAnnotations.getValue());*/
+
+        return note;
+    }
+
+
+
+  /* -----
+   * Note Manager
+   ----- */
 
     newNote(pageNumber: number): BaseAnnotation {
         let noteData: NoteAnnotation = {
