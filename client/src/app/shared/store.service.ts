@@ -8,7 +8,7 @@ import {Http, ResponseContentType} from "@angular/http";
 export class StoreService {
 
 
-  private LODE_URL = 'http://latemar.science.unitn.it/LODE';
+  private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures';
 
   private LS_DATA = 'data';
 

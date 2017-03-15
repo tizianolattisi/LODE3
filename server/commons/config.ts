@@ -17,6 +17,6 @@ export const SENDGRID_API_KEY: string = (process.env['SENDGRID_API_KEY']) || ('*
 export const EMAIL_SENDER: string = (process.env['EMAIL_SENDER']) || 'mail@annotations.com';
 
 export const PDF_CACHE_DAYS: number = 7;
-export const LODE_BASE_URL: string = 'http://latemar.science.unitn.it/LODE';
+export const LODE_BASE_URL: string = 'http://latemar.science.unitn.it/cad/lectures';
 
 export const INDEX_HTML_NAME = (process.env['ENV'] == 'dev') ? ('index-dev.html') : ('index.html');
