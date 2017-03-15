@@ -25,18 +25,20 @@ courseRouter.get(PATH + '/:courseId/lectures/:lectureId', (req, res, next) => {
             let lectureData: Lecture = new Lecture();
 
             lectureData.information = {
-                course: lodeInfo.lezione.info.corso,
-                title: lodeInfo.lezione.info.titolo,
-                professor: lodeInfo.lezione.info.professore,
+                course: lodeInfo.data.info.course,
+                title: lodeInfo.data.info.title,
+                professor: lodeInfo.data.info.lecturer,
             };
             lectureData.video = {
-                url: LODE_BASE_URL + '/' + course + '/' + lecture + '/content/video.mp4',
-                start: lodeInfo.lezione.video.timestamp,
-                duration: lodeInfo.lezione.video.totaltime
+                url: LODE_BASE_URL + '/' + course + '/' + lecture + '/' + lodeInfo.data.camvideo.name,
+                start: lodeInfo.data.info.timestamp,
+                duration: lodeInfo.data.info.totaltime
             };
 
-            for (let s of lodeInfo.lezione.slide) {
-                lectureData.addSlide(course, lecture, s);
+            if( lodeInfo.data.slide ) {
+                for (let s of lodeInfo.data.slide) {
+                    lectureData.addSlide(course, lecture, s);
+                }
             }
             return res.json(lectureData);
 
@@ -57,7 +59,7 @@ const fetchInfo = (course: string, lecture: string): Promise<LodeData> => {
 
     return new Promise<LodeData>((resolve, reject) => {
 
-        let url = LODE_BASE_URL + '/' + course + '/' + lecture + '/content/data.xml';
+        let url = LODE_BASE_URL + '/' + course + '/' + lecture + '/data.xml';
 
         http.get(url, (response) => {
             var data: string = '';

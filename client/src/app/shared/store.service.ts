@@ -177,7 +177,7 @@ export class StoreService {
    ----- */
 
   getVideoUrl() {
-    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/content/movie.mp4') : (null);
+    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null);
   }
 
   registerHtmlVideoElement(videoElem: HTMLVideoElement) {

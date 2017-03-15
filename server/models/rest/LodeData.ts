@@ -2,13 +2,14 @@
  * Representation of LODE video lecture data
  */
 export interface LodeData {
-    lezione: Lezione
+    data: Data
 }
 
-interface Lezione {
+interface Data {
     slide: Slide[],
     info: Info,
-    video: Video
+    camvideo: Video,
+    pcvideo: Video
 }
 
 export interface Slide {
@@ -18,16 +19,17 @@ export interface Slide {
 }
 
 interface Info {
-    corso: string,
-    dinamic_url: string,
-    titolo: string,
-    professore: string,
+    course: string,
+    dynamic_url: string,
+    title: string,
+    lecturer: string,
+    timestamp: Date,
+    totaltime: number,
     pdf_hash: string
 }
 
 interface Video {
-    nome: string,
-    timestamp: Date,
+    name: string,
     starttime: number,
     totaltime: number
 }
