@@ -40,6 +40,9 @@ export const ioListener = (socket: Socket) => {
                 if (data.pageNumber) {
                     condition.pageNumber = data.pageNumber;
                 }
+                if (data.data) {
+                    condition.data = data.data;
+                }
                 Annotation.find(condition, (err, annotations: IAnnotation[]) => {
                     if (!err) {
                         let result: IAnnotation[] = []; // result that will be send as response

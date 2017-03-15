@@ -62,9 +62,9 @@ export class SlideNoteBarComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.storeService.lodeLecture.subscribe((lodeLecture)=> {
-      if (lodeLecture) {
-        this.slides = lodeLecture.slides;
+    this.storeService.lodeSlides.subscribe((lodeSlides)=> {
+      if (lodeSlides) {
+        this.slides = lodeSlides.slides;
       }
     });
   }

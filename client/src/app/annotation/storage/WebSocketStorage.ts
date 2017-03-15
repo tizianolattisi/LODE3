@@ -76,7 +76,13 @@ export class WebSocketStorage implements Storage {
         this.socket.emit('delete', {pdfId: documentId, uuid: annotationUuid});
     };
 
-    onEvent() {
+    getSlides(documentId: string) {
+      this.socket.emit('gets', {pdfId: documentId, data: "change-slide"});
+      return Observable.of([]);
+    };
+
+
+  onEvent() {
         return this.eventEmit;
     }
 }

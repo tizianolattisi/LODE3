@@ -14,6 +14,8 @@ export abstract class Storage {
 
     deleteAnnotation: (documentId: string, annotationUuid: string) => void;
 
+    getSlides: (documentId: string)=>Observable<BaseAnnotation[]>;
+
     onEvent: () => Subject<StorageOperation>;
 }
 

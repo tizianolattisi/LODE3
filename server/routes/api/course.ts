@@ -34,12 +34,13 @@ courseRouter.get(PATH + '/:courseId/lectures/:lectureId', (req, res, next) => {
                 start: lodeInfo.data.info.timestamp,
                 duration: lodeInfo.data.info.totaltime
             };
-
+            /* // XXX: slide informations are now in db
             if( lodeInfo.data.slide ) {
                 for (let s of lodeInfo.data.slide) {
                     lectureData.addSlide(course, lecture, s);
                 }
             }
+            */
             return res.json(lectureData);
 
         })

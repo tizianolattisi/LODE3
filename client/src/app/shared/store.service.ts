@@ -1,8 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable, Inject} from '@angular/core';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import {UserService} from "../user/user.service";
 import {Http, ResponseContentType} from "@angular/http";
+import {Storage} from "../annotation/storage/Storage";
+import {STORAGE_OPAQUE_TOKEN} from "../annotation/utils/Utils";
+import {BaseAnnotation} from "../annotation/model/BaseAnnotation";
 
 @Injectable()
 export class StoreService {
@@ -33,6 +36,9 @@ export class StoreService {
   private _lodeLecture: BehaviorSubject<LodeLecture> = new BehaviorSubject(null);
   public lodeLecture: Observable<LodeLecture> = this._lodeLecture.asObservable();
 
+  private _lodeSlides: BehaviorSubject<LodeSlides> = new BehaviorSubject(null);
+  public lodeSlides: Observable<LodeSlides> = this._lodeSlides.asObservable();
+
   private _currentSlide: BehaviorSubject<number> = new BehaviorSubject(0);
   currentSlide: Observable<number> = this._currentSlide.asObservable();
   private _currentSlideIndex: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -54,7 +60,7 @@ export class StoreService {
   public htmlVideoElement: Observable<HTMLVideoElement> = this._htmlVideoElement.asObservable();
 
 
-  constructor(private userService: UserService, private http: Http) {
+  constructor(private userService: UserService, private http: Http, @Inject(STORAGE_OPAQUE_TOKEN) private storage: Storage) {
 
     this.userService.userData.subscribe(ud => {
       if (ud.email) { // user is logged
@@ -93,6 +99,10 @@ export class StoreService {
         .then(values => {
           this._pdfDocument.next(values[0]);
           this._lodeLecture.next(values[1] as any);
+          let slidesPromise = this.loadLodeSlides();
+          Promise.all([slidesPromise]).then(slides => {
+            // TODO: user slides to generate lodeSlides
+          });
         });
 
 
@@ -127,6 +137,18 @@ export class StoreService {
       }
     });
 
+  }
+
+  private loadLodeSlides(): Promise<BaseAnnotation[]> {
+
+    return new Promise<BaseAnnotation[]>((resolve, reject) => {
+      this.storage.getSlides('3d445287ffc9e701cd786f998a05624b')
+        .subscribe((slides: BaseAnnotation[]) => {
+          return resolve(slides);
+        }, (err) => {
+          return reject(null);
+        });
+    });
   }
 
   private loadLodeLecture(): Promise<LodeLecture> {
@@ -205,9 +227,9 @@ export class StoreService {
 
   // update slides page & index when video time change
   private autoUpdateSlide(time: number) {
-    let lodeLecture = this._lodeLecture.getValue();
-    if (lodeLecture) {
-      let slide = lodeLecture.slides[this._currentSlideIndex.getValue() + 1];
+    let lodeSlides = this._lodeSlides.getValue();
+    if (lodeSlides) {
+      let slide = lodeSlides.slides[this._currentSlideIndex.getValue() + 1];
       if (slide && slide.time < time) {
         this.updateCurrentSlides(this._currentSlideIndex.getValue() + 1);
       }
@@ -222,7 +244,7 @@ export class StoreService {
   // update and broadcast slide page & index
   private updateCurrentSlides(slideIndex: number) {
     if (slideIndex >= 0) {
-      let page = this._lodeLecture.getValue().slides[slideIndex].page;
+      let page = this._lodeSlides.getValue().slides[slideIndex].page;
       if (page != this._currentSlide.getValue()) {
         this._currentSlide.next(page);
       }
@@ -235,14 +257,14 @@ export class StoreService {
   setCurrentTime(time: number, start?: boolean) {
 
     time = (time >= 0) ? (Math.round(time)) : (0);
-    if (time >= 0 && this._lodeLecture.getValue()) {
+    if (time >= 0 && this._lodeSlides.getValue()) {
       // update slide page & index
-      for (let i = 0; i < this._lodeLecture.getValue().slides.length; i++) {
-        if (this._lodeLecture.getValue().slides[i].time > time) {
+      for (let i = 0; i < this._lodeSlides.getValue().slides.length; i++) {
+        if (this._lodeSlides.getValue().slides[i].time > time) {
           this.updateCurrentSlides(i - 1);
           break;
         }
-        if (i == this._lodeLecture.getValue().slides.length - 1) {
+        if (i == this._lodeSlides.getValue().slides.length - 1) {
           this.updateCurrentSlides(i);
         }
       }
@@ -256,7 +278,7 @@ export class StoreService {
   }
 
   setCurrentSlideIndex(slideIndex: number) {
-    let slide = this._lodeLecture.getValue().slides[slideIndex];
+    let slide = this._lodeSlides.getValue().slides[slideIndex];
     if (slide) {
       this.updateCurrentSlides(slideIndex);
       this.updateCurrentTime(slide.time);
@@ -296,12 +318,14 @@ interface LodeLecture {
     url: string,
     start: Date,
     duration: number
-  },
+  }
+}
+
+interface LodeSlides {
   slides: {
     page: number,
     thumbnailUrl: string,
     title: string,
     time: number
   }[]
-
 }
