@@ -10,7 +10,7 @@ declare var Quill: tQuill;
 @Component({
   selector: 'note-editor',
   templateUrl: './note-editor.component.html',
-  styleUrls: ['./note-editor.component.css'],
+  styleUrls: ['./note-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteEditorComponent {

@@ -6,7 +6,7 @@ import {NoteTool} from "../../annotation/tools/NoteTool";
 @Component({
   selector: 'app-projector',
   templateUrl: './projector.component.html',
-  styleUrls: ['./projector.component.css']
+  styleUrls: ['./projector.component.scss']
 })
 export class ProjectorComponent {
 

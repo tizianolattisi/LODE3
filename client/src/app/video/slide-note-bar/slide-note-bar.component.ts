@@ -18,7 +18,7 @@ export class SlideDirective {
 @Component({
   selector: 'slide-note-bar',
   templateUrl: './slide-note-bar.component.html',
-  styleUrls: ['./slide-note-bar.component.css']
+  styleUrls: ['./slide-note-bar.component.scss']
 })
 export class SlideNoteBarComponent implements OnInit {
 

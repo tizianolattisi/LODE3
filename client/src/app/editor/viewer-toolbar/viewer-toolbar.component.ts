@@ -3,7 +3,7 @@ import {Component, Input, EventEmitter, Output} from '@angular/core';
 @Component({
   selector: 'viewer-toolbar',
   templateUrl: './viewer-toolbar.component.html',
-  styleUrls: ['./viewer-toolbar.component.css']
+  styleUrls: ['./viewer-toolbar.component.scss']
 })
 export class ViewerToolbarComponent {
 

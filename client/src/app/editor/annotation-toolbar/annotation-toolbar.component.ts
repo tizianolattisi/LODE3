@@ -4,7 +4,7 @@ import {AnnotationManager} from "../../annotation/AnnotationManager";
 @Component({
   selector: 'annotation-toolbar',
   templateUrl: './annotation-toolbar.component.html',
-  styleUrls: ['./annotation-toolbar.component.css']
+  styleUrls: ['./annotation-toolbar.component.scss']
 })
 export class AnnotationToolbarComponent {
 

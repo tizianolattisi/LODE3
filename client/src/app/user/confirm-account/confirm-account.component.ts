@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 @Component({
   selector: 'confirm-account',
   templateUrl: './confirm-account.component.html',
-  styleUrls: ['./confirm-account.component.css']
+  styleUrls: ['./confirm-account.component.scss']
 })
 export class ConfirmAccountComponent {
 
