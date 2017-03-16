@@ -230,6 +230,10 @@ export class AnnotationManager implements NoteManager, LogManager {
     protected addFCanvas(pageNumber: number): ICanvas | IStaticCanvas {
 
         let fCanvas = this.createCanvas(pageNumber, !this.isEditorMode);
+        if (!fCanvas) {
+          return null;
+        }
+
         if (this.isEditorMode) {
             this.canvases[pageNumber] = <ICanvas>fCanvas;
             this.updateCanvasForTool(<ICanvas>fCanvas, this._toolSelected.getValue());
@@ -259,17 +263,21 @@ export class AnnotationManager implements NoteManager, LogManager {
         // add editable canvas on top of the pdfjs canvas
 
         let container = (this.isEditorMode) ? (document.getElementById('pageContainer' + pageNumber)) : (document.getElementById('slide-container'));
-        let c = document.createElement('canvas');
-        container.appendChild(c);
+        if (container) {
+          let c = document.createElement('canvas');
+          container.appendChild(c);
 
-        let fCanvas = (staticCanvas) ? (new fabric.StaticCanvas(c)) : (new fabric.Canvas(c));
-        fCanvas.getElement().setAttribute(AnnotationManager.CANVAS_PAGE_NUMBER, pageNumber.toString());
+          let fCanvas = (staticCanvas) ? (new fabric.StaticCanvas(c)) : (new fabric.Canvas(c));
+          fCanvas.getElement().setAttribute(AnnotationManager.CANVAS_PAGE_NUMBER, pageNumber.toString());
 
-        fCanvas.setWidth(container.getBoundingClientRect().width);
-        fCanvas.setHeight(container.getBoundingClientRect().height);
-        fCanvas.calcOffset();
-
-        return fCanvas;
+          fCanvas.setWidth(container.getBoundingClientRect().width);
+          fCanvas.setHeight(container.getBoundingClientRect().height);
+          fCanvas.calcOffset();
+          return fCanvas;
+        } else {
+          console.warn('No canvas has been added to slides because slide container is missing');
+          return null;
+        }
     }
 
     private getCanvasElemById(canvas: ICanvas, uuid: string): IObject | IObject[] {
@@ -324,22 +332,24 @@ export class AnnotationManager implements NoteManager, LogManager {
     }
 
     setCanvasObjectProperties(object: IObject | IObject[], uuid: string, type: string, pageNumber: number) {
+      if (object) {
         if (object.constructor === Array) {
-            for (let i in <IObject[]>object) { // is a path
-                object[i].set(AnnotationManager.ELEM_UUID, uuid);
-                object[i].set(AnnotationManager.ELEM_PAGE, pageNumber);
-                object[i].set(AnnotationManager.PATH_N, i);
-            }
+          for (let i in <IObject[]>object) { // is a path
+            object[i].set(AnnotationManager.ELEM_UUID, uuid);
+            object[i].set(AnnotationManager.ELEM_PAGE, pageNumber);
+            object[i].set(AnnotationManager.PATH_N, i);
+          }
         } else {
-            (<IObject>object).set(AnnotationManager.ELEM_UUID, uuid);
-            (<IObject>object).set(AnnotationManager.ELEM_PAGE, pageNumber);
+          (<IObject>object).set(AnnotationManager.ELEM_UUID, uuid);
+          (<IObject>object).set(AnnotationManager.ELEM_PAGE, pageNumber);
         }
 
         if (type == NoteTool.TYPE) { // open note on click
-            (<IObject>object).on('mouseup', (event: IEvent) => {
-                this.openNote(uuid, pageNumber, true);
-            });
+          (<IObject>object).on('mouseup', (event: IEvent) => {
+            this.openNote(uuid, pageNumber, true);
+          });
         }
+      }
     }
 
     /**
@@ -368,7 +378,6 @@ export class AnnotationManager implements NoteManager, LogManager {
         if (time && time > 0 && this.videoStartDate) {
             annotation.timestamp = this.getVideoDateRelativeToLesson(time, this.videoStartDate);
         }
-
         // save annotation in storage
         this.storage.addAnnotation(this.documentId, annotation);
 

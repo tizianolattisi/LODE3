@@ -48,6 +48,9 @@ export class WebSocketStorage implements Storage {
             })
             .on('delete-fail', (data: any)=> {
                 this.eventEmit.next({operation: StorageOpType.deleteFail, annotations: [data]});
+            })
+            .on('get-slide-changes', (data:any)=> {
+                this.eventEmit.next({operation: StorageOpType.getChangeSlides, annotations: data});
             });
     }
 
@@ -77,7 +80,7 @@ export class WebSocketStorage implements Storage {
     };
 
     getSlides(documentId: string) {
-      this.socket.emit('gets', {pdfId: documentId, data: "change-slide"});
+      this.socket.emit('get-slide-changes', {pdfId: documentId});
       return Observable.of([]);
     };
 

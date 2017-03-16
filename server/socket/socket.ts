@@ -11,7 +11,7 @@ export const ioListener = (socket: Socket) => {
     /**
      * Handle: Get specific annotation request
      */
-    socket.on('get', (data)=> {
+    socket.on('get', (data) => {
         try {
             if (data && data.uuid && data.pdfId) {
                 Annotation.findOne({
@@ -33,7 +33,7 @@ export const ioListener = (socket: Socket) => {
      * Handle: Get annotations for a pdf file request
      * It also synchronize annotation with LODE video if requested
      */
-    socket.on('gets', (data)=> {
+    socket.on('gets', (data) => {
         try {
             if (data && data.pdfId) {
                 let condition: any = {pdfId: data.pdfId, uid: new Types.ObjectId((socket as any).decoded_token.id)};
@@ -42,6 +42,9 @@ export const ioListener = (socket: Socket) => {
                 }
                 if (data.data) {
                     condition.data = data.data;
+                }
+                if (data.type) {
+                    condition.type = data.type;
                 }
                 Annotation.find(condition, (err, annotations: IAnnotation[]) => {
                     if (!err) {
@@ -65,7 +68,7 @@ export const ioListener = (socket: Socket) => {
     /**
      * Handle: add a new annotation in database
      */
-    socket.on('add', (annotation: IAnnotation)=> {
+    socket.on('add', (annotation: IAnnotation) => {
         try {
             if (annotation && annotation.uuid && annotation.pdfId && annotation.type && annotation.pageNumber && annotation.data) {
 
@@ -81,7 +84,7 @@ export const ioListener = (socket: Socket) => {
                     a.timestamp = annotation.timestamp;
                 }
 
-                a.save((err)=> {
+                a.save((err) => {
                     if (err) {
                         console.error(err);
                         socket.emit('add-fail', annotation);
@@ -97,7 +100,7 @@ export const ioListener = (socket: Socket) => {
     /**
      * Handle: Modify an existent annotation
      */
-    socket.on('edit', (data: IAnnotation)=> {
+    socket.on('edit', (data: IAnnotation) => {
         try {
             if (data && data.uuid && data.pdfId && data.type && data.pageNumber && data.data) {
 
@@ -109,7 +112,7 @@ export const ioListener = (socket: Socket) => {
                     uuid: data.uuid,
                     pdfId: data.pdfId,
                     uid: new Types.ObjectId((socket as any).decoded_token.id)
-                }, data, (err)=> {
+                }, data, (err) => {
                     if (err) {
                         console.error(err);
                         Annotation.findOne({uuid: data.uuid, pdfId: data.pdfId}, (err, annotation: IAnnotation) => {
@@ -128,7 +131,7 @@ export const ioListener = (socket: Socket) => {
     /**
      * Handle: delete an annotation from database
      */
-    socket.on('delete', (data)=> {
+    socket.on('delete', (data) => {
         try {
             if (data && data.pdfId && data.uuid) {
                 Annotation.findOneAndRemove({
@@ -143,6 +146,32 @@ export const ioListener = (socket: Socket) => {
                                 socket.emit('delete-fail', annotation);
                             }
                         });
+                    }
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+    socket.on('get-slide-changes', (data) => {
+        try {
+            if (data && data.pdfId) {
+                let condition: any = {pdfId: data.pdfId, uid: new Types.ObjectId((socket as any).decoded_token.id)};
+                if (data.pageNumber) {
+                    condition.pageNumber = data.pageNumber;
+                }
+                condition.type = 'change-slide';
+                Annotation.find(condition, (err, annotations: IAnnotation[]) => {
+                    if (!err) {
+                        let result: IAnnotation[] = []; // result that will be send as response
+                        for (let a of annotations) {
+                            if (data.sync) { // sync note with video if needed
+                                a = syncAnnotation(new Date(data.sync), a);
+                            }
+                            result.push(<IAnnotation>a.toJSON()); // send note in response
+                        }
+                        socket.emit('get-slide-changes', result);
                     }
                 });
             }

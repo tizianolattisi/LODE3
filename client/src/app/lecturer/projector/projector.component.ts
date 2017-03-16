@@ -16,11 +16,7 @@ export class ProjectorComponent {
 
   changeSlide(page: number) {
     this.storeService.setCurrentSlide(page);
-
-    var note = this.am.newNote(page);
-    note.type = NoteTool.TYPE;
-    note.data = "change-slide";
-    this.am.saveNote(note);
+    this.am.saveNewAnnotation('change-slide', page, {pageNumber: page, annotationData: {page: page}, canvasAnnotation: null});
   }
 
 }

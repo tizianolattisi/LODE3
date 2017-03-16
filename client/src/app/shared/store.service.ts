@@ -3,7 +3,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import {UserService} from "../user/user.service";
 import {Http, ResponseContentType} from "@angular/http";
-import {Storage} from "../annotation/storage/Storage";
+import {Storage, StorageOperation, StorageOpType} from "../annotation/storage/Storage";
 import {STORAGE_OPAQUE_TOKEN} from "../annotation/utils/Utils";
 import {BaseAnnotation} from "../annotation/model/BaseAnnotation";
 
@@ -81,8 +81,32 @@ export class StoreService {
         });
 
         this.loadData();
+        this.loadLodeSlides();
       }
     });
+
+    // Handle responses from storage
+    let storageResults = this.storage.onEvent();
+    if (storageResults) {
+      storageResults.subscribe((res: StorageOperation) => {
+
+        switch (res.operation) {
+          case StorageOpType.getChangeSlides:
+            // Here we are only interested in 'change-slide' annotations
+
+            let changeSlidesAnn = res.annotations;
+
+            if (changeSlidesAnn.length > 0) {
+              // TODO do something with the 'change-slide' annotations
+              console.log('Annotations "change-slide"', changeSlidesAnn);
+              // this._lodeSlides.next([...]);
+            }
+            break;
+          default:
+            break;
+        }
+      });
+    }
   }
 
   /* -----
@@ -99,10 +123,6 @@ export class StoreService {
         .then(values => {
           this._pdfDocument.next(values[0]);
           this._lodeLecture.next(values[1] as any);
-          let slidesPromise = this.loadLodeSlides();
-          Promise.all([slidesPromise]).then(slides => {
-            // TODO: user slides to generate lodeSlides
-          });
         });
 
 
@@ -116,7 +136,7 @@ export class StoreService {
 
   private loadPdfDocument(): Promise<PDFDocumentProxy> {
 
-    return new Promise<PDFDocumentProxy>((resolve, reject)=> {
+    return new Promise<PDFDocumentProxy>((resolve, reject) => {
       if (this.pdfHash) {
 
         PDFJS.getDocument({
@@ -139,21 +159,15 @@ export class StoreService {
 
   }
 
-  private loadLodeSlides(): Promise<BaseAnnotation[]> {
-
-    return new Promise<BaseAnnotation[]>((resolve, reject) => {
-      this.storage.getSlides('3d445287ffc9e701cd786f998a05624b')
-        .subscribe((slides: BaseAnnotation[]) => {
-          return resolve(slides);
-        }, (err) => {
-          return reject(null);
-        });
-    });
+  private loadLodeSlides(): void {
+    this.storage.getSlides(this.pdfHash);
+    // Result of call will be handled by the 'storage responses handler'
+    // initialized in the constructor of this class
   }
 
   private loadLodeLecture(): Promise<LodeLecture> {
 
-    return new Promise<LodeLecture>((resolve, reject)=> {
+    return new Promise<LodeLecture>((resolve, reject) => {
       this.http.get('api/courses/' + this.course + '/lectures/' + this.lecture, {headers: this.userService.HEADERS})
         .map(res => res.json())
         .subscribe((res: LodeLecture) => {
@@ -206,11 +220,11 @@ export class StoreService {
     this._htmlVideoElement.next(videoElem);
 
     // update video elem time
-    videoElem.addEventListener('loadedmetadata', ()=> {
+    videoElem.addEventListener('loadedmetadata', () => {
       this._htmlVideoElement.getValue().currentTime = this._currentTime.getValue();
 
       // start listen for time change
-      this._htmlVideoElement.getValue().addEventListener('timeupdate', (res)=> {
+      this._htmlVideoElement.getValue().addEventListener('timeupdate', (res) => {
         this.updateCurrentTime((<HTMLVideoElement>res.target).currentTime);
         this.autoUpdateSlide((<HTMLVideoElement>res.target).currentTime);
       });

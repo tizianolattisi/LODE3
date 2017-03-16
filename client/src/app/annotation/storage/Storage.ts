@@ -33,4 +33,5 @@ export const StorageOpType = {
     deleteFail: 'deleteFail',
     addFail: 'addFail',
     editFail: 'addFail',
+    getChangeSlides: 'get-slide-changes'
 };
