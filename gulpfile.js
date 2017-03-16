@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var typescript = require('gulp-typescript');
 var shell = require('gulp-shell');
@@ -19,7 +18,6 @@ gulp.task('default', []);
 //   3. Compile server into ./bin folder
 // - Client
 //   1. Install NPM dependencies
-//   2. Compile Sass into css
 //   3. Build Angular2 App for production (Ahead Of Time compilation)
 gulp.task('build', function (cb) {
     runSequence(
@@ -28,7 +26,6 @@ gulp.task('build', function (cb) {
         'copy-resource-files',
         'typescript-server',
         'npm-install-client',
-        'sass',
         'build-angular',
         cb);
 });
@@ -38,17 +35,15 @@ gulp.task('npm-install-server', shell.task(['cd server && npm install']));
 gulp.task('npm-install-client', shell.task(['cd client && npm install']));
 
 // Compile Angular2 App using the 'Ahead Of Time compilation'
-gulp.task('build-angular', shell.task(['cd client && ./node_modules/angular-cli/bin/ng build --target=production --environment=prod']));
+gulp.task('build-angular', shell.task(['cd client && ./node_modules/@angular/cli/bin/ng build --target=production --environment=prod']));
 
 //Clean files produced by build tasks
 gulp.task('clean', shell.task([
     'rm -rf bin',
     'rm -rf server/node_modules',
     'rm -rf client/node_modules',
-    'find client -type f -name "*.css" -delete',
     'find client/src -type f -name "*.js" -delete',
     'find client/src -type f -name "*.map" -delete',
-    'find client/src -type f -name "*.spec.ts" -delete',
     'rm -rf client/dist'
 ]));
 
@@ -78,27 +73,6 @@ gulp.task('typescript-client', function () {
 // watch for file changes and compile
 gulp.task('typescript:watch', function () {
     gulp.watch('./**/*.ts', ['typescript-server', 'typescript-client']);
-});
-
-
-/* -----
- * Sass compilation
- ----- */
-
-// compile sass files into css
-gulp.task('sass', function () {
-    gulp.src('./client/src/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./client/src'));
-    gulp.src('./client/src/style/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(concat('styles.css'))
-        .pipe(gulp.dest('./client/src'));
-});
-
-// watch for files changes
-gulp.task('sass:watch', function () {
-    gulp.watch('./client/**/*.scss', ['sass']);
 });
 
 /* -----

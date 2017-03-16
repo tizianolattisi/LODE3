@@ -18,11 +18,20 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "styles.css"
+        "styles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/socket.io-client/socket.io.js",
+        "../node_modules/pdfjs-dist/build/pdf.js",
+        "../node_modules/pdfjs-dist/web/pdf_viewer.js",
+        "../node_modules/fabric/dist/fabric.js",
+        "../node_modules/quill/dist/quill.min.js",
+        "../node_modules/katex/dist/katex.min.js",
+        "../node_modules/file-saver/FileSaver.min.js",
+        "../node_modules/jwt-decode/build/jwt-decode.min.js"
+      ],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
@@ -39,7 +48,7 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
+    "styleExt": "scss",
     "prefixInterfaces": false,
     "inline": {
       "style": false,

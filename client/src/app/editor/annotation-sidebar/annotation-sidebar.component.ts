@@ -5,7 +5,7 @@ import {ToolService} from "../../annotation/tool.service";
 @Component({
   selector: 'annotation-sidebar',
   templateUrl: './annotation-sidebar.component.html',
-  styleUrls: ['./annotation-sidebar.component.css'],
+  styleUrls: ['./annotation-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AnnotationSidebarComponent {

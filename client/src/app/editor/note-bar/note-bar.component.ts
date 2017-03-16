@@ -4,7 +4,7 @@ import {AnnotationManager} from "../../annotation/AnnotationManager";
 @Component({
   selector: 'note-bar',
   templateUrl: './note-bar.component.html',
-  styleUrls: ['./note-bar.component.css']
+  styleUrls: ['./note-bar.component.scss']
 })
 export class NoteBarComponent {
 

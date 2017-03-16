@@ -8,33 +8,6 @@
 
   <base href="/">
 
-  <!-- Styles -->
-
-  <link rel="stylesheet" href="../src/style/style.css">
-  <link rel="stylesheet" href="../src/style/form-style.css">
-  <link href="../node_modules/mdi/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css"/>
-  <link rel="stylesheet" href="../node_modules/pdfjs-dist/web/pdf_viewer.css">
-  <link rel="stylesheet" href="../node_modules/quill/dist/quill.snow.css">
-  <link rel="stylesheet" href="../node_modules/katex/dist/katex.min.css">
-
-  <!-- Load libraries -->
-
-  <!-- Socket.io -->
-  <script src="../node_modules/socket.io-client/socket.io.js"></script>
-
-  <!-- PDFJS -->
-  <script src="../node_modules/pdfjs-dist/build/pdf.js"></script>
-  <script src="../node_modules/pdfjs-dist/web/pdf_viewer.js"></script>
-  <script src="../node_modules/fabric/dist/fabric.js"></script>
-
-  <!-- Quill -->
-  <script src="../node_modules/quill/dist/quill.min.js"></script>
-  <script src="../node_modules/katex/dist/katex.min.js"></script>
-
-  <!-- File Saver -->
-  <script src="../node_modules/file-saver/FileSaver.min.js"></script>
-  <script src="../node_modules/jwt-decode/build/jwt-decode.min.js"></script>
-
   <script>
     {% if pdfHash %}
     window.dataPdfHash = "{{ pdfHash }}";

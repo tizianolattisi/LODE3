@@ -7,7 +7,7 @@ import {BaseAnnotation} from "../../annotation/model/BaseAnnotation";
 @Component({
   selector: 'pdf-editor',
   templateUrl: './pdf-editor.component.html',
-  styleUrls: ['./pdf-editor.component.css']
+  styleUrls: ['./pdf-editor.component.scss']
 })
 export class PdfEditorComponent {
 

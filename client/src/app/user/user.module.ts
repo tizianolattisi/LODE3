@@ -6,6 +6,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { SignupComponent } from './signup/signup.component';
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
+import {EqualValidator} from "./EqualValidator";
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import {HttpModule} from "@angular/http";
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [ConfirmAccountComponent, LoginComponent, ResetPasswordComponent, SignupComponent],
+  declarations: [ConfirmAccountComponent, LoginComponent, ResetPasswordComponent, SignupComponent, EqualValidator],
   exports: [LoginComponent, SignupComponent, ConfirmAccountComponent, ResetPasswordComponent]
 })
 export class UserModule { }
