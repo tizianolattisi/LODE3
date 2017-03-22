@@ -32,9 +32,9 @@ export class TimelineComponent implements OnInit {
     });
 
     if (!this.hidePlaceholders) {
-      this.storeService.lodeSlides.subscribe((lodeSlides)=> {
-        if (lodeSlides) {
-          this.slides = lodeSlides.slides;
+      this.storeService.lodeLecture.subscribe((lodeLecture)=> {
+        if (lodeLecture) {
+          this.slides = lodeLecture.slides;
         }
       });
 
