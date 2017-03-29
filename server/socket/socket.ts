@@ -47,7 +47,9 @@ export const ioListener = (socket: Socket) => {
                             if (data.sync) { // sync note with video if needed
                                 a = syncAnnotation(new Date(data.sync), a);
                             }
-                            result.push(<IAnnotation>a.toJSON()); // send note in response
+                            if( a.data!='change-slide' ) {
+                                result.push(<IAnnotation>a.toJSON()); // send note in response
+                            }
                         }
                         socket.emit('annotations', result);
                     }

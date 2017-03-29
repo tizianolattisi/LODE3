@@ -21,15 +21,15 @@ export default class Lecture implements LodeLecture {
         return LODE_BASE_URL + '/' + course + '/' + lecture + '/content/' + relUrl;
     }
 
-    addSlide(course: string, lecture: string, slide: LodeSlide) {
+    addSlide(course: string, lecture: string, page: number, title: string, thumbnailUrl: string, time: number) {
         if (!this.slides) {
             this.slides = [];
         }
         this.slides.push({
-            page: Lecture.getPageFromThumbnail(slide.immagine),
-            title: slide.titolo,
-            thumbnailUrl: Lecture.getThumbnailAbsoluteUrl(course, lecture, slide.immagine),
-            time: slide.tempo
+            page: page,
+            title: title,
+            thumbnailUrl: thumbnailUrl,
+            time: time
         });
     }
 }
