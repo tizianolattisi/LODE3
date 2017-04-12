@@ -1,0 +1,19 @@
+
+<div class="box">
+
+  <div class="form-page">
+
+    <div class="box-form">
+      <form [formGroup]="launcherForm" (ngSubmit)="doPost(launcherForm.value)">
+        <div class="form-element">
+          <input type="pdfUrl" placeholder="...">
+        </div>
+        <div class="button-box content-right">
+          <button type="submit" class="action-btn">Post <i
+            class="mdi mdi-18px mdi-login-variant"></i></button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
