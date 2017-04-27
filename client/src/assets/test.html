@@ -6,34 +6,38 @@
 </head>
 <body>
 <h3>Test 1</h3>
-<form action="http://127.0.0.1:8080/lecturer" method="post">
+<form action="/lecturer" method="post">
     <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/segue_userFiles/2016Programmazione2/Clonazione2016.pptx.pdf" hidden>
     <button type="submit">Open projector</button>
 </form>
-<form action="http://127.0.0.1:8080/video" method="post">
+<form action="/video" method="post">
     <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/segue_userFiles/2016Programmazione2/Clonazione2016.pptx.pdf" hidden>
     <input type="text" name="course" value="LinguaggiDiProgrammazione" hidden>
     <input type="text" name="lecture" value="12-12-CopyConstructor" hidden>
     <button type="submit">Go to video lecture</button>
 </form>
-<form action="http://127.0.0.1:8080/editor" method="post">
+<form action="/editor" method="post">
     <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/segue_userFiles/2016Programmazione2/Clonazione2016.pptx.pdf" hidden>
     <button type="submit">Take notes</button>
 </form>
 <h3>Test 2</h3>
-<form action="http://127.0.0.1:8080/lecturer" method="post">
+<form action="/lecturer" method="post">
     <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/cad/lectures/TEST/Lezione6/4-Ereditarieta2016.ppt.pdf" hidden>
     <button type="submit">Open projector</button>
 </form>
-<form action="http://127.0.0.1:8080/video" method="post">
+<form action="/video" method="post">
     <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/cad/lectures/TEST/Lezione6/4-Ereditarieta2016.ppt.pdf" hidden>
     <input type="text" name="course" value="TEST" hidden>
     <input type="text" name="lecture" value="Lezione6" hidden>
     <button type="submit">Go to video lecture</button>
 </form>
-<form action="http://127.0.0.1:8080/editor" method="post">
+<form action="/editor" method="post">
     <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/cad/lectures/TEST/Lezione6/4-Ereditarieta2016.ppt.pdf" hidden>
     <button type="submit">Take notes</button>
+</form>
+<form action="/editor" method="post">
+  <input type="text" name="pdfUrl" value="http://latemar.science.unitn.it/cad/lectures/TEST/Lezione6/4-Ereditarieta2016R.ppt.pdf" hidden>
+  <button type="submit">Take notes (new pdf)</button>
 </form>
 </body>
 </html>
