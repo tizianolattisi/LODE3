@@ -10,6 +10,7 @@ import {PdfEditorComponent} from "../editor/pdf-editor/pdf-editor.component";
 import {AuthGuard} from "./auth-guard";
 import {VideoLectureComponent} from "../video/video-lecture/video-lecture.component";
 import {ProjectorComponent} from "../lecturer/projector/projector.component";
+import {TestPageComponent} from "./test-page/test-page.component";
 
 export const appRoutes: Routes = [
     {
@@ -17,6 +18,11 @@ export const appRoutes: Routes = [
         component: HomePageComponent,
         pathMatch: 'full'
     },
+  {
+    path: 'test',
+    component: TestPageComponent,
+    pathMatch: 'full'
+  },
     {
         path: 'user',
         children: [

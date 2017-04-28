@@ -5,6 +5,8 @@ import xml2js = require('xml2js');
 import {LodeData} from "../../models/rest/LodeData";
 import {default as Lecture} from "../../models/rest/LodeLecture";
 import {LODE_BASE_URL} from "../../commons/config";
+import {Annotation, IAnnotation} from "../../models/db/Annotation";
+import {Types} from "mongoose";
 
 const courseRouter: Router = Router();
 const PATH = '/courses';
@@ -16,30 +18,40 @@ courseRouter.get(PATH + '/:courseId/lectures/:lectureId', (req, res, next) => {
 
     let course = req.params.courseId;
     let lecture = req.params.lectureId;
+    let lectureData: Lecture = new Lecture();
+    let timestamp: Date;
 
     fetchInfo(course, lecture)
         .then((lodeInfo) => {
 
             // lodeInfo.lezione.video.timestamp = new Date('11-06-2016 16:25');
-
-            let lectureData: Lecture = new Lecture();
+            timestamp = lodeInfo.data.info.timestamp
 
             lectureData.information = {
-                course: lodeInfo.lezione.info.corso,
-                title: lodeInfo.lezione.info.titolo,
-                professor: lodeInfo.lezione.info.professore,
+                course: lodeInfo.data.info.course,
+                title: lodeInfo.data.info.title,
+                professor: lodeInfo.data.info.lecturer,
             };
             lectureData.video = {
-                url: LODE_BASE_URL + '/' + course + '/' + lecture + '/content/video.mp4',
-                start: lodeInfo.lezione.video.timestamp,
-                duration: lodeInfo.lezione.video.totaltime
+                url: LODE_BASE_URL + '/' + course + '/' + lecture + '/' + lodeInfo.data.camvideo.name,
+                start: lodeInfo.data.info.timestamp,
+                duration: lodeInfo.data.info.totaltime
             };
 
-            for (let s of lodeInfo.lezione.slide) {
-                lectureData.addSlide(course, lecture, s);
-            }
-            return res.json(lectureData);
-
+        })
+        .then(function() {
+            let condition: any = {};
+            Annotation.find(condition, (err, annotations: IAnnotation[]) => {
+                if (!err) {
+                    for (let a of annotations) {
+                        if( a.data=='change-slide' ) {
+                            a = syncAnnotation(new Date(timestamp), a);
+                            lectureData.addSlide(course, lecture, a.pageNumber, 'title', 'url', a.time);
+                        }
+                    }
+                }
+                return res.json(lectureData);
+            });
         })
         .catch((err)=> {
             return next(err);
@@ -57,7 +69,7 @@ const fetchInfo = (course: string, lecture: string): Promise<LodeData> => {
 
     return new Promise<LodeData>((resolve, reject) => {
 
-        let url = LODE_BASE_URL + '/' + course + '/' + lecture + '/content/data.xml';
+        let url = LODE_BASE_URL + '/' + course + '/' + lecture + '/data.xml';
 
         http.get(url, (response) => {
             var data: string = '';
@@ -81,6 +93,13 @@ const fetchInfo = (course: string, lecture: string): Promise<LodeData> => {
                 reject(err);
             });
     });
+};
+
+const syncAnnotation = (startTime: Date, annotation: IAnnotation): IAnnotation => {
+    annotation.time = (annotation.timestamp) ? // if annotation has been saved with a timestamp (because has been taken after a lesson)
+        ((annotation.timestamp.getTime() - startTime.getTime()) / 1000) : // calculate time with the timestamp
+        ((annotation._id.getTimestamp().getTime() - startTime.getTime()) / 1000); // otherwise use the MongoDB timestamp
+    return annotation;
 };
 
 export {courseRouter};

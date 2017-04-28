@@ -16,10 +16,11 @@ import {VideoModule} from "../video/video.module";
 import {UserService} from "../user/user.service";
 import {RouterModule} from "@angular/router";
 import {BrowserModule} from "@angular/platform-browser";
-import {FormsModule} from "@angular/forms";
+import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {ToolService} from "../annotation/tool.service";
 import {LecturerModule} from "../lecturer/lecturer.module";
+import { TestPageComponent } from './test-page/test-page.component';
 
 @NgModule({
   imports: [
@@ -31,12 +32,14 @@ import {LecturerModule} from "../lecturer/lecturer.module";
     LecturerModule,
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule
   ],
   declarations: [
     AppComponent,
     HomePageComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    TestPageComponent
   ],
   providers: [
     UserService,
