@@ -1,52 +1,49 @@
 <div class="note-window" #noteWindow
      style="position: fixed; top: 56px; left: 72px; width: 625px; height: 300px; min-height: 300px; min-width: 500px;">
-    <div class="header-bar" [draggable]="noteWindow" prevent-drag="preventDrag">
-        <input type="text" id="noteTitle" placeholder="Title" [(ngModel)]="note.data.title"
-               (ngModelChange)="titleChange()"
-               [disabled]="!editMode || readOnly">
-        <button class="circular-button first-btn" *ngIf="!readOnly" (click)="switchMode()">
-            <i class="mdi mdi-18px"
-               [ngClass]="{'mdi-pencil-off': !editMode, 'mdi-pencil': editMode}"></i>
-        </button>
-        <button class="circular-button" (click)="expandWindow()">
-            <i class="mdi mdi-arrow-expand-all mdi-18px"></i>
-        </button>
-        <button class="circular-button" (click)="closeWindow()">
-            <i class="mdi mdi-close mdi-18px"></i>
-        </button>
-    </div>
-    <div class="content">
-        <div class="note-editor quill-box">
-            <div #quillToolbar [ngClass]="{'hide-toolbar': readOnly || !editMode}">
-                <select title="Font" class="ql-font">
-                </select>
-                <select title="Size" class="ql-size">
-                </select>
-                <button class="ql-bold">Bold</button>
-                <button class="ql-italic">Italic</button>
-                <button class="ql-underline">Underline</button>
-                <button class="ql-strike">Strikethrough</button>
-                <span class="ql-format-separator"></span>
-                <button class="ql-script" value="sub"></button>
-                <button class="ql-script" value="super"></button>
-                <span class="ql-format-separator"></span>
-                <button class="ql-blockquote"></button>
-                <button class="ql-code-block"></button>
-                <span class="ql-format-separator"></span>
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-                <select class="ql-align"></select>
+  <div class="header-bar" [draggable]="noteWindow" prevent-drag="preventDrag">
+    <input class="uk-input" type="text" id="noteTitle" placeholder="Title" [(ngModel)]="note.data.title"
+           (ngModelChange)="titleChange()"
+           [disabled]="!editMode || readOnly">
 
-                <button class="ql-list" value="bullet"></button>
-                <button class="ql-link"></button>
-                <button class="ql-formula"></button>
-            </div>
+    <a class="uk-icon-button" uk-icon="icon: pencil" *ngIf="!readOnly && editMode" (click)="switchMode()"></a>
+    <a class="uk-icon-button" uk-icon="icon: pencil-off" *ngIf="!readOnly && !editMode" (click)="switchMode()"></a>
 
-            <div #quillEditor>
-            </div>
-        </div>
+    <a class="uk-icon-button" uk-icon="icon: expand" (click)="expandWindow()"></a>
+    <a class="uk-icon-button" uk-icon="icon: close" (click)="closeWindow()"></a>
+
+  </div>
+  <div class="content">
+    <div class="note-editor quill-box">
+      <div #quillToolbar [ngClass]="{'hide-toolbar': readOnly || !editMode}">
+        <select title="Font" class="ql-font">
+        </select>
+        <select title="Size" class="ql-size">
+        </select>
+        <button class="ql-bold">Bold</button>
+        <button class="ql-italic">Italic</button>
+        <button class="ql-underline">Underline</button>
+        <button class="ql-strike">Strikethrough</button>
+        <span class="ql-format-separator"></span>
+        <button class="ql-script" value="sub"></button>
+        <button class="ql-script" value="super"></button>
+        <span class="ql-format-separator"></span>
+        <button class="ql-blockquote"></button>
+        <button class="ql-code-block"></button>
+        <span class="ql-format-separator"></span>
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+        <select class="ql-align"></select>
+
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-link"></button>
+        <button class="ql-formula"></button>
+      </div>
+
+      <div #quillEditor>
+      </div>
     </div>
-    <div class="resize-handler"
-         [resizable]="noteWindow">
-    </div>
+  </div>
+  <div class="resize-handler"
+       [resizable]="noteWindow">
+  </div>
 </div>

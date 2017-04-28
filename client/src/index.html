@@ -20,6 +20,33 @@
     {% endif %}
   </script>
 
+  <style>
+    .loader-pencil-content {
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+
+    svg#loader-pencil {
+      fill: #424242;
+      width: 120px;
+      transform: rotate(-90deg);
+    }
+
+    #line {
+      animation: linePencil .8s infinite linear;
+    }
+
+    @keyframes linePencil {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-150px);
+      }
+    }
+  </style>
 </head>
 <body>
   <app-root>

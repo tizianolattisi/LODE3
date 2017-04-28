@@ -1,97 +1,131 @@
-<div class="box">
+<div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
+  <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m">
 
-    <div *ngIf="currentPage == 0" class="form-page">
-        <div class="box-form">
-            <h2>Login</h2>
-            <form [formGroup]="loginForm" (ngSubmit)="doLogin(loginForm.value)">
-                <div *ngIf="message" class="message-box"
-                     [ngClass]="{'positive-message': success, 'negative-message': !success}">
-                    <span>{{message}}</span>
-                </div>
-                <div class="form-element">
-                    <input type="email" placeholder="Email" [formControl]="loginForm.controls['email']">
-                    <div class="validation-message"
-                         *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
-                        <span>Email required</span>
-                    </div>
-                </div>
-                <div class="form-element">
-                    <input type="password" placeholder="Password" [formControl]="loginForm.controls['password']">
-                    <div class="validation-message"
-                         *ngIf="(loginForm.controls['password'].dirty || loginForm.controls['password'].touched) && !loginForm.controls['password'].valid">
-                        <span>Password required</span>
-                    </div>
-                </div>
-
-                <div class="button-box content-right">
-                    <button type="submit" class="action-btn" [disabled]="!loginForm.valid">Login <i
-                            class="mdi mdi-18px mdi-login-variant"></i></button>
-                </div>
-            </form>
-
-            <div class="space-bar"></div>
-
-            <div class="link-box">
-                <a (click)="showPage(1)">Password forgot? Click here</a>
-                <a (click)="showPage(2)">Account Confirmation email not received? Click here</a>
-            </div>
-            <div class="sign-up-box">
-                <a (click)="goToSignUp()"><b>Don't have an account yet? Click here</b></a>
-            </div>
-        </div>
-    </div>
-
-    <div *ngIf="currentPage == 1" class="form-page">
-        <div class="button-box space-bottom">
-            <a (click)="showPage(0)"><i class="mdi mdi-arrow-left"></i>Go to login</a>
-        </div>
-        <form [formGroup]="loginForm" (ngSubmit)="doPasswordForgot(loginForm.value)">
-            <div class="form-element">
-                <label>Insert your registered email address</label>
-                <input class="input-darker" type="email" placeholder="Email"
-                       [formControl]="loginForm.controls['email']">
-                <div class="input-error"
-                     *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
-                    <span>Email required</span>
-                </div>
-            </div>
-
-            <div class="button-box">
-                <button class="action-btn" [disabled]="!loginForm.controls['email'].valid" type="submit">
-                    Recover password
-                </button>
-            </div>
-        </form>
-        <div *ngIf="message" class="message-box"
-             [ngClass]="{'positive-message': success, 'negative-message': !success}">
+    <div *ngIf="currentPage == 0">
+      <h1 class="uk-card-title uk-text-center">Login</h1>
+      <div class="uk-flex uk-flex-column uk-flex-around uk-flex-stretch">
+        <form [formGroup]="loginForm" (ngSubmit)="doLogin(loginForm.value)" class="uk-flex uk-flex-column">
+          <div *ngIf="message" class="uk-text-center"
+               [ngClass]="{'uk-text-success': success, 'uk-text-danger': !success}">
             <span>{{message}}</span>
-        </div>
-    </div>
-
-    <div *ngIf="currentPage == 2" class="form-page">
-        <div class="button-box space-bottom">
-            <a (click)="showPage(0)"><i class="mdi mdi-arrow-left"></i>Go to login</a>
-        </div>
-        <form [formGroup]="loginForm" (ngSubmit)="doEmailConfirm(loginForm.value)">
-            <div class="form-element">
-                <label>Insert the email address</label>
-                <input class="input-darker" type="email" placeholder="Email"
-                       [formControl]="loginForm.controls['email']">
-                <div class="input-error"
-                     *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
-                    <span>Email required</span>
-                </div>
+          </div>
+          <div class="uk-margin">
+            <div class="uk-inline uk-width-1-1">
+              <span class="uk-form-icon" uk-icon="icon: user"></span>
+              <input type="email" class="uk-input uk-flex-1" placeholder="Email"
+                     [ngClass]="{'uk-form-danger': (loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid}"
+                     [formControl]="loginForm.controls['email']">
             </div>
-
-            <div class="button-box">
-                <button class="action-btn" [disabled]="!loginForm.controls['email'].valid" type="submit">
-                    Request account confirm link
-                </button>
+            <div class="uk-text-danger"
+                 *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
+              <span>Email required</span>
             </div>
+          </div>
+          <div class="uk-margin">
+            <div class="uk-inline uk-width-1-1">
+              <span class="uk-form-icon" uk-icon="icon: lock"></span>
+              <input type="password" class="uk-input" placeholder="Password"
+                     [ngClass]="{'uk-form-danger': (loginForm.controls['password'].dirty || loginForm.controls['password'].touched) && !loginForm.controls['password'].valid}"
+                     [formControl]="loginForm.controls['password']">
+            </div>
+            <div class="uk-text-danger"
+                 *ngIf="(loginForm.controls['password'].dirty || loginForm.controls['password'].touched) && !loginForm.controls['password'].valid">
+              <span>Password required</span>
+            </div>
+          </div>
+          <div class="uk-flex uk-flex-right">
+            <button type="submit" class="uk-button uk-button-primary" [disabled]="!loginForm.valid">
+              <span>Login</span>
+              <span uk-icon="icon: chevron-right"></span>
+            </button>
+          </div>
         </form>
-        <div *ngIf="message" class="message-box"
-             [ngClass]="{'positive-message': success, 'negative-message': !success}">
-            <span>{{message}}</span>
+
+        <hr>
+
+        <div class="uk-flex uk-flex-column uk-flex-top">
+          <button class="uk-button uk-button-link" (click)="showPage(1)">Password forgot? Click here</button>
+          <button class="uk-button uk-button-link" (click)="showPage(2)">Account Confirmation email not received? Click
+            here
+          </button>
         </div>
+        <hr>
+        <div class="uk-flex uk-flex-column uk-flex-top">
+          <button class="uk-button uk-button-link" (click)="goToSignUp()"><b>Don't have an account yet? Click here</b>
+          </button>
+        </div>
+
+      </div>
     </div>
+
+    <div *ngIf="currentPage == 1">
+
+      <div class="uk-flex">
+        <button class="uk-button uk-button-default" (click)="showPage(0)">
+          <span uk-icon="icon: chevron-left"></span>
+          <span>Go to login</span>
+        </button>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="doPasswordForgot(loginForm.value)"
+            class="uk-flex uk-flex-column uk-margin-top">
+        <div class="uk-margin">
+          <label class="uk-form-label" for="lost-password-mail">Insert your registered email address</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <input id="lost-password-mail" type="email" class="uk-input uk-flex-1" placeholder="Email"
+                   [formControl]="loginForm.controls['email']">
+          </div>
+          <div class="uk-text-danger"
+               *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
+            <span>Email required</span>
+          </div>
+        </div>
+
+        <div class="uk-margin uk-flex uk-flex-right">
+          <button type="submit" class="uk-button uk-button-primary" [disabled]="!loginForm.controls['email'].valid" type="submit">
+            <span>Recover password</span>
+          </button>
+        </div>
+      </form>
+      <div *ngIf="message" class="uk-text-center"
+           [ngClass]="{'uk-text-success': success, 'uk-text-danger': !success}">
+        <span>{{message}}</span>
+      </div>
+    </div>
+
+    <div *ngIf="currentPage == 2">
+      <div class="uk-flex">
+        <button class="uk-button uk-button-default" (click)="showPage(0)">
+          <span uk-icon="icon: chevron-left"></span>
+          <span>Go to login</span>
+        </button>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="doEmailConfirm(loginForm.value)"
+            class="uk-flex uk-flex-column uk-margin-top">
+        <div class="uk-margin">
+          <label class="uk-form-label" for="confirm-mail">Insert the email address</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <input id="confirm-mail" type="email" class="uk-input uk-flex-1" placeholder="Email"
+                   [formControl]="loginForm.controls['email']">
+          </div>
+          <div class="uk-text-danger"
+               *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid">
+            <span>Email required</span>
+          </div>
+        </div>
+        <div class="uk-margin uk-flex uk-flex-right">
+          <button type="submit" class="uk-button uk-button-primary" [disabled]="!loginForm.controls['email'].valid" type="submit">
+            <span>Request account confirm link</span>
+          </button>
+        </div>
+      </form>
+      <div *ngIf="message" class="uk-text-center"
+           [ngClass]="{'uk-text-success': success, 'uk-text-danger': !success}">
+        <span>{{message}}</span>
+      </div>
+    </div>
+  </div>
 </div>

@@ -2,6 +2,25 @@
 
 $editor-bg: #fafafa;
 
+.auto-height {
+  height: auto;
+}
+
+.small-padding {
+  padding: 0.4rem;
+}
+
+.left-bar {
+  width: 60px;
+}
+
+.left-sidebar {
+  width: 30rem;
+  height: 100%;
+  overflow-y: auto;
+  background: $light-grey;
+}
+
 .editor-box {
   position: fixed;
   display: flex;
@@ -20,6 +39,8 @@ $editor-bg: #fafafa;
   width: 100%;
   max-height: 112px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
 
   .spacer {
     flex: 1;
@@ -95,15 +116,15 @@ $editor-bg: #fafafa;
   background: $primary-color;
 }
 
-.left-sidebar {
-  display: none;
-  overflow-y: auto;
-  background: $light-grey;
-  flex-direction: column;
-  align-items: center;
-  width: 0;
-  height: 100%;
-}
+//.left-sidebar {
+//  display: none;
+//  overflow-y: auto;
+//  background: $light-grey;
+//  flex-direction: column;
+//  align-items: center;
+//  width: 0;
+//  height: 100%;
+//}
 
 .pdf-download-box {
   display: flex;
@@ -156,6 +177,10 @@ annotation-sidebar {
 
 .pdf-editor-not-visible {
   width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
   visibility: hidden;
 }
 
@@ -198,7 +223,7 @@ annotation-sidebar {
   left: 0;
   bottom: 0;
   outline: none;
-
+  padding-top: 1.5rem;
 }
 
 .vl-loader-box {

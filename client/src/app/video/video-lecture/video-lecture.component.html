@@ -11,12 +11,12 @@
         <div class="vl-container">
             <div class="vl-box">
                 <slide-viewer class="vl-elem"></slide-viewer>
-                <div class="viewer-toolbar all-width">
+                <div class="viewer-toolbar all-width uk-padding-small">
                     <viewer-toolbar [currentPage]="storeService.currentSlide | async"
                                     [totalPages]="storeService.getSlideTotalPages()"
                                     (pageSelected)="changeSlide($event)">
                     </viewer-toolbar>
-                    <button class="go-to-editor-btn" (click)="goToEditor()">Go to editor
+                    <button class="uk-button uk-button-primary" (click)="goToEditor()">Go to editor
                         <i class="mdi mdi-lead-pencil"></i></button>
                 </div>
             </div>
@@ -32,10 +32,4 @@
         <slide-note-bar (highlightNoteRequest)="highlightTimelineNote($event)"></slide-note-bar>
     </div>
 
-</div>
-<div class="mini-box-container">
-    <div class="mini-box error-box" *ngIf="am.errorMessage">
-        <i class="mdi mdi-24px mdi-exclamation"></i>
-        <span>&nbsp;{{am.errorMessage}}</span>
-    </div>
 </div>

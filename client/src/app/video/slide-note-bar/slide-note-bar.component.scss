@@ -1,5 +1,9 @@
 @import "../../../style/colors.scss";
 
+.media-box {
+  overflow-x: auto;
+}
+
 .bar {
   display: flex;
   width: 100%;

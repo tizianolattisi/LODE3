@@ -24,6 +24,7 @@
         "../node_modules/socket.io-client/socket.io.js",
         "../node_modules/pdfjs-dist/build/pdf.js",
         "../node_modules/pdfjs-dist/web/pdf_viewer.js",
+        "../node_modules/pdfjs-dist/web/compatibility.js",
         "../node_modules/fabric/dist/fabric.js",
         "../node_modules/quill/dist/quill.min.js",
         "../node_modules/katex/dist/katex.min.js",
@@ -32,7 +33,9 @@
         "../node_modules/pdfjs-dist/build/pdf.worker.js",
         "../node_modules/pdfjs-dist/web/compatibility.js",
         "../node_modules/intl/dist/Intl.min.js",
-        "../node_modules/intl/locale-data/jsonp/en.js"
+        "../node_modules/intl/locale-data/jsonp/en.js",
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/uikit/dist/js/uikit.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

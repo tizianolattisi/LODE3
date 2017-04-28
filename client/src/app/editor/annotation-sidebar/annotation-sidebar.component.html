@@ -1,32 +1,37 @@
-<div class="annotation-toolbar">
-    <div class="annotation-toolbar-box">
-        <div class="header">
-            <b>ANNOTATIONS</b>
-        </div>
-        <div class="ann-container" #annBox>
-            <div *ngFor="let pageAnns of am.allAnnotations | async; let i = index">
-                <div *ngIf="pageAnns && !isEmpty(pageAnns)">
-                    <div *ngFor="let ann of pageAnns | dictionaryToArray"
-                         (click)="selectAnnotation(ann.uuid, ann.pageNumber)">
-                        <div class="ann-content">
-                            <div class="ann-type-icon">
-                                <i class="mdi mdi-24px" [ngClass]="toolService.getToolIconClass(ann.type)"></i>
-                            </div>
-                            <div>
-                                <b>Page {{ann.pageNumber}}</b>
-                                <div class="ann-details">{{ann.type}} (id: {{ann.uuid}})</div>
-                            </div>
-                            <button class="circular-button circular-button-del"
-                                    (click)="deleteAnnotation(ann.uuid, ann.pageNumber)">
-                                <i class="mdi mdi-delete mdi-18px"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="divider"></div>
-                </div>
+<div class="uk-flex uk-flex-column uk-height-1-1 overflow-auto">
+  <div class="header">
+    <h3>Annotations</h3>
+  </div>
+  <div #annBox>
+    <div *ngFor="let pageAnns of am.allAnnotations | async; let i = index">
+      <div *ngIf="pageAnns && !isEmpty(pageAnns)">
+        <div class="uk-card uk-card-default uk-card-hover uk-margin-left uk-margin-right uk-margin-bottom"
+             *ngFor="let ann of pageAnns | dictionaryToArray"
+             (click)="selectAnnotation(ann.uuid, ann.pageNumber)">
+          <div class="uk-card-body uk-padding-small">
+
+            <div class="uk-flex uk-flex-between uk-flex-middle">
+              <div class="uk-border-circle type-icon uk-flex uk-flex-middle uk-flex-center">
+                <span [attr.uk-icon]="'icon:' + toolService.getToolIconClass(ann.type)"></span>
+              </div>
+              <div class="uk-width-expand uk-margin-small-left uk-margin-small-right">
+                <h4 class="uk-card-title uk-margin-remove-bottom">Page {{ann.pageNumber}}</h4>
+                <p class="uk-text-meta uk-margin-remove-top">
+                  <span class="uk-text-capitalize">{{ann.type}}</span>
+                  <span>(id: {{ann.uuid}})</span>
+                </p>
+              </div>
+              <div>
+                <a class="uk-icon-button" uk-icon="icon: delete"
+                   (click)="deleteAnnotation(ann.uuid, ann.pageNumber)"></a>
+              </div>
             </div>
+
+          </div>
+
         </div>
+        <hr class="uk-divider-icon">
+      </div>
     </div>
-    <div class="border">
-    </div>
+  </div>
 </div>

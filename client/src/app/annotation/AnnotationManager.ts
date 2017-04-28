@@ -22,6 +22,7 @@ import {LogManager} from "./LogManager";
 import {LogAnnotation} from "./model/LogAnnotation";
 
 declare var fabric:any;
+declare var UIkit:any;
 
 /**
  * Object responsible of all the annotations stuff on the PDF document
@@ -198,11 +199,8 @@ export class AnnotationManager implements NoteManager, LogManager {
                         }
                         this.showTempErrMessage('Fail to save last edited annotation. Please, try to refresh the page.');
                         break;
-
                     case StorageOpType.close:
-                        setTimeout(()=> {
-                            this.errorMessage = 'Attention! It\'s possible that future annotations will not be saved. Please, try to refresh the page.';
-                        }, 3000);
+                        this.showTempErrMessage('Attention! It\'s possible that future annotations will not be saved. Please, try to refresh the page.');
                         break;
                 }
             });
@@ -826,9 +824,12 @@ export class AnnotationManager implements NoteManager, LogManager {
 
     protected showTempErrMessage(msg: string) {
         this.errorMessage = msg;
-        setTimeout(()=> {
-            this.errorMessage = '';
-        }, 5000);
+        UIkit.notification({
+            message: msg,
+            status: 'danger',
+            pos: 'bottom-right',
+            timeout: 5000
+        });
     }
 
     protected scaleObject(object: IObject) {
@@ -840,7 +841,7 @@ export class AnnotationManager implements NoteManager, LogManager {
     }
 
     getScaleValue(): number {
-        return (this.pdfViewer) ? (parseFloat(this.pdfViewer.currentScaleValue)) : (1.0);
+        return (this.pdfViewer) ? (parseFloat(this.pdfViewer.currentScale)) : (1.0);
     }
 
     protected objectToArray(obj: Object): any[] {

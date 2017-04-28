@@ -1,21 +1,13 @@
-.content {
-  padding-top: 5rem;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.big-text {
+  font-size: 10rem;
+  font-weight: 800;
+}
+
+.mid-text {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.grey-text {
   color: #BDBDBD;
-
-  .fzf {
-    font-size: 10rem;
-    font-weight: 800;
-  }
-
-  .text {
-    margin-top: 1rem;
-    font-size: 3rem;
-    font-weight: 600;
-  }
 }

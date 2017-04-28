@@ -1,60 +1,10 @@
-@import "../../../style/colors.scss";
-
-.toolbar-box {
-  display: flex;
-  height: 56px;
-  align-items: center;
-  justify-content: space-between;
-  margin: auto;
+.rotate-90 {
+  width: 36px;
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
-.tool-box {
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: space-around;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-.divider {
-  height: 60%;
-  border: 1px solid $light-grey;
-}
-
-.number-input {
-  width: 3rem;
-}
-
-.circular-btn-toolbar {
-  margin: 0.2rem;
-}
-
-.width-select {
-  padding: 0.5rem;
-  background: white;
-  border-radius: 2px;
-  border: 1px solid $light-grey;
-}
-
-input[type="number"], input[type="text"] {
-  border: 0;
-  border-bottom: 1px solid $dark;
-  margin-right: 0.2em;
-  height: 50%;
-  text-align: center;
-  font-size: 1.02rem;
-  font-weight: 600;
-  padding: 0;
-
-  &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-}
-
-input[type="text"] {
-  background: $light;
-  border-radius: 0;
+.small-width {
+  width: 56px;
 }

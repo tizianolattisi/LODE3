@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {UserService} from "../user.service";
 import {ActivatedRoute} from "@angular/router";

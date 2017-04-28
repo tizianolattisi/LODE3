@@ -21,6 +21,7 @@ import {HttpModule} from "@angular/http";
 import {ToolService} from "../annotation/tool.service";
 import {LecturerModule} from "../lecturer/lecturer.module";
 import { TestPageComponent } from './test-page/test-page.component';
+import {IconLoader} from "./icon-loader.service";
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { TestPageComponent } from './test-page/test-page.component';
     AnnotationManager,
     ToolService,
     AuthGuard,
-    CodeParamGuard
+    CodeParamGuard,
+    IconLoader
   ],
   bootstrap: [AppComponent]
 })

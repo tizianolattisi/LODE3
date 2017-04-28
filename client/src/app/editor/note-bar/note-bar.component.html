@@ -1,4 +1,4 @@
-<div #noteBar [ngClass]="{'horizontal-bar': !verticalPosition, 'vertical-bar': verticalPosition}">
+<div #noteBar class="uk-flex" [ngClass]="{'uk-fl': !verticalPosition, 'uk-flex-column': verticalPosition}">
     <note *ngFor="let note of am.allAnnotations | async | filterNotes:currentPage"
           id="note-{{note.uuid}}"
           (dblclick)="openNote(note.uuid, note.pageNumber)"

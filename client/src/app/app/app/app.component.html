@@ -1,30 +1,38 @@
-<header>
-    <div class="header-box left-side">
-        <div routerLink="/" class="icon-box">
-            <div class="icon"></div>
-        </div>
-        <span routerLink="/" class="app-title">Annotations</span>
+<nav class="uk-navbar-container" uk-navbar>
+  <div class="uk-navbar-left">
+    <!--TODO icon-->
+    <a routerLink="/" class="uk-navbar-item uk-logo" href="#">Annotations</a>
+  </div>
+  <div class="uk-navbar-right">
+    <div class="uk-navbar-item" *ngIf="!userData.email">
+      <button class="uk-button uk-button-default uk-visible@s" routerLink="/user/signup">Sign Up</button>
+      <a routerLink="/user/signup" class="uk-icon-button uk-hidden@s" uk-icon="icon: plus-circle"></a>
     </div>
-    <div class="spacer"></div>
-    <div class="header-box right-side">
+    <div class="uk-navbar-item" *ngIf="!userData.email">
+      <button class="uk-button uk-button-primary uk-visible@s" routerLink="/user/login">
+        <span>Login</span>
+        <span uk-icon="icon: sign-in"></span>
+      </button>
+      <a routerLink="/user/login" class="uk-icon-button uk-hidden@s" uk-icon="icon: sign-in"></a>
+    </div>
 
-        <div *ngIf="!userData.email">
-            <a class="sign-up-btn" routerLink="/user/signup">Sign Up</a>
-            <button class="header-button" routerLink="/user/login">Login</button>
-        </div>
-        <div *ngIf="userData.email">
-            <span class="user-email">{{userData.email}}</span>
-            <button class="header-button-circular circular-button logout" (click)="doLogout()"><i
-                    class="mdi mdi-logout-variant mdi-18px"></i></button>
-        </div>
+    <div class="uk-navbar-item uk-grid-small" uk-grid *ngIf="userData.email">
+      <span uk-icon="icon: user"></span>
+      <span class="user-email">{{userData.email}}</span>
     </div>
-</header>
-<main>
-    <div class="page-content">
-        <router-outlet>
-            <div *ngIf="loading" class="main-loader-box loader-center">
-                <div class="loader loader-default-size"></div>
-            </div>
-        </router-outlet>
+    <div class="uk-navbar-item" *ngIf="userData.email">
+      <button class="uk-button uk-button-default uk-visible@s" (click)="doLogout()">
+        <span>Logout</span>
+        <span uk-icon="icon: sign-out"></span>
+      </button>
+      <a class="uk-icon-button uk-hidden@s" uk-icon="icon: sign-out" (click)="doLogout()"></a>
     </div>
+  </div>
+</nav>
+<main uk-height-viewport="expand: true">
+  <router-outlet>
+    <div *ngIf="loading" class="main-loader-box loader-center">
+      <div uk-spinner></div>
+    </div>
+  </router-outlet>
 </main>

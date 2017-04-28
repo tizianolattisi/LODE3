@@ -61,18 +61,9 @@ gulp.task('typescript-server', function () {
     return tsResult.js.pipe(gulp.dest('./bin'));
 });
 
-// compile client
-gulp.task('typescript-client', function () {
-
-    var tsProject = typescript.createProject('./client/src/tsconfig.json');
-    var tsResult = tsProject.src()
-        .pipe(tsProject());
-    return tsResult.js.pipe(gulp.dest('./bin/client'));
-});
-
 // watch for file changes and compile
 gulp.task('typescript:watch', function () {
-    gulp.watch('./**/*.ts', ['typescript-server', 'typescript-client']);
+    gulp.watch('./**/*.ts', ['typescript-server']);
 });
 
 /* -----

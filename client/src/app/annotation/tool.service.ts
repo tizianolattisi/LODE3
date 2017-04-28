@@ -24,13 +24,13 @@ export class ToolService {
     let noteTool = new NoteTool();
     let highlightTool = new HighlightTool();
 
-    this.tools[pencilTool.getType()] = {tool: pencilTool, iconClass: "mdi-lead-pencil", text: 'Pencil'};
-    this.tools[rectTool.getType()] = {tool: rectTool, iconClass: "mdi-shape-rectangle-plus", text: 'Rectangle'};
-    this.tools[circleTool.getType()] = {tool: circleTool, iconClass: "mdi-shape-circle-plus", text: 'Circle'};
-    this.tools[arrowTool.getType()] = {tool: arrowTool, iconClass: "mdi-call-made", text: 'Arrow'};
-    this.tools[textTool.getType()] = {tool: textTool, iconClass: "mdi-format-text", text: 'Text'};
-    this.tools[noteTool.getType()] = {tool: noteTool, iconClass: "mdi-comment-text-outline", text: 'Note'};
-    this.tools[highlightTool.getType()] = {tool: highlightTool, iconClass: "mdi-grease-pencil", text: 'Highlight'};
+    this.tools[pencilTool.getType()] = {tool: pencilTool, iconClass: "pencil", text: 'Pencil'};
+    this.tools[rectTool.getType()] = {tool: rectTool, iconClass: "rectangle-plus", text: 'Rectangle'};
+    this.tools[circleTool.getType()] = {tool: circleTool, iconClass: "circle-plus", text: 'Circle'};
+    this.tools[arrowTool.getType()] = {tool: arrowTool, iconClass: "arrow-plus", text: 'Arrow'};
+    this.tools[textTool.getType()] = {tool: textTool, iconClass: "text-plus", text: 'Text'};
+    this.tools[noteTool.getType()] = {tool: noteTool, iconClass: "comment-plus", text: 'Note'};
+    this.tools[highlightTool.getType()] = {tool: highlightTool, iconClass: "highlight-plus", text: 'Highlight'};
   }
 
 
