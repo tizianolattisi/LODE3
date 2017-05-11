@@ -1,4 +1,6 @@
 import {Component, Input, EventEmitter, Output} from '@angular/core';
+import {AnnotationManager} from "../../annotation/AnnotationManager";
+import {NoteTool} from "../../annotation/tools/NoteTool";
 
 @Component({
   selector: 'viewer-toolbar',
@@ -27,7 +29,11 @@ export class ViewerToolbarComponent {
     {value: "1.5", name: "150%"}
   ];
 
-  ngOnInit(): void {
+
+    constructor(public am: AnnotationManager) {
+    }
+
+    ngOnInit(): void {
     if (this.pdfviewer) {
       // current and total pages counter
       this.pdfviewer.container.addEventListener('pagesinit', ()=> {
@@ -42,10 +48,18 @@ export class ViewerToolbarComponent {
     }
   }
 
+  addChangeSlideNote(page): void {
+    var note = this.am.newNote(page);
+    note.type = NoteTool.TYPE;
+    note.data = "change-slide";
+    this.am.saveNote(note);
+  }
+
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       if (this.pdfviewer) {
         this.pdfviewer.currentPageNumber += 1;
+        this.addChangeSlideNote(this.pdfviewer.currentPageNumber);
       } else {
         this.pageSelectedOutput.emit(this.currentPage + 1);
       }
@@ -56,6 +70,7 @@ export class ViewerToolbarComponent {
     if (this.currentPage > 1) {
       if (this.pdfviewer) {
         this.pdfviewer.currentPageNumber -= 1;
+        this.addChangeSlideNote(this.pdfviewer.currentPageNumber);
       } else {
         this.pageSelectedOutput.emit(this.currentPage - 1);
       }
@@ -65,6 +80,7 @@ export class ViewerToolbarComponent {
   changePage(page: number): void {
     if (this.pdfviewer) {
       this.pdfviewer.currentPageNumber = page;
+      this.addChangeSlideNote(this.pdfviewer.currentPageNumber);
     } else {
       this.pageSelectedOutput.emit(page);
     }
