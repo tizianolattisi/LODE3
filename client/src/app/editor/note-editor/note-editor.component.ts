@@ -1,9 +1,9 @@
 import {Component, ChangeDetectionStrategy, ViewChild, ElementRef, Input} from '@angular/core';
 import Timer = NodeJS.Timer;
-import {AnnotationManager} from "../../annotation/AnnotationManager";
 import {NoteAnnotation} from "../../annotation/model/NoteAnnotation";
 import DeltaStatic = Quill.DeltaStatic;
 import {Quill as tQuill} from "quill";
+import {NoteManager} from "../../annotation/NoteManager";
 
 declare var Quill: tQuill;
 
@@ -38,12 +38,12 @@ export class NoteEditorComponent {
   edited: boolean = false;
 
 
-  constructor(private am: AnnotationManager) {
+  constructor(private nm: NoteManager) {
   }
 
   ngOnInit(): void {
     // get note
-    this.note = this.am.getNote(this.noteUuid, this.notePage);
+    this.note = this.nm.getNote(this.noteUuid, this.notePage);
 
     // init quill
     this.quillEditor = new Quill(this.quillEditorElem.nativeElement, {
@@ -87,7 +87,7 @@ export class NoteEditorComponent {
       if (this.textEdited) {
         (<NoteAnnotation>this.note.data).text = this.textEdited;
       }
-      this.am.saveNote(this.note);
+      this.nm.saveNote(this.note);
       this.edited = false;
     }
   }
@@ -103,7 +103,7 @@ export class NoteEditorComponent {
       }
       this.saveNote();
     }
-    this.am.closeNote(this.noteUuid);
+    this.nm.closeNote(this.noteUuid);
   }
 
   switchMode() {

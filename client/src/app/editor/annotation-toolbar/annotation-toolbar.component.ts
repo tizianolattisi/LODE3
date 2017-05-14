@@ -14,9 +14,8 @@ export class AnnotationToolbarComponent {
   @ViewChild('cpCanvas') cpCanvasElem: ElementRef;
 
   constructor(public am: AnnotationManager) {
-    this.am.registerAnnotationToolbar(this);
 
-    this.am.toolSelected.subscribe(tool => {
+    this.am.toolSelected$.subscribe(tool => {
       this.selectedTool = tool;
     });
   }
@@ -57,7 +56,7 @@ export class AnnotationToolbarComponent {
 
   private colorPickerRender() {
     let ctx = (this.cpCanvasElem.nativeElement as HTMLCanvasElement).getContext('2d');
-    var gradient = ctx.createLinearGradient(0, 0, this.cpCanvasElem.nativeElement.width, 0);
+    let gradient = ctx.createLinearGradient(0, 0, this.cpCanvasElem.nativeElement.width, 0);
 
     // Create color gradient
     gradient.addColorStop(0, "rgb(255,   0,   0)");

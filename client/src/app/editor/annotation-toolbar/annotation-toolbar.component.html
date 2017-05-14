@@ -4,7 +4,7 @@
     <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: cursor"
        [ngClass]="{'tool-button-selected': selectedTool == 'default'}"
        (click)="selectDefaultTool()" title="Default Tool" uk-tooltip="pos: bottom"></a>
-    <a *ngFor="let t of am.annotationTools | async | dictionaryToArray"
+    <a *ngFor="let t of am.annotationTools$ | async | dictionaryToArray"
        class="uk-icon-button uk-margin-small-right" [attr.uk-icon]="'icon:' + t.iconClass"
        id="ann-{{t.tool.getType()}}-btn"
        [ngClass]="{'tool-button-selected': selectedTool == t.tool.getType()}"

@@ -8,8 +8,9 @@ export interface IAnnotation extends mongoose.Document {
     pageNumber: number,
     type: string,
     time: number,
-    timestamp? : Date,
+    timestamp?: Date,
     uid: Types.ObjectId,
+    scales: { origLeft: number, origTop: number, origScaleX: number, origScaleY: number },
     data: any
 }
 
@@ -35,6 +36,12 @@ var AnnotationSchema = new mongoose.Schema({
     uid: {
         type: Schema.Types.ObjectId,
         required: true
+    },
+    scales: {
+        origLeft: Number,
+        origTop: Number,
+        origScaleX: Number,
+        origScaleY: Number
     },
     data: Schema.Types.Mixed
 });

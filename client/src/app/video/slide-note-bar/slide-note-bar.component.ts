@@ -3,7 +3,8 @@ import {
   QueryList, EventEmitter
 } from '@angular/core';
 import {StoreService} from "../../shared/store.service";
-import {AnnotationManager} from "../../annotation/AnnotationManager";
+import {NoteManager} from "../../annotation/NoteManager";
+import {OpenNotes} from "../../annotation/OpenNotes";
 
 @Directive({
   selector: '[slideIndex]'
@@ -32,7 +33,7 @@ export class SlideNoteBarComponent implements OnInit {
   slides: any[];
   showSlides: boolean = true;
 
-  public constructor(private storeService: StoreService, public am: AnnotationManager) {
+  public constructor(private storeService: StoreService, public nm: NoteManager, public openNotes: OpenNotes) {
 
     this.storeService.currentSlideIndex.subscribe(index => {
       if (this.slidesElems) {
@@ -47,7 +48,7 @@ export class SlideNoteBarComponent implements OnInit {
       }
     });
 
-    this.am.highlightedNote.subscribe(uuid => {
+    this.openNotes.highlightedNote.subscribe(uuid => {
       this.showSlides = false;
 
       let noteElem = document.getElementById('note-' + uuid);
@@ -62,7 +63,7 @@ export class SlideNoteBarComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.storeService.lodeLecture.subscribe((lodeLecture)=> {
+    this.storeService.lodeLecture.subscribe((lodeLecture) => {
       if (lodeLecture) {
         this.slides = lodeLecture.slides;
       }
@@ -74,20 +75,20 @@ export class SlideNoteBarComponent implements OnInit {
   }
 
   newNote() {
-    let note = this.am.newNote(this.storeService.getCurrentSlide());
-    this.am.openNote(note.uuid, note.pageNumber, true);
+    let note = this.nm.newNote(this.storeService.getCurrentSlide());
+    this.openNotes.openNote(note.uuid, note.pageNumber, true);
   }
 
-  highlightTimeline(data: {uuid: string, pageNumber: number}) {
+  highlightTimeline(data: { uuid: string, pageNumber: number }) {
     this.highlightNoteRequest.emit(data.uuid);
   }
 
 
   animate(elem: any, style: string, from: number, to: number, time: number) {
     if (!elem) return;
-    var start = new Date().getTime(),
+    let start = new Date().getTime(),
       timer = setInterval(function () {
-        var step = Math.min(1, (new Date().getTime() - start) / time);
+        let step = Math.min(1, (new Date().getTime() - start) / time);
         elem[style] = (from + step * (to - from));
         if (step == 1) clearInterval(timer);
       }, 25);

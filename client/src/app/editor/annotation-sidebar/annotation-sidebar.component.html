@@ -3,7 +3,7 @@
     <h3>Annotations</h3>
   </div>
   <div #annBox>
-    <div *ngFor="let pageAnns of am.allAnnotations | async; let i = index">
+    <div *ngFor="let pageAnns of am.getAnnotations() | async; let i = index">
       <div *ngIf="pageAnns && !isEmpty(pageAnns)">
         <div class="uk-card uk-card-default uk-card-hover uk-margin-left uk-margin-right uk-margin-bottom"
              *ngFor="let ann of pageAnns | dictionaryToArray"
@@ -26,9 +26,7 @@
                    (click)="deleteAnnotation(ann.uuid, ann.pageNumber)"></a>
               </div>
             </div>
-
           </div>
-
         </div>
         <hr class="uk-divider-icon">
       </div>

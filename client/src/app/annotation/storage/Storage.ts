@@ -4,31 +4,31 @@ import {Subject} from "rxjs/Subject";
 
 export abstract class Storage {
 
-    getAnnotations: (documentId: string, sync: Date, pageNumber?: number)=>Observable<BaseAnnotation[]>;
+  getAnnotations: (documentId: string, sync: Date, pageNumber?: number) => Observable<BaseAnnotation[]>;
 
-    getAnnotation: (documentId: string, annotationUuid: string) => Observable<BaseAnnotation>;
+  getAnnotation: (documentId: string, annotationUuid: string) => Observable<BaseAnnotation>;
 
-    addAnnotation: (documentId: string, annotation: BaseAnnotation) => void;
+  addAnnotation: (documentId: string, annotation: BaseAnnotation) => void;
 
-    editAnnotation: (documentId: string, annotation: BaseAnnotation) => void;
+  editAnnotation: (documentId: string, annotation: BaseAnnotation) => void;
 
-    deleteAnnotation: (documentId: string, annotationUuid: string) => void;
+  deleteAnnotation: (documentId: string, annotationUuid: string) => void;
 
-    onEvent: () => Subject<StorageOperation>;
+  onEvent: () => Subject<StorageOperation>;
 }
 
 
 export interface StorageOperation {
 
-    operation: string,
-    annotations: BaseAnnotation[]
+  operation: string,
+  annotations: BaseAnnotation[]
 }
 
 export const StorageOpType = {
-    close: 'close',
-    error: 'error',
-    get: 'get',
-    deleteFail: 'deleteFail',
-    addFail: 'addFail',
-    editFail: 'addFail',
+  close: 'close',
+  error: 'error',
+  get: 'get',
+  deleteFail: 'delete-fail',
+  addFail: 'add-fail',
+  editFail: 'edit-fail',
 };

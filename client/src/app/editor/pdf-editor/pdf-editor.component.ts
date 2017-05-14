@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {StoreService} from "../../shared/store.service";
 import {AnnotationManager} from "../../annotation/AnnotationManager";
 import {BaseAnnotation} from "../../annotation/model/BaseAnnotation";
+import {OpenNotes} from "../../annotation/OpenNotes";
 
 @Component({
   selector: 'pdf-editor',
@@ -29,16 +30,16 @@ export class PdfEditorComponent {
 
   downloadPdfStatus: number = 0; // -1: error, 0: nothing, 1: loading, 2: complete
 
-  constructor(private router: Router, private storeService: StoreService, private renderer: Renderer, public am: AnnotationManager) {
+  constructor(private router: Router, private storeService: StoreService, private renderer: Renderer, public am: AnnotationManager, public openNotes: OpenNotes) {
 
     // Init PDFJS
     this.PDFJS = PDFJS;
     this.PDFJS.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.js';
 
-    this.storeService.pdfLoading.subscribe((status)=> {
-      if (status == -2) {
+    this.storeService.pdfLoading.subscribe((status) => {
+      if (status === -2) {
         this.pdfLoading = false;
-      } else if (status == -1) {
+      } else if (status === -1) {
         this.pdfLoading = false;
         this.pdfLoadingFail = true;
       } else {
@@ -74,11 +75,11 @@ export class PdfEditorComponent {
     this.PDFViewer.setFindController(pdfFindController);
 
     // PDF viewer is initialized and ready when event 'pagesinit' is fired
-    this.renderer.listen(this.pdfViewerElem.nativeElement, 'pagesinit', ()=> {
-      this.PDFViewer.currentScaleValue = 1;
+    this.renderer.listen(this.pdfViewerElem.nativeElement, 'pagesinit', () => {
+      this.PDFViewer.currentScaleValue = "1";
     });
 
-    this.storeService.pdfDocument.subscribe((doc)=> {
+    this.storeService.pdfDocument.subscribe((doc) => {
       if (doc) {
         this.PDFViewer.setDocument(doc);
       }

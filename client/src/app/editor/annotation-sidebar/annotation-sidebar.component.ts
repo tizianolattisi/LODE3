@@ -10,8 +10,7 @@ import {ToolService} from "../../annotation/tool.service";
 })
 export class AnnotationSidebarComponent {
 
-
-  constructor(public am: AnnotationManager, private toolService: ToolService) {
+  constructor(public am: AnnotationManager, public toolService: ToolService) {
   }
 
   selectAnnotation(uuid: string, pageNumber: number) {
@@ -22,7 +21,7 @@ export class AnnotationSidebarComponent {
     this.am.deleteAnnotation(uuid, pageNumber);
   }
 
-  private isEmpty(obj: Object) {
+  public isEmpty(obj: Object) {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
 

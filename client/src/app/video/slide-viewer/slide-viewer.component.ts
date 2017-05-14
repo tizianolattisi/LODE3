@@ -24,7 +24,7 @@ export class SlideViewerComponent implements OnInit {
 
     // register canvas as pdfViewer
     this.pdfViewerLike = {
-      currentScaleValue: 1.0,
+      currentScaleValue: "1",
       container: this.canvasElem.nativeElement
     };
     this.storeService.registerPdfViewer(<any>this.pdfViewerLike);

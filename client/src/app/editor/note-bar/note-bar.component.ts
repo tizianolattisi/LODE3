@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {AnnotationManager} from "../../annotation/AnnotationManager";
+import {NoteManager} from "../../annotation/NoteManager";
+import {OpenNotes} from "../../annotation/OpenNotes";
 
 @Component({
   selector: 'note-bar',
@@ -15,16 +16,16 @@ export class NoteBarComponent {
 
   @Output('noteClicked') noteClicked: EventEmitter<{uuid: string, pageNumber: number}> = new EventEmitter<{uuid: string, pageNumber: number}>();
 
-  constructor(public am: AnnotationManager) {
+  constructor(public nm: NoteManager, public openNotes:OpenNotes) {
   }
 
   openNote(uuid: string, pageNumber: number) {
-    this.am.openNote(uuid, pageNumber, this.openEditMode);
+    this.nm.openNote(uuid, pageNumber, this.openEditMode);
   }
 
   fireNoteClicked(uuid: string, pageNumber: number) {
     this.noteClicked.emit({uuid: uuid, pageNumber: pageNumber});
-    this.am.setHighlightedNote(uuid);
+    this.nm.setHighlightedNote(uuid);
   }
 
 }

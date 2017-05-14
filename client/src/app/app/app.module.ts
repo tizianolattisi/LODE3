@@ -20,8 +20,11 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {ToolService} from "../annotation/tool.service";
 import {LecturerModule} from "../lecturer/lecturer.module";
-import { TestPageComponent } from './test-page/test-page.component';
+import {TestPageComponent} from './test-page/test-page.component';
 import {IconLoader} from "./icon-loader.service";
+import {NoteManager} from "../annotation/NoteManager";
+import {LogManager} from "../annotation/LogManager";
+import {OpenNotes} from "../annotation/OpenNotes";
 
 @NgModule({
   imports: [
@@ -47,6 +50,9 @@ import {IconLoader} from "./icon-loader.service";
     StoreService,
     {provide: STORAGE_OPAQUE_TOKEN, useClass: WebSocketStorage},
     AnnotationManager,
+    NoteManager,
+    OpenNotes,
+    LogManager,
     ToolService,
     AuthGuard,
     CodeParamGuard,

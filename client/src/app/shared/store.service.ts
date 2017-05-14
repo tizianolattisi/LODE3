@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import {UserService} from "../user/user.service";
@@ -93,22 +93,22 @@ export class StoreService {
         .then(values => {
           this._pdfDocument.next(values[0]);
           this._lodeLecture.next(values[1] as any);
+        }, () => {
         });
-
 
     } else { // load only pdf
       this.loadPdfDocument()
         .then(doc => {
           this._pdfDocument.next(doc);
+        }, () => {
         });
     }
   }
 
   private loadPdfDocument(): Promise<PDFDocumentProxy> {
 
-    return new Promise<PDFDocumentProxy>((resolve, reject)=> {
+    return new Promise<PDFDocumentProxy>((resolve, reject) => {
       if (this.pdfHash) {
-
         PDFJS.getDocument({
           url: '/api/pdfs/' + this.pdfHash,
           httpHeaders: {'Authorization': 'Bearer ' + this.userService.getToken()}
@@ -119,11 +119,11 @@ export class StoreService {
           return resolve(pdfDocument);
         }, err => {
           this._pdfLoading.next(-1);
-          return reject(null);
+          return reject(err);
         });
       } else {
         this._pdfLoading.next(-1);
-        return reject(null);
+        return reject();
       }
     });
 
@@ -131,7 +131,7 @@ export class StoreService {
 
   private loadLodeLecture(): Promise<LodeLecture> {
 
-    return new Promise<LodeLecture>((resolve, reject)=> {
+    return new Promise<LodeLecture>((resolve, reject) => {
       this.http.get('api/courses/' + this.course + '/lectures/' + this.lecture, {headers: this.userService.HEADERS})
         .map(res => res.json())
         .subscribe((res: LodeLecture) => {
@@ -184,11 +184,11 @@ export class StoreService {
     this._htmlVideoElement.next(videoElem);
 
     // update video elem time
-    videoElem.addEventListener('loadedmetadata', ()=> {
+    videoElem.addEventListener('loadedmetadata', () => {
       this._htmlVideoElement.getValue().currentTime = this._currentTime.getValue();
 
       // start listen for time change
-      this._htmlVideoElement.getValue().addEventListener('timeupdate', (res)=> {
+      this._htmlVideoElement.getValue().addEventListener('timeupdate', (res) => {
         this.updateCurrentTime((<HTMLVideoElement>res.target).currentTime);
         this.autoUpdateSlide((<HTMLVideoElement>res.target).currentTime);
       });

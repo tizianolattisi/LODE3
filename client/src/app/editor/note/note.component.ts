@@ -1,7 +1,8 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {AnnotationManager} from "../../annotation/AnnotationManager";
 import {StoreService} from "../../shared/store.service";
 import {BaseAnnotation} from "../../annotation/model/BaseAnnotation";
+import {NoteManager} from "../../annotation/NoteManager";
+import {OpenNotes} from "../../annotation/OpenNotes";
 
 @Component({
   selector: 'note',
@@ -19,23 +20,23 @@ export class NoteComponent implements OnInit {
   isOpen: boolean = false;
   note: any;
 
-  constructor(private am: AnnotationManager, public storeService: StoreService) {
-    this.am.openNotesUuid.subscribe(notes => {
+  constructor(private nm: NoteManager, private openNotes: OpenNotes, public storeService: StoreService) {
+    this.openNotes.openNotesUuid.subscribe(notes => {
       this.isOpen = notes.indexOf(this.noteUuid) >= 0;
     })
   }
 
   ngOnInit(): void {
     // get note
-    this.note = this.am.getNote(this.noteUuid, this.notePage);
+    this.note = this.nm.getNote(this.noteUuid, this.notePage);
   }
 
   openNote(uuid: string, pageNumber: number) {
-    this.am.openNote(uuid, pageNumber, this.openEditMode);
+    this.openNotes.openNote(uuid, pageNumber, this.openEditMode);
   }
 
   deleteNote(uuid: string, pageNumber: number) {
-    this.am.deleteNote(uuid, pageNumber);
+    this.nm.deleteNote(uuid, pageNumber);
   }
 
   seeVideo(note: BaseAnnotation) {

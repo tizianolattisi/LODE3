@@ -72,8 +72,8 @@
 <!--</div>-->
 
 <note-editor
-  *ngFor="let uuid of am.openNotesUuid | async;let i = index"
+  *ngFor="let uuid of openNotes.openNotesUuid | async;let i = index"
   [noteUuid]="uuid"
-  [notePage]="am.openNotesPageNumber[i]"
-  [editMode]="am.openNotesEditMode[i]">
+  [notePage]="openNotes.openNotesPageNumber[i]"
+  [editMode]="openNotes.openNotesEditMode[i]">
 </note-editor>
