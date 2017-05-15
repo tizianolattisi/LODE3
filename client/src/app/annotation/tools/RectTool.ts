@@ -111,7 +111,7 @@ export class RectTool implements Tool {
 
   onScale(object: IObject): IObject {
     // Correct strokeWidth modified by the scale
-    (<IRect>object).strokeWidth = ((<IRect>object).strokeWidth / object.getScaleX()) * am.getScaleValue();
+    (<IRect>object).strokeWidth = (<IRect>object).strokeWidth * am.getScaleValue();
     return object;
   }
 

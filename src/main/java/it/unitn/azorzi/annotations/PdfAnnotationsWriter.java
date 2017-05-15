@@ -1,4 +1,4 @@
-package main.java.it.unitn.azorzi.annotations;
+package it.unitn.azorzi.annotations;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
@@ -27,7 +27,7 @@ public class PdfAnnotationsWriter {
      * @param pdfPath         Pdf document path
      * @param annotationsJson Json String representing the annotations to write
      * @return Pdf document with annotations
-     * @throws IOException
+     * @throws IOException IO Exception.
      */
     public static byte[] generatePdfWithAnnotations(String pdfPath, String annotationsJson) throws IOException {
 
@@ -70,14 +70,15 @@ public class PdfAnnotationsWriter {
 
         PdfPage page = pdfDoc.getPage(a.getPageNumber());
 
-        float x = getPointFromPixel(((Double) a.getData().get("x")).floatValue());
-        float y = getYPointFromPixel(((Double) a.getData().get("y")).floatValue(), page.getPageSize().getHeight());
-        float w = getPointFromPixel(((Double) a.getData().get("w")).floatValue());
-        float h = getPointFromPixel(((Double) a.getData().get("h")).floatValue());
+        float x = getPointFromPixel(scale(a.getScales().getOrigLeft(), a.getScales().getOrigScaleX()).floatValue());
+        float y = getYPointFromPixel(scale(a.getScales().getOrigTop(), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
+        float w = getPointFromPixel(scale(((Double) a.getData().get("w")), a.getScales().getOrigScaleX()).floatValue());
+        float h = getPointFromPixel(scale(((Double) a.getData().get("h")), a.getScales().getOrigScaleY()).floatValue());
+        float strokeWidth = getPointFromPixel(scale((Double) a.getData().get("strokeWidth"), a.getScales().getOrigScaleY()).floatValue());
 
         PdfAnnotation square = new PdfSquareAnnotation(new Rectangle(x, y - h, w, h))
                 .setColor(getColor((String) a.getData().get("stroke")))
-                .setBorder(new PdfArray(new float[]{0.0f, 0.0f, getPointFromPixel(((Double) a.getData().get("strokeWidth")).floatValue())}));
+                .setBorder(new PdfArray(new float[]{0.0f, 0.0f, strokeWidth}));
         page.addAnnotation(square);
     }
 
@@ -85,13 +86,15 @@ public class PdfAnnotationsWriter {
 
         PdfPage page = pdfDoc.getPage(a.getPageNumber());
 
-        float cx = getPointFromPixel(((Double) a.getData().get("cx")).floatValue());
-        float cy = getYPointFromPixel(((Double) a.getData().get("cy")).floatValue(), page.getPageSize().getHeight());
-        float r = getPointFromPixel(((Double) a.getData().get("r")).floatValue());
+        float r = getPointFromPixel(scale((Double) a.getData().get("r"), a.getScales().getOrigScaleX()).floatValue());
+        float cx = getPointFromPixel(scale(a.getScales().getOrigLeft(), a.getScales().getOrigScaleX()).floatValue());
+        float cy = getYPointFromPixel(scale(a.getScales().getOrigTop(), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
+        float strokeWidth = getPointFromPixel(scale((Double) a.getData().get("strokeWidth"), a.getScales().getOrigScaleY()).floatValue());
 
-        PdfAnnotation circle = new PdfCircleAnnotation(new Rectangle(cx - r, cy - r, r * 2, r * 2))
+
+      PdfAnnotation circle = new PdfCircleAnnotation(new Rectangle(cx - r, cy - r, r * 2, r * 2))
                 .setColor(getColor((String) a.getData().get("stroke")))
-                .setBorder(new PdfArray(new float[]{0.0f, 0.0f, getPointFromPixel(((Double) a.getData().get("strokeWidth")).floatValue())}));
+                .setBorder(new PdfArray(new float[]{0.0f, 0.0f, strokeWidth}));
         page.addAnnotation(circle);
     }
 
@@ -99,9 +102,9 @@ public class PdfAnnotationsWriter {
 
         PdfPage page = pdfDoc.getPage(a.getPageNumber());
 
-        float x = getPointFromPixel(((Double) a.getData().get("x")).floatValue());
-        float y = getYPointFromPixel(((Double) a.getData().get("y")).floatValue(), page.getPageSize().getHeight());
-        float size = ((Double) a.getData().get("size")).floatValue();
+        float x = getPointFromPixel(scale(a.getScales().getOrigLeft(), a.getScales().getOrigScaleX()).floatValue());
+        float y = getYPointFromPixel(scale(a.getScales().getOrigTop(), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
+        float size = ((Double) a.getData().get("size")).floatValue() * (1 / a.getScales().getOrigScaleX().floatValue());
 
         PdfFreeTextAnnotation freeText = new PdfFreeTextAnnotation(new Rectangle(x, y - size, (size * ((String) a.getData().get("text")).length()) / 2, size), "");
         freeText.setContents(new PdfString((String) a.getData().get("text")));
@@ -114,23 +117,33 @@ public class PdfAnnotationsWriter {
 
         PdfPage page = pdfDoc.getPage(a.getPageNumber());
 
-        float x1 = getPointFromPixel(((Double) a.getData().get("x1")).floatValue());
-        float y1 = getYPointFromPixel(((Double) a.getData().get("y1")).floatValue(), page.getPageSize().getHeight());
-        float x2 = getPointFromPixel(((Double) a.getData().get("x2")).floatValue());
-        float y2 = getYPointFromPixel(((Double) a.getData().get("y2")).floatValue(), page.getPageSize().getHeight());
+        float left = scale(a.getScales().getOrigLeft(), a.getScales().getOrigScaleX()).floatValue();
+        float top = scale(a.getScales().getOrigTop(), a.getScales().getOrigScaleY()).floatValue();
+
+        float x1 = getPointFromPixel(scale((Double) a.getData().get("x1"), a.getScales().getOrigScaleX()).floatValue());
+        float y1 = getYPointFromPixel(scale((Double) a.getData().get("y1"), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
+        float x2 = getPointFromPixel(scale((Double) a.getData().get("x2"), a.getScales().getOrigScaleX()).floatValue());
+        float y2 = getYPointFromPixel(scale((Double) a.getData().get("y2"), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
+
+        x1 = x1 - (left - x1);
+        y1 = y1 - (top - y1);
+        x2 = x2 - (left - x2);
+        y2 = y2 - (top - y2);
 
         float llx = (x1 < x2) ? (x1) : (x2);
         float lly = (y1 < y2) ? (y1) : (y2);
         float w = Math.abs(x2 - x1);
         float h = Math.abs(y2 - y1);
 
-        PdfLineAnnotation arrow = new PdfLineAnnotation(
+        float strokeWidth = getPointFromPixel(scale((Double) a.getData().get("strokeWidth"), a.getScales().getOrigScaleX()).floatValue());
+
+      PdfLineAnnotation arrow = new PdfLineAnnotation(
                 new Rectangle(llx, lly, w, h),
                 new float[]{x1, y1, x2, y2}
         );
         arrow.setColor(getColor((String) a.getData().get("stroke")));
         arrow.setInteriorColor(getColorArray((String) a.getData().get("stroke")));
-        arrow.setBorder(new PdfArray(new float[]{0.0f, 0.0f, getPointFromPixel(((Double) a.getData().get("strokeWidth")).floatValue())}));
+        arrow.setBorder(new PdfArray(new float[]{0.0f, 0.0f, strokeWidth}));
 
         PdfArray le = new PdfArray();
         le.add(PdfName.None);
@@ -144,8 +157,8 @@ public class PdfAnnotationsWriter {
 
         PdfPage page = pdfDoc.getPage(a.getPageNumber());
 
-        float x = getPointFromPixel(((Double) a.getData().get("x")).floatValue());
-        float y = getYPointFromPixel(((Double) a.getData().get("y")).floatValue(), page.getPageSize().getHeight());
+        float x = getPointFromPixel(scale(a.getScales().getOrigLeft(), a.getScales().getOrigScaleX()).floatValue());
+        float y = getYPointFromPixel(scale(a.getScales().getOrigTop(), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
 
         PdfTextAnnotation comment = new PdfTextAnnotation(new Rectangle(x, y, 0, 0));
 
@@ -172,11 +185,12 @@ public class PdfAnnotationsWriter {
 
         PdfPage page = pdfDoc.getPage(a.getPageNumber());
 
-        PathData pd = getPathData((List<LinkedTreeMap>) a.getData().get("paths"), page.getPageSize().getHeight());
+        PathData pd = getPathData((List<LinkedTreeMap>) a.getData().get("paths"), page.getPageSize().getHeight(), a);
+        float strokeWidth = getPointFromPixel(scale((Double) a.getData().get("strokeWidth"), a.getScales().getOrigScaleX()).floatValue());
 
-        PdfInkAnnotation ink = new PdfInkAnnotation(new Rectangle(pd.getLlx(), pd.getLly(), pd.getUrx() - pd.getLlx(), pd.getUry() - pd.getLly()), pd.getList());
+      PdfInkAnnotation ink = new PdfInkAnnotation(new Rectangle(pd.getLlx(), pd.getLly(), pd.getUrx() - pd.getLlx(), pd.getUry() - pd.getLly()), pd.getList());
         ink.setColor(getColor((String) a.getData().get("stroke")));
-        ink.setBorder(new PdfArray(new float[]{0.0f, 0.0f, getPointFromPixel(((Double) a.getData().get("strokeWidth")).floatValue())}));
+        ink.setBorder(new PdfArray(new float[]{0.0f, 0.0f, strokeWidth}));
 
         page.addAnnotation(ink);
     }
@@ -188,11 +202,10 @@ public class PdfAnnotationsWriter {
         float[] pdfRects = new float[8];
 
         for (LinkedTreeMap<String, Double> r : rects) {
-
-            Float x = getPointFromPixel(r.get("x").floatValue());
-            Float y = getYPointFromPixel(r.get("y").floatValue(), page.getPageSize().getHeight());
-            Float w = getPointFromPixel(r.get("w").floatValue());
-            Float h = getPointFromPixel(r.get("h").floatValue());
+            Float x = getPointFromPixel(scale(r.get("x"), a.getScales().getOrigScaleX()).floatValue());
+            Float y = getYPointFromPixel(scale(r.get("y"), a.getScales().getOrigScaleY()).floatValue(), page.getPageSize().getHeight());
+            Float w = getPointFromPixel(scale(r.get("w"), a.getScales().getOrigScaleX()).floatValue());
+            Float h = getPointFromPixel(scale(r.get("h"), a.getScales().getOrigScaleY()).floatValue());
 
             // Add lr, ll, ur, ul corners
             pdfRects[0] = (x + w);
@@ -212,7 +225,10 @@ public class PdfAnnotationsWriter {
     }
 
 
-    private static PathData getPathData(List<LinkedTreeMap> paths, float pageHeight) {
+    private static PathData getPathData(List<LinkedTreeMap> paths, float pageHeight, Annotation a) {
+
+        Double origScaleX = a.getScales().getOrigScaleX();
+        Double origScaleY = a.getScales().getOrigScaleY();
 
         float llx = Float.MAX_VALUE;
         float lly = Float.MAX_VALUE;
@@ -227,8 +243,8 @@ public class PdfAnnotationsWriter {
             for (List<Object> p : (List<List<Object>>) path.get("path")) {
 
                 if (p.get(0).equals("M") || p.get(0).equals("L")) {
-                    float p1 = getPointFromPixel(((Double) p.get(1)).floatValue());
-                    float p2 = getYPointFromPixel(((Double) p.get(2)).floatValue(), pageHeight);
+                    float p1 = getPointFromPixel(scale((Double) p.get(1), origScaleX).floatValue());
+                    float p2 = getYPointFromPixel(scale((Double) p.get(2), origScaleX).floatValue(), pageHeight);
                     subList.add(new PdfNumber(p1));
                     subList.add(new PdfNumber(p2));
 
@@ -238,8 +254,8 @@ public class PdfAnnotationsWriter {
                     lly = Math.min(lly, p2);
 
                 } else if (p.get(0).equals("Q")) {
-                    float p1 = getPointFromPixel(((Double) p.get(3)).floatValue());
-                    float p2 = getYPointFromPixel(((Double) p.get(4)).floatValue(), pageHeight);
+                    float p1 = getPointFromPixel(scale((Double) p.get(3), origScaleX).floatValue());
+                    float p2 = getYPointFromPixel(scale((Double) p.get(4), origScaleX).floatValue(), pageHeight);
                     subList.add(new PdfNumber(p1));
                     subList.add(new PdfNumber(p2));
 
@@ -250,6 +266,11 @@ public class PdfAnnotationsWriter {
                 }
             }
         }
+
+        llx = scale(llx, origScaleX).floatValue();
+        lly = scale(lly, origScaleY).floatValue();
+        urx = scale(urx, origScaleX).floatValue();
+        ury = scale(ury, origScaleY).floatValue();
 
         return new PathData(llx, lly, urx, ury, inkList);
     }
@@ -290,6 +311,13 @@ public class PdfAnnotationsWriter {
         return a;
     }
 
+    private static Double scale(Double value, Double pdfScale) {
+      return pdfScale == null ? value : value * (1 / pdfScale);
+    }
+
+  private static Double scale(float value, Double pdfScale) {
+    return pdfScale == null ? value : value * (1 / pdfScale);
+  }
 
     private static class PathData {
         float llx;

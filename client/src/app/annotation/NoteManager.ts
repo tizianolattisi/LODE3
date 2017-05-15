@@ -30,7 +30,7 @@ export class NoteManager {
     };
 
     // Draw note on canvas
-    let noteObject = NoteTool.drawNotePlaceholder(noteData.x, noteData.y, this.annotationManager.getCanvas(pageNumber));
+    let noteObject = NoteTool.drawNotePlaceholder(noteData.x, noteData.y, this.annotationManager.getCanvas(pageNumber), this.annotationManager);
 
     // Add new note annotation
     return this.annotationManager.addNewAnnotation(NoteTool.TYPE, pageNumber, {

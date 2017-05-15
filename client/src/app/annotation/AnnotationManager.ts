@@ -883,18 +883,26 @@ export class AnnotationManager {
 
     for (let i in objects) {
 
+      let objectType = objects[i].get(AnnotationManager.ELEM_TYPE);
+
+
       let origLeft = (objects[i] as any).origLeft;
       let origTop = (objects[i] as any).origTop;
       let origScaleX = (objects[i] as any).origScaleX;
       let origScaleY = (objects[i] as any).origScaleY;
 
-      objects[i].scaleX = pdfScale / origScaleX;
-      objects[i].scaleY = pdfScale / origScaleY;
+      if (objectType == NoteTool.TYPE) { // Note are scaled according pdf scale
+        objects[i].scaleX = pdfScale;
+        objects[i].scaleY = pdfScale;
+      } else {
+        objects[i].scaleX = pdfScale / origScaleX;
+        objects[i].scaleY = pdfScale / origScaleY;
+      }
+
       objects[i].left = ((origLeft * pdfScale) / origScaleX);
       objects[i].top = ((origTop * pdfScale) / origScaleY);
 
       // Call "onScale" handlers
-      let objectType = objects[i].get(AnnotationManager.ELEM_TYPE);
       let tool = this.getTool(objectType);
       if (tool) {
         objects[i] = tool.onScale(objects[i]);

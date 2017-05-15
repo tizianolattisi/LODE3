@@ -53,7 +53,7 @@ export class NoteTool implements Tool {
     }
 
     let point = (<ICanvas>this).getPointer(event.e);
-    let noteGroup = NoteTool.drawNotePlaceholder(point.x, point.y, this);
+    let noteGroup = NoteTool.drawNotePlaceholder(point.x, point.y, this, am);
 
     let noteAnnotation: NoteAnnotation = {
       x: point.x,
@@ -73,7 +73,7 @@ export class NoteTool implements Tool {
   };
 
 
-  static drawNotePlaceholder(x: number, y: number, canvas: ICanvas): Group {
+  static drawNotePlaceholder(x: number, y: number, canvas: ICanvas, am: AnnotationManager): Group {
     if (!canvas) {
       return null;
     }
@@ -98,7 +98,9 @@ export class NoteTool implements Tool {
       lockRotation: true,
       lockScalingX: true,
       lockScalingY: true,
-      lockUniScaling: true
+      lockUniScaling: true,
+      scaleX: am.getScaleValue(),
+      scaleY: am.getScaleValue()
     });
     noteGroup.setControlsVisibility({
       bl: false,
