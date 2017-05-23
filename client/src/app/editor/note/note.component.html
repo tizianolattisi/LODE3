@@ -4,18 +4,18 @@
   <div class="uk-card-body padding-xsmall uk-flex">
 
     <div class="uk-flex uk-flex-column uk-flex-center uk-flex-1">
-      <h4 *ngIf="note.data.title">{{note.data.title}}</h4>
+      <h4 *ngIf="note.data.title" class="note-title">{{note.data.title}}</h4>
       <div *ngIf="note.data.text" class="note-text quill-read-only-content" [quill]="note.data.text">
       </div>
       <div *ngIf="!note.data.text"><i>Empty note</i></div>
     </div>
 
     <div class="uk-flex uk-flex-column">
-      <a class="uk-icon-button uk-margin-small-bottom" uk-icon="icon: delete" (click)="deleteNote(note.uuid, note.pageNumber)"
+      <a class="uk-icon-button uk-margin-small-bottom note-button" uk-icon="icon: delete; ratio: 0.85" (click)="deleteNote(note.uuid, note.pageNumber)"
          title="Delete Note" uk-tooltip></a>
-      <a class="uk-icon-button uk-margin-small-bottom" uk-icon="icon: note-edit" (click)="openNote(note.uuid, note.pageNumber)"
+      <a class="uk-icon-button uk-margin-small-bottom note-button" uk-icon="icon: note-edit; ratio: 0.85" (click)="openNote(note.uuid, note.pageNumber)"
          title="Open Note" uk-tooltip></a>
-      <a class="uk-icon-button uk-margin-small-bottom" uk-icon="icon: video" (click)="seeVideo(note)"
+      <a class="uk-icon-button uk-margin-small-bottom note-button" uk-icon="icon: video; ratio: 0.85" (click)="seeVideo(note)"
          *ngIf="note.time && storeService.course"
          title="Delete Note" uk-tooltip></a>
     </div>

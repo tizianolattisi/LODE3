@@ -12,7 +12,7 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="mail">Insert a unitn.it email</label>
           <div class="uk-inline uk-width-1-1">
-            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <span class="uk-form-icon" uk-icon="icon: mail; ratio: 0.85"></span>
             <input id="mail" type="email" class="uk-input uk-flex-1" placeholder="Email"
                    [ngClass]="{
                    'uk-form-success': signupForm.controls['email'].valid,
@@ -29,7 +29,7 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="password">Insert a password</label>
           <div class="uk-inline uk-width-1-1">
-            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <span class="uk-form-icon" uk-icon="icon: lock; ratio: 0.85"></span>
             <input id="password" class="uk-input uk-flex-1" type="password" placeholder="Password"
                    validateEqual="confirmPassword" reverse="true"
                    [formControl]="signupForm.controls['password']"
@@ -47,7 +47,7 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="password-confirm">Retype password</label>
           <div class="uk-inline uk-width-1-1">
-            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <span class="uk-form-icon" uk-icon="icon: lock; ratio: 0.85"></span>
             <input id="password-confirm" class="uk-input uk-flex-1" type="password" placeholder="Retype Password"
                    validateEqual="password"
                    [formControl]="signupForm.controls['confirmPassword']"

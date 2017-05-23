@@ -2,28 +2,28 @@
 
   <div class="uk-flex uk-flex-middle" *ngIf="pdfviewer">
     <!-- Search -->
-    <a class="uk-icon-button" uk-icon="icon: search" (click)="showInputSearch= !showInputSearch"></a>
+    <a class="uk-icon-button" uk-icon="icon: search; ratio: 0.85" (click)="showInputSearch= !showInputSearch"></a>
     <div class="uk-flex uk-flex-between" *ngIf="showInputSearch">
       <input class="uk-input uk-form-width-small uk-margin-small-left uk-margin-small-right" type="text"
              placeholder="Search" [ngModel]="searchText"
              (ngModelChange)="doSearch($event)"
              (keyup.enter)="nextSearchMatch()">
-      <a class="uk-icon-button" *ngIf="searchText" (click)="prevSearchMatch()" uk-icon="icon: chevron-left"></a>
-      <a class="uk-icon-button" *ngIf="searchText" (click)="nextSearchMatch()" uk-icon="icon: chevron-right"></a>
+      <a class="uk-icon-button" *ngIf="searchText" (click)="prevSearchMatch()" uk-icon="icon: chevron-left; ratio: 0.85"></a>
+      <a class="uk-icon-button" *ngIf="searchText" (click)="nextSearchMatch()" uk-icon="icon: chevron-right; ratio: 0.85"></a>
     </div>
   </div>
   <hr *ngIf="pdfviewer" class="rotate-90">
 
   <!-- Page Selector -->
   <div class="uk-flex uk-flex-middle">
-    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: chevron-left" (click)="prevPage()"></a>
+    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: chevron-left; ratio: 0.85" (click)="prevPage()"></a>
     <input class="uk-input small-width" type="number" pattern="[0-9]*"
            [(ngModel)]="currentPage" (keyup.enter)="changePage(currentPage)">
     <span *ngIf="totalPages">
       <span>&nbsp;of&nbsp;</span>
       <b>{{totalPages}}</b>
     </span>
-    <a class="uk-icon-button uk-margin-small-left" uk-icon="icon: chevron-right" (click)="nextPage()"></a>
+    <a class="uk-icon-button uk-margin-small-left" uk-icon="icon: chevron-right; ratio: 0.85" (click)="nextPage()"></a>
   </div>
   <hr *ngIf="pdfviewer" class="rotate-90">
   <div class="uk-flex uk-flex-middle" *ngIf="pdfviewer">

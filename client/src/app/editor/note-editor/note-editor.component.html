@@ -1,15 +1,15 @@
 <div class="note-window" #noteWindow
      style="position: fixed; top: 56px; left: 72px; width: 625px; height: 300px; min-height: 300px; min-width: 500px;">
   <div class="header-bar" [draggable]="noteWindow" prevent-drag="preventDrag">
-    <input class="uk-input" type="text" id="noteTitle" placeholder="Title" [(ngModel)]="note.data.title"
+    <input class="uk-input title-input" type="text" id="noteTitle" placeholder="Title" [(ngModel)]="note.data.title"
            (ngModelChange)="titleChange()"
            [disabled]="!editMode || readOnly">
 
-    <a class="uk-icon-button" uk-icon="icon: pencil" *ngIf="!readOnly && editMode" (click)="switchMode()"></a>
-    <a class="uk-icon-button" uk-icon="icon: pencil-off" *ngIf="!readOnly && !editMode" (click)="switchMode()"></a>
+    <a class="uk-icon-button icon-button" uk-icon="icon: pencil; ratio: 0.85" *ngIf="!readOnly && editMode" (click)="switchMode()"></a>
+    <a class="uk-icon-button icon-button" uk-icon="icon: pencil-off; ratio: 0.85" *ngIf="!readOnly && !editMode" (click)="switchMode()"></a>
 
-    <a class="uk-icon-button" uk-icon="icon: expand" (click)="expandWindow()"></a>
-    <a class="uk-icon-button" uk-icon="icon: close" (click)="closeWindow()"></a>
+    <a class="uk-icon-button icon-button" uk-icon="icon: expand; ratio: 0.85" (click)="expandWindow()"></a>
+    <a class="uk-icon-button icon-button" uk-icon="icon: close; ratio: 0.85" (click)="closeWindow()"></a>
 
   </div>
   <div class="content">

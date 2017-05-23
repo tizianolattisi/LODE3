@@ -5,7 +5,7 @@ import {HighlightTool} from "./tools/HighlightTool";
 import {AnnotationScales, BaseAnnotation} from "./model/BaseAnnotation";
 import {Injectable, Inject} from "@angular/core";
 import {NoteTool} from "./tools/NoteTool";
-import {generateUUID, STORAGE_OPAQUE_TOKEN} from "./utils/Utils";
+import {generateUUID, STORAGE_TOKEN} from "./utils/Utils";
 import {PencilTool} from "./tools/PencilTool";
 import {PencilAnnotation} from "./model/PencilAnnotation";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
@@ -24,9 +24,9 @@ import DeltaStatic = Quill.DeltaStatic;
 import * as moment from "../../../../bin/node_modules/moment/moment";
 import Base = moment.unitOfTime.Base;
 import {OpenNotes} from "./OpenNotes";
+import 'uikit';
 
 declare const fabric: any;
-declare const UIkit: any;
 
 /**
  * Object responsible of all the annotations stuff on the PDF document
@@ -86,7 +86,7 @@ export class AnnotationManager {
 
   constructor(private toolService: ToolService,
               private openNotes: OpenNotes,
-              @Inject(STORAGE_OPAQUE_TOKEN) private storage: Storage,
+              @Inject(STORAGE_TOKEN) private storage: Storage,
               private storeService: StoreService,
               private router: Router) {
 
@@ -857,7 +857,7 @@ export class AnnotationManager {
   // ///////////////////////////
 
   protected static showTempErrMessage(msg: string) {
-    UIkit.notification({
+    (UIkit as any).notification({
       message: msg,
       status: 'danger',
       pos: 'bottom-right',

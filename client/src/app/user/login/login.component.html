@@ -11,7 +11,7 @@
           </div>
           <div class="uk-margin">
             <div class="uk-inline uk-width-1-1">
-              <span class="uk-form-icon" uk-icon="icon: user"></span>
+              <span class="uk-form-icon" uk-icon="icon: user; ratio: 0.85"></span>
               <input type="email" class="uk-input uk-flex-1" placeholder="Email"
                      [ngClass]="{'uk-form-danger': (loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && !loginForm.controls['email'].valid}"
                      [formControl]="loginForm.controls['email']">
@@ -23,7 +23,7 @@
           </div>
           <div class="uk-margin">
             <div class="uk-inline uk-width-1-1">
-              <span class="uk-form-icon" uk-icon="icon: lock"></span>
+              <span class="uk-form-icon" uk-icon="icon: lock; ratio: 0.85"></span>
               <input type="password" class="uk-input" placeholder="Password"
                      [ngClass]="{'uk-form-danger': (loginForm.controls['password'].dirty || loginForm.controls['password'].touched) && !loginForm.controls['password'].valid}"
                      [formControl]="loginForm.controls['password']">
@@ -36,7 +36,7 @@
           <div class="uk-flex uk-flex-right">
             <button type="submit" class="uk-button uk-button-primary" [disabled]="!loginForm.valid">
               <span>Login</span>
-              <span uk-icon="icon: chevron-right"></span>
+              <span uk-icon="icon: chevron-right; ratio: 0.85"></span>
             </button>
           </div>
         </form>
@@ -62,7 +62,7 @@
 
       <div class="uk-flex">
         <button class="uk-button uk-button-default" (click)="showPage(0)">
-          <span uk-icon="icon: chevron-left"></span>
+          <span uk-icon="icon: chevron-left; ratio: 0.85"></span>
           <span>Go to login</span>
         </button>
       </div>
@@ -72,7 +72,7 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="lost-password-mail">Insert your registered email address</label>
           <div class="uk-inline uk-width-1-1">
-            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <span class="uk-form-icon" uk-icon="icon: mail; ratio: 0.85"></span>
             <input id="lost-password-mail" type="email" class="uk-input uk-flex-1" placeholder="Email"
                    [formControl]="loginForm.controls['email']">
           </div>
@@ -97,7 +97,7 @@
     <div *ngIf="currentPage == 2">
       <div class="uk-flex">
         <button class="uk-button uk-button-default" (click)="showPage(0)">
-          <span uk-icon="icon: chevron-left"></span>
+          <span uk-icon="icon: chevron-left; ratio: 0.85"></span>
           <span>Go to login</span>
         </button>
       </div>
@@ -107,7 +107,7 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="confirm-mail">Insert the email address</label>
           <div class="uk-inline uk-width-1-1">
-            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <span class="uk-form-icon" uk-icon="icon: mail; ratio: 0.85"></span>
             <input id="confirm-mail" type="email" class="uk-input uk-flex-1" placeholder="Email"
                    [formControl]="loginForm.controls['email']">
           </div>

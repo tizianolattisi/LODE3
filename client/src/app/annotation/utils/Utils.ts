@@ -1,4 +1,4 @@
-import {OpaqueToken} from "@angular/core";
+import {InjectionToken} from "@angular/core";
 export const generateUUID: ()=>string = ()=> {
     var d = new Date().getTime();
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -14,4 +14,4 @@ export interface Point {
     y: number
 }
 
-export let STORAGE_OPAQUE_TOKEN = new OpaqueToken('annotation.storage');
+export let STORAGE_TOKEN = new InjectionToken('annotation.storage');

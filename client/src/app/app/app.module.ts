@@ -4,7 +4,7 @@ import {AppComponent} from './app/app.component';
 import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {WebSocketStorage} from "../annotation/storage/WebSocketStorage";
-import {STORAGE_OPAQUE_TOKEN} from "../annotation/utils/Utils";
+import {STORAGE_TOKEN} from "../annotation/utils/Utils";
 import {StoreService} from "../shared/store.service";
 import {CodeParamGuard} from "./code-param-guard";
 import {AuthGuard} from "./auth-guard";
@@ -48,7 +48,7 @@ import {OpenNotes} from "../annotation/OpenNotes";
   providers: [
     UserService,
     StoreService,
-    {provide: STORAGE_OPAQUE_TOKEN, useClass: WebSocketStorage},
+    {provide: STORAGE_TOKEN, useClass: WebSocketStorage},
     AnnotationManager,
     NoteManager,
     OpenNotes,

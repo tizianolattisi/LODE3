@@ -6,26 +6,26 @@
   <div class="uk-navbar-right">
     <div class="uk-navbar-item" *ngIf="!userData.email">
       <button class="uk-button uk-button-default uk-visible@s" routerLink="/user/signup">Sign Up</button>
-      <a routerLink="/user/signup" class="uk-icon-button uk-hidden@s" uk-icon="icon: plus-circle"></a>
+      <a routerLink="/user/signup" class="uk-icon-button uk-hidden@s" uk-icon="icon: plus-circle; ratio: 0.85"></a>
     </div>
     <div class="uk-navbar-item" *ngIf="!userData.email">
       <button class="uk-button uk-button-primary uk-visible@s" routerLink="/user/login">
         <span>Login</span>
-        <span uk-icon="icon: sign-in"></span>
+        <span uk-icon="icon: sign-in; ratio: 0.85"></span>
       </button>
-      <a routerLink="/user/login" class="uk-icon-button uk-hidden@s" uk-icon="icon: sign-in"></a>
+      <a routerLink="/user/login" class="uk-icon-button uk-hidden@s" uk-icon="icon: sign-in; ratio: 0.85"></a>
     </div>
 
     <div class="uk-navbar-item uk-grid-small" uk-grid *ngIf="userData.email">
-      <span uk-icon="icon: user"></span>
+      <span uk-icon="icon: user; ratio: 0.85"></span>
       <span class="user-email">{{userData.email}}</span>
     </div>
     <div class="uk-navbar-item" *ngIf="userData.email">
       <button class="uk-button uk-button-default uk-visible@s" (click)="doLogout()">
         <span>Logout</span>
-        <span uk-icon="icon: sign-out"></span>
+        <span uk-icon="icon: sign-out; ratio: 0.85"></span>
       </button>
-      <a class="uk-icon-button uk-hidden@s" uk-icon="icon: sign-out" (click)="doLogout()"></a>
+      <a class="uk-icon-button uk-hidden@s" uk-icon="icon: sign-out; ratio: 0.85" (click)="doLogout()"></a>
     </div>
   </div>
 </nav>

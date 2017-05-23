@@ -1,94 +1,96 @@
 <div class="uk-flex uk-flex-column uk-height-1-1">
-  <div class="uk-flex uk-flex-between uk-flex-wrap small-padding uk-box-shadow-medium auto-height">
+  <div class="uk-flex uk-flex-between uk-flex-wrap small-padding uk-box-shadow-medium uk-flex-none">
     <viewer-toolbar [pdfviewer]="PDFViewer"></viewer-toolbar>
     <annotation-toolbar>
     </annotation-toolbar>
   </div>
 
-  <div uk-grid class="uk-height-1-1">
+    <div uk-grid class="uk-height-1-1">
 
-    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-expand" *ngIf="pdfLoadingFail">
-      <div>Fail to load the PDF document.</div>
-    </div>
-
-    <div
-      [ngClass]="{'pdf-editor-not-visible': pdfLoadingFail, 'uk-width-expand uk-flex uk-flex-between': !pdfLoadingFail}">
-      <div class="left-bar uk-flex uk-flex-column uk-flex-middle">
-        <a class="uk-icon-button uk-margin-top uk-margin-small-bottom" uk-icon="icon: list"
-           [ngClass]="{'uk-button-primary': lefSidebarTab == 1}" (click)="switchLeftSidebar(1)"></a>
-        <a class="uk-icon-button uk-margin-top uk-margin-small-bottom" uk-icon="icon: cloud-download"
-           [ngClass]="{'uk-button-primary': lefSidebarTab == 2}" (click)="switchLeftSidebar(2)"></a>
-        <a class="uk-icon-button uk-margin-top uk-margin-small-bottom" uk-icon="icon: video"
-           [ngClass]="{'uk-button-primary': lefSidebarTab == 3}" (click)="switchLeftSidebar(3)" *ngIf="videoUrl"></a>
+      <div class="uk-flex uk-flex-middle uk-flex-center uk-width-expand" *ngIf="pdfLoadingFail">
+        <div>Fail to load the PDF document.</div>
       </div>
 
-      <div class="left-sidebar" *ngIf="lefSidebarTab == 1">
-        <annotation-sidebar></annotation-sidebar>
-      </div>
-      <div class="left-sidebar" *ngIf="lefSidebarTab == 2">
-        <div class="uk-flex uk-flex-column uk-padding uk-flex-middle uk-text-center">
-          <h4>Download a PDF with all the slides and the annotations</h4>
-          <div class="uk-margin-large" *ngIf="downloadPdfStatus != 1">
-            <button class="uk-button uk-button-primary" (click)="downloadPdf()">
-              <span>Download</span>
-              <span uk-icon="icon: cloud-download"></span>
-            </button>
+      <div
+        [ngClass]="{'pdf-editor-not-visible': pdfLoadingFail, 'uk-width-expand uk-flex uk-flex-between': !pdfLoadingFail}">
+
+        <div class="left-bar uk-flex uk-flex-column uk-flex-middle">
+          <a class="uk-icon-button uk-margin-top uk-margin-small-bottom" uk-icon="icon: list; ratio: 0.85"
+             [ngClass]="{'uk-button-primary': lefSidebarTab == 1}" (click)="switchLeftSidebar(1)"></a>
+          <a class="uk-icon-button uk-margin-top uk-margin-small-bottom" uk-icon="icon: cloud-download; ratio: 0.85"
+             [ngClass]="{'uk-button-primary': lefSidebarTab == 2}" (click)="switchLeftSidebar(2)"></a>
+          <a class="uk-icon-button uk-margin-top uk-margin-small-bottom" uk-icon="icon: video; ratio: 0.85"
+             [ngClass]="{'uk-button-primary': lefSidebarTab == 3}" (click)="switchLeftSidebar(3)" *ngIf="videoUrl"></a>
+        </div>
+
+        <div class="left-sidebar uk-height-1-1" *ngIf="lefSidebarTab == 1">
+          <annotation-sidebar></annotation-sidebar>
+        </div>
+        <div class="left-sidebar" *ngIf="lefSidebarTab == 2">
+          <div class="uk-flex uk-flex-column uk-padding uk-flex-middle uk-text-center">
+            <h4>Download a PDF with all the slides and the annotations</h4>
+            <div class="uk-margin-large" *ngIf="downloadPdfStatus != 1">
+              <button class="uk-button uk-button-primary" (click)="downloadPdf()">
+                <span>Download</span>
+                <span uk-icon="icon: cloud-download; ratio: 0.85"></span>
+              </button>
+            </div>
+            <div class="uk-margin-large" *ngIf="downloadPdfStatus == -1">
+              <div>Ops... something goes wrong...</div>
+            </div>
+            <div class="uk-margin-large" *ngIf="downloadPdfStatus == 1">
+              <div class="uk-padding-small" uk-spinner></div>
+              <div class="text">Preparing your PDF... this may take a while...</div>
+            </div>
+            <div class="uk-margin-large" *ngIf="downloadPdfStatus == 2">
+              <h4>Complete!</h4>
+              <div>
+                <i>(Remember, annotations are not visible in Browser's PDF reader)</i>
+              </div>
+            </div>
           </div>
-          <div class="uk-margin-large" *ngIf="downloadPdfStatus == -1">
-            <div>Ops... something goes wrong...</div>
-          </div>
-          <div class="uk-margin-large" *ngIf="downloadPdfStatus == 1">
-            <div class="uk-padding-small" uk-spinner></div>
-            <div class="text">Preparing your PDF... this may take a while...</div>
-          </div>
-          <div class="uk-margin-large" *ngIf="downloadPdfStatus == 2">
-            <h4>Complete!</h4>
+        </div>
+        <div class="left-sidebar" *ngIf="videoUrl && (lefSidebarTab == 3)">
+          <div class="uk-flex uk-flex-column uk-padding uk-flex-middle uk-text-center">
+            <h4 class="uk-margin-bottom">Video player</h4>
             <div>
-              <i>(Remember, annotations are not visible in Browser's PDF reader)</i>
+              <div class="uk-margin-bottom">
+                <video-toolbar [htmlVideoElement]="storeService.htmlVideoElement | async"></video-toolbar>
+              </div>
+              <div class="uk-margin-bottom">
+                <timeline [hidePlaceholders]="true"></timeline>
+              </div>
+              <button class="uk-button uk-button-default uk-margin-small-bottom" (click)="showHideVideo()">
+                <span *ngIf="hideVideo">Show Video Box</span>
+                <span *ngIf="!hideVideo">Hide Video Box</span>
+              </button>
+              <button class="uk-button uk-button-default uk-margin-small-bottom" (click)="goToVideo()">Go to Video Page
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      <div class="left-sidebar" *ngIf="videoUrl && (lefSidebarTab == 3)">
-        <div class="uk-flex uk-flex-column uk-padding uk-flex-middle uk-text-center">
-          <h4 class="uk-margin-bottom">Video player</h4>
-          <div>
-            <div class="uk-margin-bottom">
-              <video-toolbar [htmlVideoElement]="storeService.htmlVideoElement | async"></video-toolbar>
+
+        <div class="uk-width-expand pdf-editor-box">
+          <div #pdfViewer id="viewerContainer">
+            <div id="viewer" class="pdfViewer">
+              <div class="page"></div>
             </div>
-            <div class="uk-margin-bottom">
-              <timeline [hidePlaceholders]="true"></timeline>
+            <div class="note-bar" [ngClass]="{'note-bar-closed': lefSidebarTab > 0}">
+              <note-bar [openInEditMode]="true" [verticalPosition]="true"
+                        [currentPage]="PDFViewerCurrentPage"
+                        (noteClicked)="selectNoteOnCanvas($event)"></note-bar>
             </div>
-            <button class="uk-button uk-button-default uk-margin-small-bottom" (click)="showHideVideo()">
-              <span *ngIf="hideVideo">Show Video Box</span>
-              <span *ngIf="!hideVideo">Hide Video Box</span>
-            </button>
-            <button class="uk-button uk-button-default uk-margin-small-bottom" (click)="goToVideo()">Go to Video Page</button>
           </div>
         </div>
       </div>
 
-      <div class="uk-width-expand pdf-editor-box">
-        <div #pdfViewer id="viewerContainer">
-          <div id="viewer" class="pdfViewer">
-            <div class="page"></div>
-          </div>
-          <div class="note-bar" [ngClass]="{'note-bar-closed': lefSidebarTab > 0}">
-            <note-bar [openInEditMode]="true" [verticalPosition]="true"
-                      [currentPage]="PDFViewerCurrentPage"
-                      (noteClicked)="selectNoteOnCanvas($event)"></note-bar>
-          </div>
-        </div>
-      </div>
+      <note-editor
+        *ngFor="let uuid of openNotes.openNotesUuid | async;let i = index"
+        [noteUuid]="uuid"
+        [notePage]="openNotes.openNotesPageNumber[i]"
+        [editMode]="openNotes.openNotesEditMode[i]">
+      </note-editor>
     </div>
-
-    <note-editor
-      *ngFor="let uuid of openNotes.openNotesUuid | async;let i = index"
-      [noteUuid]="uuid"
-      [notePage]="openNotes.openNotesPageNumber[i]"
-      [editMode]="openNotes.openNotesEditMode[i]">
-    </note-editor>
-  </div>
 </div>
 
 <div class="mini-box-container">

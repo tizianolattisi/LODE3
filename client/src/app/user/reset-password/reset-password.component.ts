@@ -11,7 +11,7 @@ import numberInString from "../number-in-string.validator";
 export class ResetPasswordComponent {
 
 
-  private code: string;
+  public code: string;
   private form: FormGroup;
   private message: string;
   public success: boolean;

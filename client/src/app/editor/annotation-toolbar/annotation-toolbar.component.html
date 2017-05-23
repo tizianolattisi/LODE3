@@ -1,11 +1,11 @@
-<div class="uk-flex uk-flex-middle uk-flex-around uk-margin-left uk-margin-right">
+<div class="uk-flex uk-flex-middle uk-flex-around uk-margin-left uk-margin-right uk-flex-wrap">
 
   <div class="uk-flex uk-flex-middle">
-    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: cursor"
+    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: cursor; ratio: 0.85"
        [ngClass]="{'tool-button-selected': selectedTool == 'default'}"
        (click)="selectDefaultTool()" title="Default Tool" uk-tooltip="pos: bottom"></a>
     <a *ngFor="let t of am.annotationTools$ | async | dictionaryToArray"
-       class="uk-icon-button uk-margin-small-right" [attr.uk-icon]="'icon:' + t.iconClass"
+       class="uk-icon-button uk-margin-small-right" [attr.uk-icon]="'icon:' + t.iconClass + '; ratio: 0.85'"
        id="ann-{{t.tool.getType()}}-btn"
        [ngClass]="{'tool-button-selected': selectedTool == t.tool.getType()}"
        (click)="selectTool(t.tool.getType())" [attr.title]="t.text" uk-tooltip="pos: bottom"></a>
@@ -14,15 +14,6 @@
   <hr class="rotate-90">
 
   <div class="uk-flex uk-flex-middle">
-
-    <!--<div class="uk-inline">-->
-    <!--<a class="uk-icon-button uk-margin-small-right" [style.background]="am.currentColor" title="Choose color"-->
-    <!--uk-tooltip="pos: bottom"></a>-->
-    <!--<div uk-dropdown="mode: click" class="small-padding">-->
-    <!--<canvas #cpCanvas width="230" height="140"></canvas>-->
-    <!--</div>-->
-    <!--</div>-->
-
     <div class="color-picker-btn-wrapper">
       <div (click)="showHideColorPicker()" class="color-picker-btn-bg" [style.background]="am.currentColor">
       </div>
@@ -31,20 +22,20 @@
 
     <input class="uk-input small-width" type="number" pattern="[0-9]*(\.[0-9]+)?" min="0"
            [(ngModel)]="am.currentStrokeWidth" title="Stroke/Text Width" uk-tooltip="pos: bottom">
-    <span uk-icon="icon: line-width"></span>
+    <span uk-icon="icon: line-width; ratio: 0.85"></span>
   </div>
 
   <hr class="rotate-90">
 
   <div class="uk-flex uk-flex-middle">
-    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: text-select"
+    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: text-select; ratio: 0.85"
        [ngClass]="{'tool-button-selected': am.isTextSelectionMode}" (click)="switchTextSelectionMode()"
        title="Enable/Disable text selection" uk-tooltip="pos: bottom"></a>
 
-    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: select-off"
+    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: select-off; ratio: 0.85"
        (click)="clearSelection()" title="Deselect all annotations" uk-tooltip="pos: bottom"></a>
 
-    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: delete"
+    <a class="uk-icon-button uk-margin-small-right" uk-icon="icon: delete; ratio: 0.85"
        (click)="deleteSelectedAnnotations()" title="Delete selected annotations" uk-tooltip="pos: bottom"></a>
   </div>
 </div>
