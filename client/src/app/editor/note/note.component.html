@@ -11,11 +11,11 @@
     </div>
 
     <div class="uk-flex uk-flex-column">
-      <a class="uk-icon-button uk-margin-small-bottom note-button" uk-icon="icon: delete; ratio: 0.85" (click)="deleteNote(note.uuid, note.pageNumber)"
+      <a class="uk-icon-button note-button" uk-icon="icon: delete; ratio: 0.85" (click)="deleteNote(note.uuid, note.pageNumber)"
          title="Delete Note" uk-tooltip></a>
-      <a class="uk-icon-button uk-margin-small-bottom note-button" uk-icon="icon: note-edit; ratio: 0.85" (click)="openNote(note.uuid, note.pageNumber)"
+      <a class="uk-icon-button note-button" uk-icon="icon: note-edit; ratio: 0.85" (click)="openNote(note.uuid, note.pageNumber)"
          title="Open Note" uk-tooltip></a>
-      <a class="uk-icon-button uk-margin-small-bottom note-button" uk-icon="icon: video; ratio: 0.85" (click)="seeVideo(note)"
+      <a class="uk-icon-button note-button" uk-icon="icon: video; ratio: 0.85" (click)="seeVideo(note)"
          *ngIf="note.time && storeService.course"
          title="Delete Note" uk-tooltip></a>
     </div>

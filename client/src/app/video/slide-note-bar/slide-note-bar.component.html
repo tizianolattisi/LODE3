@@ -25,50 +25,56 @@
     <a class="uk-icon-button" uk-icon="icon: plus; ratio: 0.85" (click)="newNote()"></a>
   </div>
 
-  <div class="uk-flex uk-flex-column uk-flex-around uk-padding-small">
-    <span uk-icon="icon: presentation; ratio: 0.85" (click)="showSlides = true"></span>
-    <span uk-icon="icon: comment-multiple; ratio: 0.85" (click)="showSlides = false"></span>
+  <div class="uk-flex uk-flex-column uk-flex-around">
+    <div class="uk-padding-small uk-flex-1 uk-flex uk-flex-center uk-flex-middle show-button"
+         [ngClass]="{'show-button-active': showSlides}" (click)="showSlides = true">
+      <span uk-icon="icon: presentation; ratio: 0.85"></span>
+    </div>
+    <div class="uk-padding-small uk-flex-1 uk-flex uk-flex-center uk-flex-middle show-button"
+         [ngClass]="{'show-button-active': !showSlides}" (click)="showSlides = false">
+      <span uk-icon="icon: comment-multiple; ratio: 0.85"></span>
+    </div>
   </div>
 
 </div>
 
 
 <!--<div class="bar">-->
-  <!--<div class="show-bar" [ngClass]="{'hide': !showSlides}" #slidesBox>-->
-    <!--<div class="slide"-->
-         <!--*ngFor="let slide of slides; let i = index"-->
-         <!--[slideIndex]="i"-->
-         <!--[ngClass]="{'current-slide': storeService.getCurrentSlideIndex() == i}">-->
-      <!--<img (click)="goToSlide(i)"-->
-           <!--[src]="slide.thumbnailUrl" alt="slide.title">-->
-      <!--<span>{{slide.title}}</span>-->
-    <!--</div>-->
-  <!--</div>-->
+<!--<div class="show-bar" [ngClass]="{'hide': !showSlides}" #slidesBox>-->
+<!--<div class="slide"-->
+<!--*ngFor="let slide of slides; let i = index"-->
+<!--[slideIndex]="i"-->
+<!--[ngClass]="{'current-slide': storeService.getCurrentSlideIndex() == i}">-->
+<!--<img (click)="goToSlide(i)"-->
+<!--[src]="slide.thumbnailUrl" alt="slide.title">-->
+<!--<span>{{slide.title}}</span>-->
+<!--</div>-->
+<!--</div>-->
 
-  <!--<div class="show-bar" [ngClass]="{'hide': showSlides}" #notesBox>-->
-    <!--<note-bar #noteBar [verticalPosition]="false"-->
-              <!--(noteClicked)="highlightTimeline($event)"-->
-              <!--[openInEditMode]="false"></note-bar>-->
-  <!--</div>-->
+<!--<div class="show-bar" [ngClass]="{'hide': showSlides}" #notesBox>-->
+<!--<note-bar #noteBar [verticalPosition]="false"-->
+<!--(noteClicked)="highlightTimeline($event)"-->
+<!--[openInEditMode]="false"></note-bar>-->
+<!--</div>-->
 
-  <!--<div class="action-bar" [ngClass]="{'hide': showSlides}">-->
-    <!--<button class="circular-button new-note-btn" (click)="newNote()">-->
-      <!--<i class="mdi mdi-18px mdi-plus"></i>-->
-    <!--</button>-->
-  <!--</div>-->
+<!--<div class="action-bar" [ngClass]="{'hide': showSlides}">-->
+<!--<button class="circular-button new-note-btn" (click)="newNote()">-->
+<!--<i class="mdi mdi-18px mdi-plus"></i>-->
+<!--</button>-->
+<!--</div>-->
 
-  <!--<div>-->
-    <!--<div class="switch" (click)="showSlides = !showSlides">-->
-      <!--<div class="slider"-->
-           <!--[ngClass]="{'off': !showSlides}"></div>-->
-      <!--<div class="icons">-->
-        <!--<i class="mdi mdi-presentation mdi-24px"-->
-           <!--[ngClass]="{'color-dark': !showSlides}"></i>-->
-        <!--<i class="mdi mdi-comment-multiple-outline mdi-24px"-->
-           <!--[ngClass]="{'color-dark': showSlides}"></i>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
+<!--<div>-->
+<!--<div class="switch" (click)="showSlides = !showSlides">-->
+<!--<div class="slider"-->
+<!--[ngClass]="{'off': !showSlides}"></div>-->
+<!--<div class="icons">-->
+<!--<i class="mdi mdi-presentation mdi-24px"-->
+<!--[ngClass]="{'color-dark': !showSlides}"></i>-->
+<!--<i class="mdi mdi-comment-multiple-outline mdi-24px"-->
+<!--[ngClass]="{'color-dark': showSlides}"></i>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 <!--</div>-->
 
 <note-editor

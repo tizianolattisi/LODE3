@@ -1,5 +1,16 @@
 @import "../../../style/colors.scss";
 
+.show-button {
+  &:hover {
+    background: #f3f3f3;
+  }
+}
+
+.show-button-active {
+  background: #1e87f0;
+  color: white;
+}
+
 .media-box {
   overflow-x: auto;
 }

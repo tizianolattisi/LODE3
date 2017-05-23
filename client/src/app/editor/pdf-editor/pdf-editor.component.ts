@@ -76,7 +76,7 @@ export class PdfEditorComponent {
 
     // PDF viewer is initialized and ready when event 'pagesinit' is fired
     this.renderer.listen(this.pdfViewerElem.nativeElement, 'pagesinit', () => {
-      this.PDFViewer.currentScaleValue = "1";
+      this.PDFViewer.currentScaleValue = "auto";
     });
 
     this.storeService.pdfDocument.subscribe((doc) => {

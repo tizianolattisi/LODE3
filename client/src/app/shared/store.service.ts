@@ -8,7 +8,8 @@ import {Http, ResponseContentType} from "@angular/http";
 export class StoreService {
 
 
-  private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures';
+  // private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures'; // TODO
+  private LODE_URL = 'http://latemar.science.unitn.it/LODE';
 
   private LS_DATA = 'data';
 
@@ -177,7 +178,8 @@ export class StoreService {
    ----- */
 
   getVideoUrl() {
-    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null);
+    // return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null); // TODO
+    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/content/movie.mp4') : (null);
   }
 
   registerHtmlVideoElement(videoElem: HTMLVideoElement) {
@@ -206,7 +208,7 @@ export class StoreService {
   // update slides page & index when video time change
   private autoUpdateSlide(time: number) {
     let lodeLecture = this._lodeLecture.getValue();
-    if (lodeLecture) {
+    if (lodeLecture && lodeLecture.slides) {
       let slide = lodeLecture.slides[this._currentSlideIndex.getValue() + 1];
       if (slide && slide.time < time) {
         this.updateCurrentSlides(this._currentSlideIndex.getValue() + 1);
@@ -237,13 +239,15 @@ export class StoreService {
     time = (time >= 0) ? (Math.round(time)) : (0);
     if (time >= 0 && this._lodeLecture.getValue()) {
       // update slide page & index
-      for (let i = 0; i < this._lodeLecture.getValue().slides.length; i++) {
-        if (this._lodeLecture.getValue().slides[i].time > time) {
-          this.updateCurrentSlides(i - 1);
-          break;
-        }
-        if (i == this._lodeLecture.getValue().slides.length - 1) {
-          this.updateCurrentSlides(i);
+      if (this._lodeLecture.getValue().slides) {
+        for (let i = 0; i < this._lodeLecture.getValue().slides.length; i++) {
+          if (this._lodeLecture.getValue().slides[i].time > time) {
+            this.updateCurrentSlides(i - 1);
+            break;
+          }
+          if (i == this._lodeLecture.getValue().slides.length - 1) {
+            this.updateCurrentSlides(i);
+          }
         }
       }
 

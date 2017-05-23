@@ -1,10 +1,10 @@
 import {Component, Input} from '@angular/core';
-import {AnnotationManager} from "../../annotation/AnnotationManager";
 import {LogManager} from "../../annotation/LogManager";
 
 @Component({
   selector: 'video-toolbar',
-  templateUrl: './video-toolbar.component.html'
+  templateUrl: './video-toolbar.component.html',
+  styleUrls: ['./video-toolbar.component.scss']
 })
 export class VideoToolbarComponent {
 

@@ -95,6 +95,8 @@ export class AnnotationManager {
       if (this.router.url == '/editor') {
         this.isEditorMode = true;
         this.currentCanvas = null;
+        this.pdfViewer.currentScaleValue = '1';
+        this.pdfViewer.currentScaleValue = 'Auto';
       } else if (this.router.url == '/video') {
         this.isEditorMode = false;
         this.canvases = [];

@@ -22,8 +22,7 @@ export class SlideDirective {
   styleUrls: ['./slide-note-bar.component.scss']
 })
 export class SlideNoteBarComponent implements OnInit {
-
-
+  
   @ViewChild('slidesBox') slidesBox: ElementRef;
   @ViewChild('notesBox') notesBox: ElementRef;
   @ViewChildren(SlideDirective) slidesElems: QueryList<SlideDirective>;

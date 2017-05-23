@@ -1,35 +1,30 @@
-<div class="vl-main-box">
-    <div class="vl-upper-box">
-        <div class="vl-container">
-            <div class="vl-box">
-                <video-box [videoUrl]="videoUrl" class="vl-elem"
-                           (videoHtmlElement)="onHtmlVideoElementReady($event)"></video-box>
-                <video-toolbar class="all-width"
-                               [htmlVideoElement]="storeService.htmlVideoElement | async"></video-toolbar>
-            </div>
-        </div>
-        <div class="vl-container">
-            <div class="vl-box">
-                <slide-viewer class="vl-elem"></slide-viewer>
-                <div class="viewer-toolbar all-width uk-padding-small">
-                    <viewer-toolbar [currentPage]="storeService.currentSlide | async"
-                                    [totalPages]="storeService.getSlideTotalPages()"
-                                    (pageSelected)="changeSlide($event)">
-                    </viewer-toolbar>
-                    <button class="uk-button uk-button-primary" (click)="goToEditor()">Go to editor
-                        <i class="mdi mdi-lead-pencil"></i></button>
-                </div>
-            </div>
-        </div>
+<div class="uk-flex uk-flex-column uk-height-1-1 match-page">
+  <div class="uk-flex-1" uk-grid>
+    <div class="uk-flex-1 uk-padding-small">
+      <video-box [videoUrl]="videoUrl" (videoHtmlElement)="onHtmlVideoElementReady($event)"></video-box>
     </div>
-    <div class="vl-middle-box">
-        <div class="vl-timeline-box">
-            <timeline [highlightedNote]="timelineHighlightedNote">
-            </timeline>
-        </div>
+    <div class="uk-flex-1 uk-padding-small uk-flex uk-flex-center uk-flex-middle">
+      <slide-viewer></slide-viewer>
     </div>
-    <div class="vl-lower-box">
-        <slide-note-bar (highlightNoteRequest)="highlightTimelineNote($event)"></slide-note-bar>
+  </div>
+  <div class="uk-flex uk-padding-small uk-flex-none">
+    <video-toolbar class="uk-flex-1 margin-small-left margin-small-right"
+                   [htmlVideoElement]="storeService.htmlVideoElement | async"></video-toolbar>
+    <hr class="divider">
+    <div class="uk-flex-1 margin-small-left margin-small-right uk-flex uk-flex-between">
+      <viewer-toolbar [currentPage]="storeService.currentSlide | async" [totalPages]="storeService.getSlideTotalPages()"
+                      (pageSelected)="changeSlide($event)">
+      </viewer-toolbar>
+      <button class="uk-button uk-button-primary" (click)="goToEditor()">Go to editor<i class="mdi mdi-lead-pencil"></i>
+      </button>
     </div>
 
+  </div>
+  <div class="uk-flex uk-flex-column uk-flex-none">
+    <div class="uk-padding-small uk-padding-large-top">
+      <timeline [highlightedNote]="timelineHighlightedNote">
+      </timeline>
+    </div>
+    <slide-note-bar (highlightNoteRequest)="highlightTimelineNote($event)"></slide-note-bar>
+  </div>
 </div>
