@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormGroup, Validators, FormBuilder} from "@angular/forms";
 import {UserService} from "../user.service";
 import {ActivatedRoute} from "@angular/router";
@@ -11,7 +11,7 @@ import numberInString from "../number-in-string.validator";
 export class ResetPasswordComponent {
 
 
-  private code: string;
+  public code: string;
   private form: FormGroup;
   private message: string;
   public success: boolean;

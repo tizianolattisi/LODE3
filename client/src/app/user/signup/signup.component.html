@@ -1,72 +1,81 @@
-<div class="box">
-    <div class="form-page">
-        <div class="box-form">
-            <h2>Sign Up</h2>
-            <div *ngIf="!success">
-                <div *ngIf="message" class="message-box"
-                     [ngClass]="{'positive-message': success, 'negative-message': !success}">
-                    <span>{{message}}</span>
-                </div>
+<div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
+  <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m">
+    <h1 class="uk-card-title uk-text-center">Sign Up</h1>
+    <div *ngIf="!success">
+      <div *ngIf="message" class="uk-text-center"
+           [ngClass]="{'uk-text-success': success, 'uk-text-danger': !success}">
+        <span>{{message}}</span>
+      </div>
 
-                <form [formGroup]="signupForm" (ngSubmit)="doSignup(signupForm.value)">
-                    <div class="form-element">
-                        <label>Insert a unitn.it email</label>
-                        <div class="input-with-confirm">
-                            <input type="email" placeholder="Email" [formControl]="signupForm.controls['email']">
-                            <div class="validation-confirm" *ngIf="signupForm.controls['email'].valid">
-                                <i class="mdi mdi-check mdi-36px"></i>
-                            </div>
-                        </div>
-                        <div class="validation-message"
-                             *ngIf="(signupForm.controls['email'].dirty || signupForm.controls['email'].touched) && !signupForm.controls['email'].valid">
-                            <span>Provide a valid email on the unitn.it domain (eg: <i>name.surname@studenti.unitn.it</i>)</span>
-                        </div>
-                    </div>
+      <form [formGroup]="signupForm" (ngSubmit)="doSignup(signupForm.value)" class="uk-flex uk-flex-column">
 
-                    <div class="form-element">
-                        <div class="input-with-confirm">
-                            <input type="password" placeholder="Password"
-                                   validateEqual="confirmPassword" reverse="true"
-                                   [formControl]="signupForm.controls['password']">
-                            <div class="validation-confirm" *ngIf="signupForm.controls['password'].valid">
-                                <i class="mdi mdi-check mdi-36px"></i>
-                            </div>
-                        </div>
-                        <div class="validation-message"
-                             *ngIf="(signupForm.controls['password'].dirty || signupForm.controls['password'].touched) && !signupForm.controls['password'].valid">
-                            <span>Password should contain at least one digit and should have at least 6 characters</span>
-                        </div>
-                    </div>
-                    <div class="form-element">
-                        <div class="input-with-confirm">
-                            <input type="password" placeholder="Retype Password"
-                                   validateEqual="password"
-                                   [formControl]="signupForm.controls['confirmPassword']">
-                            <div class="validation-confirm" *ngIf="signupForm.controls['confirmPassword'].valid">
-                                <i class="mdi mdi-check mdi-36px"></i>
-                            </div>
-                        </div>
-                        <div class="validation-message"
-                             *ngIf="(signupForm.controls['confirmPassword'].dirty || signupForm.controls['confirmPassword'].touched) && !signupForm.controls['confirmPassword'].valid">
-                            <span>Password mismatch</span>
-                        </div>
-                    </div>
-
-                    <div class="button-box">
-                        <button class="action-btn" type="submit" [disabled]="!signupForm.valid">Sign Up</button>
-                    </div>
-                </form>
-            </div>
-
-            <div *ngIf="success">
-                <div class="message-box confirm-email-message-box"
-                     [ngClass]="{'positive-message': success, 'negative-message': !success}">
-                    <div>
-                        <i class="mdi mdi-email-open mdi-48px"></i>
-                    </div>
-                    <span>Now you will receive an email to confirm and activate your account. Check your inbox.</span>
-                </div>
-            </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="mail">Insert a unitn.it email</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: mail; ratio: 0.85"></span>
+            <input id="mail" type="email" class="uk-input uk-flex-1" placeholder="Email"
+                   [ngClass]="{
+                   'uk-form-success': signupForm.controls['email'].valid,
+                   'uk-form-danger':(signupForm.controls['email'].dirty || signupForm.controls['email'].touched) && !signupForm.controls['email'].valid
+                  }"
+                   [formControl]="signupForm.controls['email']">
+          </div>
+          <div class="uk-text-danger"
+               *ngIf="(signupForm.controls['email'].dirty || signupForm.controls['email'].touched) && !signupForm.controls['email'].valid">
+            <span>Provide a valid email on the unitn.it domain (eg: <i>name.surname@studenti.unitn.it</i>)</span>
+          </div>
         </div>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="password">Insert a password</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: lock; ratio: 0.85"></span>
+            <input id="password" class="uk-input uk-flex-1" type="password" placeholder="Password"
+                   validateEqual="confirmPassword" reverse="true"
+                   [formControl]="signupForm.controls['password']"
+                   [ngClass]="{
+                   'uk-form-success': signupForm.controls['password'].valid,
+                   'uk-form-danger':(signupForm.controls['password'].dirty || signupForm.controls['password'].touched) && !signupForm.controls['password'].valid
+                  }">
+          </div>
+          <div class="uk-text-danger"
+               *ngIf="(signupForm.controls['password'].dirty || signupForm.controls['password'].touched) && !signupForm.controls['password'].valid">
+            <span>Password should contain at least one digit and should have at least 6 characters</span>
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="password-confirm">Retype password</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: lock; ratio: 0.85"></span>
+            <input id="password-confirm" class="uk-input uk-flex-1" type="password" placeholder="Retype Password"
+                   validateEqual="password"
+                   [formControl]="signupForm.controls['confirmPassword']"
+                   [ngClass]="{
+                   'uk-form-success': signupForm.controls['confirmPassword'].valid,
+                   'uk-form-danger':(signupForm.controls['confirmPassword'].dirty || signupForm.controls['confirmPassword'].touched) && !signupForm.controls['confirmPassword'].valid
+                  }">
+          </div>
+          <div class="uk-text-danger"
+               *ngIf="(signupForm.controls['confirmPassword'].dirty || signupForm.controls['confirmPassword'].touched) && !signupForm.controls['confirmPassword'].valid">
+            <span>Password mismatch</span>
+          </div>
+        </div>
+
+        <div class="uk-flex uk-flex-center">
+          <button type="submit" class="uk-button uk-button-primary" [disabled]="!signupForm.valid">
+            <span>Sign Up</span>
+          </button>
+        </div>
+      </form>
     </div>
+
+
+    <div *ngIf="success">
+      <div class="uk-flex uk-flex-column uk-flex-center uk-flex-middle uk-text-center uk-text-success">
+        <span uk-icon="icon: mail; ratio: 3.5"></span>
+        <b class="uk-margin-top">Now you will receive an email to confirm and activate your account. Check your inbox.</b>
+      </div>
+    </div>
+  </div>
 </div>

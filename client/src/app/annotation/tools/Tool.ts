@@ -28,7 +28,7 @@ export interface Tool {
      * @param annotation the annotation which should be rendered
      * @return object model
      */
-    drawItem: (annotation: BaseAnnotation) => IObject | IObject[];
+    drawItem: (annotation: BaseAnnotation) => IObject;
 
     /**
      * Given the new object and the annotation, return the edited annotation.
@@ -36,10 +36,16 @@ export interface Tool {
      * @param annotation edited annotation or null if it should be deleted
      */
     editItem: (object: IObject, annotation: BaseAnnotation) => BaseAnnotation;
+
+  /**
+   * Function called when object or pdf is resized.
+   * @param object Canvas object.
+   */
+    onScale: (object: IObject) => IObject;
 }
 
 export interface NewAnnotation {
     pageNumber: number,
     annotationData: AnnotationData,
-    canvasAnnotation: IObject | IObject[],
+    canvasAnnotation: IObject,
 }

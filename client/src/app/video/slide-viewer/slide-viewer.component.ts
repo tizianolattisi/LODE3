@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {StoreService} from "../../shared/store.service";
-import {AnnotationManager} from "../../annotation/AnnotationManager";
 
 @Component({
   selector: 'slide-viewer',
@@ -16,7 +15,7 @@ export class SlideViewerComponent implements OnInit {
   @ViewChild('canvas') canvasElem: ElementRef;
   @ViewChild('canvasContainer') canvasContainerElem: ElementRef;
 
-  public constructor(private storeService: StoreService, private am: AnnotationManager) {
+  public constructor(private storeService: StoreService) {
     PDFJS.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.js';
   }
 
@@ -24,7 +23,7 @@ export class SlideViewerComponent implements OnInit {
 
     // register canvas as pdfViewer
     this.pdfViewerLike = {
-      currentScaleValue: 1.0,
+      currentScaleValue: "auto",
       container: this.canvasElem.nativeElement
     };
     this.storeService.registerPdfViewer(<any>this.pdfViewerLike);
@@ -48,7 +47,7 @@ export class SlideViewerComponent implements OnInit {
     this.pdfDocument.getPage(page)
       .then((pdfPage: PDFPageProxy)=> {
 
-        var viewport = pdfPage.getViewport(1);
+        let viewport = pdfPage.getViewport(1);
         let context = this.canvasElem.nativeElement.getContext('2d');
         this.canvasElem.nativeElement.height = viewport.height;
         this.canvasElem.nativeElement.width = viewport.width;
@@ -56,7 +55,7 @@ export class SlideViewerComponent implements OnInit {
         // set the scale of the pdf
         this.pdfViewerLike.currentScaleValue = (this.canvasContainerElem.nativeElement.getBoundingClientRect().height / viewport.height) * 0.75;
 
-        var renderContext = {
+        let renderContext = {
           canvasContext: context,
           viewport: viewport
         };
@@ -65,7 +64,7 @@ export class SlideViewerComponent implements OnInit {
         let annCanvasContainer = this.canvasContainerElem.nativeElement.getElementsByClassName('lower-canvas');
         if (annCanvasContainer.length > 0) {
           for (let i = annCanvasContainer.length - 1; i >= 0; i--) {
-            this.canvasContainerElem.nativeElement.removeChild(annCanvasContainer[i]);
+            annCanvasContainer[i].parentElement.removeChild(annCanvasContainer[i]);
           }
         }
 

@@ -73,6 +73,9 @@ export const ioListener = (socket: Socket) => {
                 a.pdfId = annotation.pdfId;
                 a.pageNumber = annotation.pageNumber;
                 a.type = annotation.type;
+                if (annotation.scales) {
+                    a.scales = annotation.scales;
+                }
                 a.data = annotation.data;
                 a.uid = new Types.ObjectId((socket as any).decoded_token.id);
 

@@ -4,7 +4,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/map';
 import {Observable} from "rxjs/Observable";
 
-declare var jwt_decode: any;
+declare const jwt_decode: any;
 
 @Injectable()
 export class UserService {

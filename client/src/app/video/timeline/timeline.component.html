@@ -11,7 +11,7 @@
              (click)="goToNote($event, a)"
              [ngClass]="{'note-placeholder-highlighted': highlightedPoint == a.uuid}"
              [style.left]="getItemPositionOnTimeline(a)">
-            <i class="mdi mdi-comment-text-outline"></i>
+          <span uk-icon="icon: comment-plus; ratio: 0.85"></span>
         </div>
     </div>
 

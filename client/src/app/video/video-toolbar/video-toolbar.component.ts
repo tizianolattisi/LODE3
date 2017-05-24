@@ -1,9 +1,10 @@
 import {Component, Input} from '@angular/core';
-import {AnnotationManager} from "../../annotation/AnnotationManager";
+import {LogManager} from "../../annotation/LogManager";
 
 @Component({
   selector: 'video-toolbar',
-  templateUrl: './video-toolbar.component.html'
+  templateUrl: './video-toolbar.component.html',
+  styleUrls: ['./video-toolbar.component.scss']
 })
 export class VideoToolbarComponent {
 
@@ -17,7 +18,7 @@ export class VideoToolbarComponent {
   ];
 
 
-  constructor(public am: AnnotationManager) {
+  constructor(private lm: LogManager) {
   }
 
   playPause() {
@@ -25,10 +26,10 @@ export class VideoToolbarComponent {
     if (this.htmlVideoElement) {
       if (!this.htmlVideoElement.paused) {
         this.htmlVideoElement.pause();
-        this.am.newLog("player", "play", 0);
+        this.lm.newLog("player", "play", 0);
       } else {
         this.htmlVideoElement.play();
-        this.am.newLog("player", "play", 1);
+        this.lm.newLog("player", "play", 1);
       }
     }
 

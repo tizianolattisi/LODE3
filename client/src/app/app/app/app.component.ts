@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {Router, NavigationStart, NavigationEnd, Event} from "@angular/router";
 import {UserService} from "../../user/user.service";
+import {IconLoader} from "../icon-loader.service";
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
   loading = true;
   userData: any;
 
-  constructor(private router: Router, public userService: UserService) {
+  constructor(private router: Router, public userService: UserService, private iconLoader: IconLoader) {
 
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {

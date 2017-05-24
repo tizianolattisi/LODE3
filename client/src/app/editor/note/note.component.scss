@@ -1,36 +1,37 @@
 @import "../../../style/colors.scss";
 
-.note-card {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  width: 16rem;
-  margin: 1rem;
+.padding-xsmall {
   padding: 0.5rem;
-  background: $bg-note;
-  max-height: 250px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  transition: 0.3s;
+}
 
-  h4 {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
+.note-button {
+  background: transparent;
 
   &:hover {
-    z-index: 2;
+    background: rgba(250, 250, 250, 0.7);
   }
 }
 
-@-moz-document url-prefix() {
-  .note-card {
-    height: 165px;
+.note-title {
+  color: #5f5f5f;
+}
+
+.note-card {
+  background: $bg-note;
+  max-height: 165px;
+
+  h4 {
+    margin-bottom: 10px;
   }
 }
 
 .note-card-highlight {
   background: $bg-note-highlight;
   transition: 0.3s;
+
+  &:hover {
+    background: $bg-note-highlight;
+  }
 }
 
 .note-content {
@@ -44,6 +45,7 @@
 
 .note-text {
   width: 100%;
+  max-height: 105px;
 }
 
 .note-action {

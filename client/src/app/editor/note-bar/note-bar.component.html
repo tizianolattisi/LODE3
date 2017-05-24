@@ -1,9 +1,10 @@
-<div #noteBar [ngClass]="{'horizontal-bar': !verticalPosition, 'vertical-bar': verticalPosition}">
-    <note *ngFor="let note of am.allAnnotations | async | filterNotes:currentPage"
+<div #noteBar class="uk-flex" [ngClass]="{'uk-fl': !verticalPosition, 'uk-flex-column': verticalPosition}">
+    <note *ngFor="let note of nm.getNotes() | async | filterNotes:currentPage"
           id="note-{{note.uuid}}"
+          [ngClass]="{'note-horizontal': !verticalPosition}"
           (dblclick)="openNote(note.uuid, note.pageNumber)"
           (click)="fireNoteClicked(note.uuid, note.pageNumber)"
           [noteId]="note.uuid" [notePage]="note.pageNumber" [openEditMode]="openEditMode"
-          [highlightNote]="(am.highlightedNote | async) == note.uuid">
+          [highlightNote]="(openNotes.highlightedNote | async) == note.uuid">
     </note>
 </div>

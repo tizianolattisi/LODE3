@@ -3,6 +3,7 @@ import {StoreService} from "../../shared/store.service";
 import {AnnotationManager} from "../../annotation/AnnotationManager";
 import {BaseAnnotation} from "../../annotation/model/BaseAnnotation";
 import {NoteTool} from "../../annotation/tools/NoteTool";
+import {NoteManager} from "../../annotation/NoteManager";
 
 @Component({
   selector: 'timeline',
@@ -23,7 +24,7 @@ export class TimelineComponent implements OnInit {
 
   highlightedPoint: string;
 
-  public constructor(private storeService: StoreService, public am: AnnotationManager) {
+  public constructor(private storeService: StoreService, public nm: NoteManager) {
   }
 
   ngOnInit(): void {
@@ -38,7 +39,7 @@ export class TimelineComponent implements OnInit {
         }
       });
 
-      this.am.allAnnotations.subscribe(anns => {
+      this.nm.getNotes().subscribe(anns => {
         if (anns) {
           this.annotations = anns;
         }
@@ -54,7 +55,7 @@ export class TimelineComponent implements OnInit {
   goToNote(event: MouseEvent, note: BaseAnnotation) {
     this.storeService.setCurrentTime(note.time);
     if (note.type == NoteTool.TYPE) {
-      this.am.setHighlightedNote(note.uuid);
+      this.nm.setHighlightedNote(note.uuid);
       this.highlightedPoint = note.uuid;
     }
     event.stopPropagation();

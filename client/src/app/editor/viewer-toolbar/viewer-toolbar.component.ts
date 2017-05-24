@@ -20,6 +20,7 @@ export class ViewerToolbarComponent {
   showInputSearch: boolean = false;
 
   SCALE_VALUES = [
+    {value: "auto", name: "Auto"},
     {value: "0.10", name: "10%"},
     {value: "0.25", name: "25%"},
     {value: "0.50", name: "50%"},

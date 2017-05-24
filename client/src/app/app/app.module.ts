@@ -4,7 +4,7 @@ import {AppComponent} from './app/app.component';
 import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {WebSocketStorage} from "../annotation/storage/WebSocketStorage";
-import {STORAGE_OPAQUE_TOKEN} from "../annotation/utils/Utils";
+import {STORAGE_TOKEN} from "../annotation/utils/Utils";
 import {StoreService} from "../shared/store.service";
 import {CodeParamGuard} from "./code-param-guard";
 import {AuthGuard} from "./auth-guard";
@@ -20,7 +20,11 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {ToolService} from "../annotation/tool.service";
 import {LecturerModule} from "../lecturer/lecturer.module";
-import { TestPageComponent } from './test-page/test-page.component';
+import {TestPageComponent} from './test-page/test-page.component';
+import {IconLoader} from "./icon-loader.service";
+import {NoteManager} from "../annotation/NoteManager";
+import {LogManager} from "../annotation/LogManager";
+import {OpenNotes} from "../annotation/OpenNotes";
 
 @NgModule({
   imports: [
@@ -44,11 +48,15 @@ import { TestPageComponent } from './test-page/test-page.component';
   providers: [
     UserService,
     StoreService,
-    {provide: STORAGE_OPAQUE_TOKEN, useClass: WebSocketStorage},
+    {provide: STORAGE_TOKEN, useClass: WebSocketStorage},
     AnnotationManager,
+    NoteManager,
+    OpenNotes,
+    LogManager,
     ToolService,
     AuthGuard,
-    CodeParamGuard
+    CodeParamGuard,
+    IconLoader
   ],
   bootstrap: [AppComponent]
 })

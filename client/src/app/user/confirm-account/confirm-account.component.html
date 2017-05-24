@@ -1,19 +1,21 @@
-<div class="box box-center">
-    <div *ngIf="!complete">
-        <div class="loader"></div>
-    </div>
+<div class="uk-flex uk-flex-center uk-flex-middle uk-text-center uk-height-1-1">
+  <div *ngIf="!complete">
+    <div uk-spinner></div>
+  </div>
 
-    <div class="confirm-msg" *ngIf="complete && !error">
-        <div>
-            <span class="pos-msg">Great! Account has been confirmed. Now you can perform login.</span>
-        </div>
-        <button class="login-btn" (click)="goToLogin()">Login <i class="mdi mdi-arrow-right"></i></button>
+  <div *ngIf="complete && !error">
+    <div>
+      <span class="uk-text-success text-lg">Great! Account has been confirmed. Now you can perform login.</span>
     </div>
+    <button class="uk-button uk-button-primary uk-margin-top" (click)="goToLogin()">
+      <span>Login</span>
+      <span uk-icon="icon: sign-in; ratio: 0.85"></span>
+    </button>
+  </div>
 
-    <div class="confirm-msg" *ngIf="complete && error">
-        <div>
-            <span>{{errMsg}}</span>
-        </div>
+  <div *ngIf="complete && error">
+    <div>
+      <span>{{errMsg}}</span>
     </div>
-
+  </div>
 </div>

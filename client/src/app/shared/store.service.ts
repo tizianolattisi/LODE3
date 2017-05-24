@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import {UserService} from "../user/user.service";
@@ -8,7 +8,8 @@ import {Http, ResponseContentType} from "@angular/http";
 export class StoreService {
 
 
-  private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures';
+  // private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures'; // TODO
+  private LODE_URL = 'http://latemar.science.unitn.it/LODE';
 
   private LS_DATA = 'data';
 
@@ -93,22 +94,22 @@ export class StoreService {
         .then(values => {
           this._pdfDocument.next(values[0]);
           this._lodeLecture.next(values[1] as any);
+        }, () => {
         });
-
 
     } else { // load only pdf
       this.loadPdfDocument()
         .then(doc => {
           this._pdfDocument.next(doc);
+        }, () => {
         });
     }
   }
 
   private loadPdfDocument(): Promise<PDFDocumentProxy> {
 
-    return new Promise<PDFDocumentProxy>((resolve, reject)=> {
+    return new Promise<PDFDocumentProxy>((resolve, reject) => {
       if (this.pdfHash) {
-
         PDFJS.getDocument({
           url: '/api/pdfs/' + this.pdfHash,
           httpHeaders: {'Authorization': 'Bearer ' + this.userService.getToken()}
@@ -119,11 +120,11 @@ export class StoreService {
           return resolve(pdfDocument);
         }, err => {
           this._pdfLoading.next(-1);
-          return reject(null);
+          return reject(err);
         });
       } else {
         this._pdfLoading.next(-1);
-        return reject(null);
+        return reject();
       }
     });
 
@@ -131,7 +132,7 @@ export class StoreService {
 
   private loadLodeLecture(): Promise<LodeLecture> {
 
-    return new Promise<LodeLecture>((resolve, reject)=> {
+    return new Promise<LodeLecture>((resolve, reject) => {
       this.http.get('api/courses/' + this.course + '/lectures/' + this.lecture, {headers: this.userService.HEADERS})
         .map(res => res.json())
         .subscribe((res: LodeLecture) => {
@@ -177,18 +178,19 @@ export class StoreService {
    ----- */
 
   getVideoUrl() {
-    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null);
+    // return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null); // TODO
+    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/content/movie.mp4') : (null);
   }
 
   registerHtmlVideoElement(videoElem: HTMLVideoElement) {
     this._htmlVideoElement.next(videoElem);
 
     // update video elem time
-    videoElem.addEventListener('loadedmetadata', ()=> {
+    videoElem.addEventListener('loadedmetadata', () => {
       this._htmlVideoElement.getValue().currentTime = this._currentTime.getValue();
 
       // start listen for time change
-      this._htmlVideoElement.getValue().addEventListener('timeupdate', (res)=> {
+      this._htmlVideoElement.getValue().addEventListener('timeupdate', (res) => {
         this.updateCurrentTime((<HTMLVideoElement>res.target).currentTime);
         this.autoUpdateSlide((<HTMLVideoElement>res.target).currentTime);
       });
@@ -206,7 +208,7 @@ export class StoreService {
   // update slides page & index when video time change
   private autoUpdateSlide(time: number) {
     let lodeLecture = this._lodeLecture.getValue();
-    if (lodeLecture) {
+    if (lodeLecture && lodeLecture.slides) {
       let slide = lodeLecture.slides[this._currentSlideIndex.getValue() + 1];
       if (slide && slide.time < time) {
         this.updateCurrentSlides(this._currentSlideIndex.getValue() + 1);
@@ -237,13 +239,15 @@ export class StoreService {
     time = (time >= 0) ? (Math.round(time)) : (0);
     if (time >= 0 && this._lodeLecture.getValue()) {
       // update slide page & index
-      for (let i = 0; i < this._lodeLecture.getValue().slides.length; i++) {
-        if (this._lodeLecture.getValue().slides[i].time > time) {
-          this.updateCurrentSlides(i - 1);
-          break;
-        }
-        if (i == this._lodeLecture.getValue().slides.length - 1) {
-          this.updateCurrentSlides(i);
+      if (this._lodeLecture.getValue().slides) {
+        for (let i = 0; i < this._lodeLecture.getValue().slides.length; i++) {
+          if (this._lodeLecture.getValue().slides[i].time > time) {
+            this.updateCurrentSlides(i - 1);
+            break;
+          }
+          if (i == this._lodeLecture.getValue().slides.length - 1) {
+            this.updateCurrentSlides(i);
+          }
         }
       }
 

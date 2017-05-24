@@ -2,6 +2,19 @@
 
 $window-bg: $light;
 
+.icon-button {
+  background: transparent;
+
+  &:hover {
+    background: #f1f1f1;
+  }
+}
+
+.title-input {
+  border: 0;
+  font-weight: bold;
+}
+
 .note-window {
   /*  position: fixed;
     top: 100px;
