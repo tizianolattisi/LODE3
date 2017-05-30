@@ -147,9 +147,9 @@ export class ArrowTool implements Tool {
     return annotation;
   }
 
-  onScale(object: IObject): IObject {
+  onScale(object: IObject, annotation: BaseAnnotation): IObject {
     // Correct strokeWidth modified by the scale
-    (<ILine>object).strokeWidth = (<ILine>object).strokeWidth * am.getScaleValue();
+    (<ILine>object).strokeWidth = (annotation.data as ArrowAnnotation).strokeWidth * am.getScaleValue();
     return object;
   }
 
@@ -198,7 +198,7 @@ const createFabricLineArrow = () => {
       ctx.translate((this.x2 - this.x1) / 2, (this.y2 - this.y1) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
-      ctx.moveTo(6 * am.getScaleValue() , 0);
+      ctx.moveTo(6 * am.getScaleValue(), 0);
       ctx.lineTo(-6 * am.getScaleValue(), 6 * am.getScaleValue());
       ctx.lineTo(-6 * am.getScaleValue(), -6 * am.getScaleValue());
       ctx.closePath();

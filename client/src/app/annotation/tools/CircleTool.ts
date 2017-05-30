@@ -119,9 +119,9 @@ export class CircleTool implements Tool {
     return annotation;
   }
 
-  onScale(object: IObject): IObject {
+  onScale(object: IObject, annotation: BaseAnnotation): IObject {
     // Correct strokeWidth modified by the scale
-    (<ICircle>object).strokeWidth = (<ICircle>object).strokeWidth * am.getScaleValue();
+    (<ICircle>object).strokeWidth = (annotation.data as CircleAnnotation).strokeWidth * am.getScaleValue();
     return object;
   }
 

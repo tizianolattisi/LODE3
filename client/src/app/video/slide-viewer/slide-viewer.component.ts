@@ -23,7 +23,7 @@ export class SlideViewerComponent implements OnInit {
 
     // register canvas as pdfViewer
     this.pdfViewerLike = {
-      currentScaleValue: "auto",
+      currentScaleValue: 'auto',
       container: this.canvasElem.nativeElement
     };
     this.storeService.registerPdfViewer(<any>this.pdfViewerLike);
@@ -48,12 +48,12 @@ export class SlideViewerComponent implements OnInit {
       .then((pdfPage: PDFPageProxy)=> {
 
         let viewport = pdfPage.getViewport(1);
+
+        this.pdfViewerLike.currentScale = (this.canvasContainerElem.nativeElement.getBoundingClientRect().width / viewport.width);
+
         let context = this.canvasElem.nativeElement.getContext('2d');
         this.canvasElem.nativeElement.height = viewport.height;
         this.canvasElem.nativeElement.width = viewport.width;
-
-        // set the scale of the pdf
-        this.pdfViewerLike.currentScaleValue = (this.canvasContainerElem.nativeElement.getBoundingClientRect().height / viewport.height) * 0.75;
 
         let renderContext = {
           canvasContext: context,
@@ -74,7 +74,7 @@ export class SlideViewerComponent implements OnInit {
             this.canvasElem.nativeElement.dispatchEvent(new CustomEvent("pagerendered", {
               detail: {
                 pageNumber: page,
-                canvas: this.canvasElem.nativeElement
+                canvas: this.canvasContainerElem.nativeElement
               }
             }));
           });
