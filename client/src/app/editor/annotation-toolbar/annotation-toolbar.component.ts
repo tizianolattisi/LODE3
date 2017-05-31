@@ -1,5 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {AnnotationManager} from "../../annotation/AnnotationManager";
+import {until} from "selenium-webdriver";
+import elementIsDisabled = until.elementIsDisabled;
 
 @Component({
   selector: 'annotation-toolbar',
@@ -44,6 +46,10 @@ export class AnnotationToolbarComponent {
 
   switchTextSelectionMode() {
     this.am.setTextSelectionMode(!this.am.isTextSelectionMode);
+  }
+
+  public setStrokeWidth(width: number) {
+    this.am.setCurrentStrokeWidth(width);
   }
 
   private setColor(hexString: string) {

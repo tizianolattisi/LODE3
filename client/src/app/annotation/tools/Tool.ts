@@ -41,7 +41,7 @@ export interface Tool {
    * Function called when object or pdf is resized.
    * @param object Canvas object.
    */
-    onScale: (object: IObject) => IObject;
+    onScale: (object: IObject, annotation: BaseAnnotation) => IObject;
 }
 
 export interface NewAnnotation {

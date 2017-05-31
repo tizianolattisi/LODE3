@@ -17,7 +17,7 @@ import {
   Canvas as ICanvas,
   Object as IObject,
   IEvent as IEvent,
-  Group as IGroup, Group
+  Group as IGroup
 } from "fabric";
 import {ToolService} from "./tool.service";
 import DeltaStatic = Quill.DeltaStatic;
@@ -142,7 +142,8 @@ export class AnnotationManager {
          * or the scale is changed (in this case, each page is rendered again)
          */
         pdfViewer.container.addEventListener('pagerendered', (e: any) => {
-          this.createAnnotationCanvas(e.target, e.detail.pageNumber, this.isEditorMode);
+          const container = e.detail.canvas ? e.detail.canvas : e.target;
+          this.createAnnotationCanvas(container, e.detail.pageNumber, this.isEditorMode);
         });
 
         this.documentId = this.storeService.pdfHash;
@@ -243,13 +244,11 @@ export class AnnotationManager {
     fCanvas.setHeight(container.getBoundingClientRect().height);
     this.scaleCanvasObjects(fCanvas);
 
+    this.canvases[pageNumber] = fCanvas;
     if (editable) {
-      this.canvases[pageNumber] = <ICanvas>fCanvas;
       this.updateCanvasForTool(<ICanvas>fCanvas, this._toolSelected$.getValue());
       this.setCanvasObjectSelectHandler(<ICanvas>fCanvas);
       this.setCanvasObjectEditHandler(<ICanvas>fCanvas);
-    } else {
-      this.canvases[pageNumber] = fCanvas;
     }
 
     // Load annotations
@@ -284,21 +283,13 @@ export class AnnotationManager {
     let tool = this._annotationTools$.getValue()[annotation.type];
 
     if (tool && canvas) {
+
       let canvasObject = tool.tool.drawItem(annotation);
       if (canvasObject) {
         this.addAttrsToCanvasObject(canvasObject, annotation.uuid, annotation.type, annotation.pageNumber);
 
         // Copy scale parameters from annotation data to canvas objects
         let scales = annotation.scales;
-        if (AnnotationManager.isPencilObject(canvasObject, annotation.type)) {
-          let objects = (canvasObject as Group).getObjects();
-          for (let o of objects) {
-            (o as any).origLeft = scales.origLeft;
-            (o as any).origTop = scales.origTop;
-            (o as any).origScaleX = scales.origScaleX;
-            (o as any).origScaleY = scales.origScaleY;
-          }
-        }
         (canvasObject as any).origLeft = scales.origLeft;
         (canvasObject as any).origTop = scales.origTop;
         (canvasObject as any).origScaleX = scales.origScaleX;
@@ -342,15 +333,6 @@ export class AnnotationManager {
       // Set canvas object properties
       this.addAttrsToCanvasObject(canvasObject, annotationUuid, type, pageNumber);
 
-      // Set scale parameters to annotation
-      if (canvasObject.type === 'group' && type != NoteTool.TYPE) {
-        for (let o of (canvasObject as Group).getObjects()) {
-          (o as any).origLeft = o.getLeft();
-          (o as any).origTop = o.getTop();
-          (o as any).origScaleX = this.getScaleValue();
-          (o as any).origScaleY = this.getScaleValue();
-        }
-      }
       (canvasObject as any).origLeft = canvasObject.getLeft();
       (canvasObject as any).origTop = canvasObject.getTop();
       (canvasObject as any).origScaleX = this.getScaleValue();
@@ -514,16 +496,6 @@ export class AnnotationManager {
   private addAttrsToCanvasObject(object: IObject, uuid: string, type: string, pageNumber: number) {
     // Attach to a canvas object some attributes.
 
-    if (AnnotationManager.isPencilObject(object, type)) { // Object is a path
-      let objects = (object as Group).getObjects();
-      for (let i in objects) {
-        objects[i].set(AnnotationManager.ELEM_UUID, uuid);
-        objects[i].set(AnnotationManager.ELEM_PAGE, pageNumber);
-        objects[i].set(AnnotationManager.ELEM_TYPE, type);
-        objects[i].set(AnnotationManager.PATH_N, parseInt(i));
-      }
-    }
-
     object.set(AnnotationManager.ELEM_UUID, uuid);
     object.set(AnnotationManager.ELEM_PAGE, pageNumber);
     object.set(AnnotationManager.ELEM_TYPE, type);
@@ -679,6 +651,12 @@ export class AnnotationManager {
    */
   setCurrentColor(hex: string): void {
     this.currentColor = hex;
+
+    // If pencil was selected, reselect the tool to update the current color
+    if (this._toolSelected$.getValue() === PencilTool.TYPE) {
+      this.selectTool(AnnotationManager.DEFAULT_TOOL_TYPE);
+      this.selectTool(PencilTool.TYPE);
+    }
   }
 
   /**
@@ -687,6 +665,12 @@ export class AnnotationManager {
    */
   setCurrentStrokeWidth(width: number): void {
     this.currentStrokeWidth = width;
+
+    // If pencil was selected, reselect the tool to update the current width
+    if (this._toolSelected$.getValue() === PencilTool.TYPE) {
+      this.selectTool(AnnotationManager.DEFAULT_TOOL_TYPE);
+      this.selectTool(PencilTool.TYPE);
+    }
   }
 
   /**
@@ -766,14 +750,6 @@ export class AnnotationManager {
     }
   }
 
-  private static isPencilObject(object: IObject, type?: string) {
-    if (type) {
-      return object ? (object.type === 'group' && type === PencilTool.TYPE) : null;
-    } else {
-      return object ? (object.type === 'group' && object.get(AnnotationManager.ELEM_TYPE) === PencilTool.TYPE) : null;
-    }
-  }
-
   private static isSinglePath(object: IObject) {
     return object && (object.get(AnnotationManager.ELEM_TYPE) === PencilTool.TYPE) && object.get(AnnotationManager.PATH_N);
   }
@@ -786,18 +762,22 @@ export class AnnotationManager {
   private deleteCanvasAnnotation(object: IObject) {
     let uuid = object.get(AnnotationManager.ELEM_UUID);
     let pageNumber = object.get(AnnotationManager.ELEM_PAGE);
+    console.log('ob', object);
 
     if (AnnotationManager.isSinglePath(object)) { // Single path object -> edit the annotation.
+      console.log('ssingel');
 
       let pathNum = object.get(AnnotationManager.PATH_N);
 
       let annotation = this._allAnnotations$.getValue()[pageNumber][uuid];
       if (annotation) {
         if ((<PencilAnnotation>annotation.data).paths.length <= 1) {
-          this.storage.deleteAnnotation(this.documentId, uuid);
+          this.deleteAnnotation(uuid, pageNumber);
         } else {
           (<PencilAnnotation>annotation.data).paths[pathNum] = null;
-          object.remove();
+          if (this.canvases[pageNumber]) {
+            this.canvases[pageNumber].remove(object);
+          }
           this.editAnnotation(annotation); // edit pencil annotation means only delete some paths
         }
       }
@@ -872,7 +852,11 @@ export class AnnotationManager {
    * @return {number} Pdf scale value.
    */
   getScaleValue(): number {
-    return (this.pdfViewer) ? (parseFloat(this.pdfViewer.currentScale)) : (1.0);
+    if (!this.pdfViewer) {
+      return 1.0;
+    }
+    let scale = parseFloat(this.pdfViewer.currentScale);
+    return isNaN(scale) ? 1.0 : scale;
   }
 
   /**
@@ -886,7 +870,6 @@ export class AnnotationManager {
     for (let i in objects) {
 
       let objectType = objects[i].get(AnnotationManager.ELEM_TYPE);
-
 
       let origLeft = (objects[i] as any).origLeft;
       let origTop = (objects[i] as any).origTop;
@@ -907,7 +890,9 @@ export class AnnotationManager {
       // Call "onScale" handlers
       let tool = this.getTool(objectType);
       if (tool) {
-        objects[i] = tool.onScale(objects[i]);
+        let pageNumber = objects[i].get(AnnotationManager.ELEM_PAGE);
+        let uuid = objects[i].get(AnnotationManager.ELEM_UUID);
+        objects[i] = tool.onScale(objects[i], this._allAnnotations$.getValue()[pageNumber][uuid]);
       }
       objects[i].setCoords();
     }

@@ -3,23 +3,19 @@ import {AnnotationManager} from "../AnnotationManager";
 import {BaseAnnotation} from "../model/BaseAnnotation";
 import {PencilAnnotation} from "../model/PencilAnnotation";
 import {Subject} from "rxjs/Subject";
-import {Canvas as ICanvas, Group, IPath, Object as IObject} from "fabric";
+import {Canvas as ICanvas, IPath, Object as IObject} from "fabric";
 
 declare const fabric: any;
 
 let am: AnnotationManager;
 let eventEmitter: Subject<NewAnnotation>;
 
-let annotationsPerPageMap: { [page: number]: NewAnnotation } = {}; // items drawn while the tool was selected. one group for each page (index == page)
-
 let pathCreatedCallback = function (obj: any) {
 
   let path: IPath = obj.path;
   let pageNumber = parseInt((<ICanvas>this).getElement().getAttribute(AnnotationManager.CANVAS_PAGE_NUMBER));
 
-  let newAnnotation: NewAnnotation = annotationsPerPageMap[pageNumber];
-  (<PencilAnnotation>newAnnotation.annotationData).paths.push(path.toJSON());
-  // path.set(AnnotationManager.PATH_N, (<any>newAnnotation.canvasAnnotation).length);
+  // Set path params
   path.set('lockMovementX', true);
   path.set('lockMovementY', true);
   path.set('lockRotation', true);
@@ -39,11 +35,23 @@ let pathCreatedCallback = function (obj: any) {
   });
   path.set('selectable', true);
 
-  path.remove();
-  (newAnnotation.canvasAnnotation as Group).addWithUpdate(path);
+  // Create new annotation
+  let newAnnotation = {
+    pageNumber: pageNumber,
+    annotationData: <PencilAnnotation>{
+      angle: 0,
+      paths: [path.toJSON()],
+      stroke: this.freeDrawingBrush.color,
+      strokeWidth: this.freeDrawingBrush.width
+    },
+    canvasAnnotation: path
+  };
+
   (<PencilAnnotation>newAnnotation.annotationData).x = newAnnotation.canvasAnnotation.getLeft();
   (<PencilAnnotation>newAnnotation.annotationData).y = newAnnotation.canvasAnnotation.getTop();
   this.renderAll();
+
+  eventEmitter.next(newAnnotation);
 };
 
 
@@ -56,18 +64,10 @@ export class PencilTool implements Tool {
   }
 
   toolSelected() {
-    annotationsPerPageMap = {};
     eventEmitter = new Subject<NewAnnotation>();
   };
 
   toolDeselected() {
-
-    for (let i in annotationsPerPageMap) {
-      if (annotationsPerPageMap.hasOwnProperty(i)) {
-        eventEmitter.next(annotationsPerPageMap[i]);
-      }
-    }
-
     eventEmitter.complete();
     eventEmitter = null;
   };
@@ -75,25 +75,6 @@ export class PencilTool implements Tool {
   onDragStart = function (event: fabric.IEvent) {
     // drawing mode activated from AnnotationManager
     (<ICanvas>this).on('path:created', pathCreatedCallback);
-    // create new annotation
-    let pageNumber = parseInt((<ICanvas>this).getElement().getAttribute(AnnotationManager.CANVAS_PAGE_NUMBER));
-    let newAnnotation: NewAnnotation = annotationsPerPageMap[pageNumber];
-    if (!newAnnotation) {
-      newAnnotation = <any>{
-        pageNumber: pageNumber,
-        annotationData: <PencilAnnotation>{
-          angle: 0,
-          paths: [],
-          stroke: this.freeDrawingBrush.color,
-          strokeWidth: this.freeDrawingBrush.width
-        },
-        canvasAnnotation: new fabric.Group([], {
-          subTargetCheck: true
-        })
-      };
-      (this as ICanvas).add(newAnnotation.canvasAnnotation as Group);
-      annotationsPerPageMap[pageNumber] = newAnnotation;
-    }
   };
 
   onDragMove = function (event: fabric.IEvent) {
@@ -144,20 +125,16 @@ export class PencilTool implements Tool {
         paths.push(path);
       }
     }
-    return new fabric.Group(paths, {
-      left: data.x,
-      top: data.y,
-      subTargetCheck: true
-    });
+    return paths[0];
   };
 
   editItem(object: IObject, annotation: BaseAnnotation): BaseAnnotation {
     return annotation;
   }
 
-  onScale(object: IObject): IObject {
+  onScale(object: IObject, annotation: BaseAnnotation): IObject {
     // Correct strokeWidth modified by the scale
-    (<IPath>object).strokeWidth = (<IPath>object).strokeWidth * am.getScaleValue();
+    (<IPath>object).strokeWidth = (annotation.data as PencilAnnotation).strokeWidth * am.getScaleValue();
     return object;
   }
 

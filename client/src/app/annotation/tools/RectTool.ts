@@ -5,7 +5,7 @@ import {BaseAnnotation} from "../model/BaseAnnotation";
 import {Subject} from "rxjs/Subject";
 import {Rect as IRect, Object as IObject, Canvas as ICanvas} from "fabric";
 
-declare var fabric: any;
+declare let fabric: any;
 
 let elem: IRect = null;
 let am: AnnotationManager;
@@ -109,9 +109,9 @@ export class RectTool implements Tool {
     return annotation;
   }
 
-  onScale(object: IObject): IObject {
+  onScale(object: IObject, annotation: BaseAnnotation): IObject {
     // Correct strokeWidth modified by the scale
-    (<IRect>object).strokeWidth = (<IRect>object).strokeWidth * am.getScaleValue();
+    (<IRect>object).strokeWidth = (annotation.data as RectAnnotation).strokeWidth * am.getScaleValue();
     return object;
   }
 
