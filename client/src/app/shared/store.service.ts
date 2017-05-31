@@ -8,8 +8,8 @@ import {Http, ResponseContentType} from "@angular/http";
 export class StoreService {
 
 
-  // private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures'; // TODO
-  private LODE_URL = 'http://latemar.science.unitn.it/LODE';
+  private LODE_URL = 'http://latemar.science.unitn.it/cad/lectures'; // TODO
+  //private LODE_URL = 'http://latemar.science.unitn.it/LODE';
 
   private LS_DATA = 'data';
 
@@ -178,8 +178,8 @@ export class StoreService {
    ----- */
 
   getVideoUrl() {
-    // return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null); // TODO
-    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/content/movie.mp4') : (null);
+    return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/rtsp.mov.mp4') : (null); // TODO
+    //return (this.course && this.lecture) ? (this.LODE_URL + '/' + this.course + '/' + this.lecture + '/content/movie.mp4') : (null);
   }
 
   registerHtmlVideoElement(videoElem: HTMLVideoElement) {

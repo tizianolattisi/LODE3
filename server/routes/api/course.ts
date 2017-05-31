@@ -40,11 +40,12 @@ courseRouter.get(PATH + '/:courseId/lectures/:lectureId', (req, res, next) => {
 
         })
         .then(function() {
+            // TODO: get slides from logs
             let condition: any = {};
             Annotation.find(condition, (err, annotations: IAnnotation[]) => {
                 if (!err) {
                     for (let a of annotations) {
-                        if( a.data=='change-slide' ) {
+                        if( a.type=='log' && a.data.type=='lecturer' && a.data.action=='slide') {
                             a = syncAnnotation(new Date(timestamp), a);
                             lectureData.addSlide(course, lecture, a.pageNumber, 'title', 'url', a.time);
                         }
