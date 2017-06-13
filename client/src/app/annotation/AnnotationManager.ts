@@ -25,6 +25,7 @@ import * as moment from "../../../../bin/node_modules/moment/moment";
 import Base = moment.unitOfTime.Base;
 import {OpenNotes} from "./OpenNotes";
 import 'uikit';
+import {AnnotationAction} from "./model/AnnotationAction";
 
 declare const fabric: any;
 
@@ -79,6 +80,11 @@ export class AnnotationManager {
   public currentStrokeWidth: number = 3;
   public isTextSelectionMode: boolean = false;
 
+  // Stacks where actions (add, edit, delete) performed by the user are collected.
+  // Each action is saved into the undoHistory. When user performs an undo, actions are popped from
+  // the undoHistory and pushed into the redoHistory and vice versa.
+  private undoHistory: AnnotationAction[] = [];
+  private redoHistory: AnnotationAction[] = [];
 
   // ///////////////////////////
   // Constructor
@@ -275,42 +281,48 @@ export class AnnotationManager {
   }
 
   /**
-   * Render an annotation into a canvas.
-   * @param canvas canvas
-   * @param annotation annotation data
+   * Render an annotation to a canvas, apply scales and add metadata to the rendered annotation.
+   * @param canvas canvas where render the annotation
+   * @param annotation annotation data representing the annotation to render
+   * @return {IObject} Canvas Object
    */
   protected renderAnnotationToCanvas(canvas: ICanvas, annotation: BaseAnnotation) {
-    let tool = this._annotationTools$.getValue()[annotation.type];
+    let canvasObject = this.renderAnnotationToCanvasSimple(canvas, annotation);
 
-    if (tool && canvas) {
+    if (canvasObject) {
+      this.addAttrsToCanvasObject(canvasObject, annotation.uuid, annotation.type, annotation.pageNumber);
 
-      let canvasObject = tool.tool.drawItem(annotation);
-      if (canvasObject) {
-        this.addAttrsToCanvasObject(canvasObject, annotation.uuid, annotation.type, annotation.pageNumber);
+      // Copy scale parameters from annotation data to canvas objects
+      let scales = annotation.scales;
+      (canvasObject as any).origLeft = scales.origLeft;
+      (canvasObject as any).origTop = scales.origTop;
+      (canvasObject as any).origScaleX = scales.origScaleX;
+      (canvasObject as any).origScaleY = scales.origScaleY;
 
-        // Copy scale parameters from annotation data to canvas objects
-        let scales = annotation.scales;
-        (canvasObject as any).origLeft = scales.origLeft;
-        (canvasObject as any).origTop = scales.origTop;
-        (canvasObject as any).origScaleX = scales.origScaleX;
-        (canvasObject as any).origScaleY = scales.origScaleY;
+      this.scaleCanvasObjects(canvas);
 
-        // Render
-        // if (AnnotationManager.isPencilObject(canvasObject, annotation.type)) {
-        // for (let o of (canvasObject as Group).getObjects()) {
-        //   canvas.add(o);
-        // }
-        // } else {
-        canvas.add(canvasObject);
-        // }
-        this.scaleCanvasObjects(canvas);
-
-        // Save object to array
-        this.annotationsObjects[annotation.uuid] = canvasObject;
-      }
+      // Save object to array
+      this.annotationsObjects[annotation.uuid] = canvasObject;
     }
+    return canvasObject;
   }
 
+  /**
+   * Render an annotation to a canvas.
+   * @param canvas canvas where render the annotation
+   * @param annotation annotation data representing the annotation to render
+   * @return {IObject} Canvas Object
+   */
+  protected renderAnnotationToCanvasSimple(canvas: ICanvas, annotation: BaseAnnotation) {
+    let tool = this._annotationTools$.getValue()[annotation.type];
+    if (tool && canvas) {
+      let canvasObject = tool.tool.drawItem(annotation);
+      if (canvasObject) {
+        canvas.add(canvasObject);
+      }
+      return canvasObject;
+    }
+  }
 
   // ///////////////////////////
   //  Annotations management
@@ -321,13 +333,16 @@ export class AnnotationManager {
    * @param type Type of annotation.
    * @param pageNumber Page number.
    * @param newAnnotation New annotation representation (canvas object + annotation data).
+   * @param uuid optional uuid to assign to the annotation. If not provided,, a random uuid will be used.
+   * @param notChangeHistory override the default behaviour of the method avoiding to save the add action
+   * into the undo history.
    * @return New annotation.
    */
-  addNewAnnotation(type: string, pageNumber: number, newAnnotation: NewAnnotation): BaseAnnotation {
-    let annotationUuid = generateUUID();
+  addNewAnnotation(type: string, pageNumber: number, newAnnotation: NewAnnotation, uuid?: string, notChangeHistory?: boolean): BaseAnnotation {
+    let annotationUuid = uuid ? uuid : generateUUID();
     let canvasObject = newAnnotation.canvasAnnotation;
     let data = newAnnotation.annotationData;
-    let scales: AnnotationScales = null;
+    let scales: AnnotationScales = newAnnotation.scales || null;
 
     if (canvasObject) {
       // Set canvas object properties
@@ -374,6 +389,11 @@ export class AnnotationManager {
 
     // Add annotation to allAnnotations
     this.addToAllAnnotations(annotation);
+
+    if (!notChangeHistory) {
+      this.addToUndoHistory({currentState: annotation, prevState: null, action: 'add'});
+    }
+
     return annotation;
   }
 
@@ -382,8 +402,10 @@ export class AnnotationManager {
    * @param uuid Annotation id.
    * @param pageNumber Page number.
    * @param notSave true if want not to delete the annotation from storage (= remove only from canvas)
+   * @param notChangeHistory override the default behaviour of the method avoiding to save the delete action
+   * into the undo history.
    */
-  deleteAnnotation(uuid: string, pageNumber: number, notSave?: boolean) {
+  deleteAnnotation(uuid: string, pageNumber: number, notSave?: boolean, notChangeHistory?: boolean) {
     // remove from canvas
     let object = this.annotationsObjects[uuid];
     let canvas = this.canvases[pageNumber];
@@ -398,14 +420,21 @@ export class AnnotationManager {
     // remove from all annotations var
     let annInPage = this._allAnnotations$.getValue()[pageNumber];
     if (annInPage) {
+      let ann = Object.assign({}, annInPage[uuid]);
       delete annInPage[uuid];
       let temp = {};
       temp[pageNumber] = annInPage;
       this._allAnnotations$.next(Object.assign([], this._allAnnotations$.getValue(), temp));
+
+      if (!notChangeHistory) {
+        this.addToUndoHistory({currentState: null, prevState: ann, action: 'delete'});
+      }
     }
   }
 
-  private doEditAnnotation(annotation: BaseAnnotation, object: IObject) {
+  private doEditAnnotation(annotation: BaseAnnotation, object: IObject, notChangeHistory?: boolean) {
+    // let oldAnn = Object.assign({}, annotation);
+    let oldAnn = {...annotation, scales: {...annotation.scales}, data: {...annotation.data}};
 
     // Edit canvas object
     let tool = this.getTool(annotation.type);
@@ -443,25 +472,33 @@ export class AnnotationManager {
       this.storage.editAnnotation(this.documentId, editedAnn);
       // Update all annotations var
       this.addToAllAnnotations(annotation);
+      if (!notChangeHistory) {
+        let newAnn = {...annotation, scales: {...annotation.scales}, data: {...annotation.data}};
+        this.addToUndoHistory({currentState: newAnn, prevState: oldAnn, action: 'edit'});
+      }
     }
   }
 
   /**
    * Save an edited annotation.
    * @param annotation Edited annotation.
+   * @param notChangeHistory override the default behaviour of the method avoiding to save the edit action
+   * into the undo history.
    */
-  editAnnotation(annotation: BaseAnnotation) {
+  editAnnotation(annotation: BaseAnnotation, notChangeHistory?: boolean) {
     if (annotation) {
       let object = this.annotationsObjects[annotation.uuid];
-      this.doEditAnnotation(annotation, object);
+      this.doEditAnnotation(annotation, object, notChangeHistory);
     }
   }
 
   /**
    * Edit a canvas annotation.
    * @param object New canvas object representing the annotation.
+   * @param notChangeHistory override the default behaviour of the method avoiding to save the edit action
+   * into the undo history.
    */
-  private editCanvasAnnotation(object: IObject) {
+  private editCanvasAnnotation(object: IObject, notChangeHistory?: boolean) {
 
     // Fetch properties
     let uuid = object.get(AnnotationManager.ELEM_UUID);
@@ -473,7 +510,7 @@ export class AnnotationManager {
       if (annInPage) {
         let annotation = annInPage[uuid];
         if (annotation) {
-          this.doEditAnnotation(annotation, object);
+          this.doEditAnnotation(annotation, object, notChangeHistory);
         }
       }
     }
@@ -762,10 +799,8 @@ export class AnnotationManager {
   private deleteCanvasAnnotation(object: IObject) {
     let uuid = object.get(AnnotationManager.ELEM_UUID);
     let pageNumber = object.get(AnnotationManager.ELEM_PAGE);
-    console.log('ob', object);
 
     if (AnnotationManager.isSinglePath(object)) { // Single path object -> edit the annotation.
-      console.log('ssingel');
 
       let pathNum = object.get(AnnotationManager.PATH_N);
 
@@ -832,6 +867,129 @@ export class AnnotationManager {
     if (canvas) {
       canvas.getElement().parentElement.style.pointerEvents = (this.isTextSelectionMode) ? ('none') : ('auto');
     }
+  }
+
+  // ///////////////////////////
+  //  Undo & Redo
+  // ///////////////////////////
+
+  /**
+   * Undo the last action in annotation history.
+   */
+  public undo() {
+
+    let undoAction = this.undoHistory.pop();
+    if (undoAction) {
+      switch (undoAction.action) {
+        case 'add':
+          // undo == delete annotation
+          this.deleteAnnotation(undoAction.currentState.uuid, undoAction.currentState.pageNumber, false, true);
+          break;
+        case 'edit':
+          // undo == delete current annotation, render previous (not edited) annotation, save edited annotation
+          let oldObject = this.annotationsObjects[undoAction.currentState.uuid];
+          let canvas = this.canvases[undoAction.currentState.pageNumber];
+          if (canvas) {
+            canvas.remove(oldObject);
+            this.renderAnnotationToCanvas(canvas, undoAction.prevState);
+            this.editAnnotation({
+              ...undoAction.currentState,
+              scales: {...undoAction.currentState.scales},
+              data: {...undoAction.currentState.data}
+            }, true);
+          }
+          break;
+        case 'delete':
+          // undo == render annotation (setting scales), save annotation on storage
+          if (this.canvases[undoAction.prevState.pageNumber]) {
+            let canvasAnnotation = this.renderAnnotationToCanvasSimple(this.canvases[undoAction.prevState.pageNumber], undoAction.prevState);
+
+            let scales: AnnotationScales = {
+              origLeft: (canvasAnnotation as any).origLeft,
+              origTop: (canvasAnnotation as any).origTop,
+              origScaleX: (canvasAnnotation as any).origScaleX,
+              origScaleY: (canvasAnnotation as any).origScaleY
+            };
+
+            undoAction.prevState = this.addNewAnnotation(undoAction.prevState.type, undoAction.prevState.pageNumber, {
+              pageNumber: undoAction.prevState.pageNumber,
+              annotationData: undoAction.prevState.data,
+              canvasAnnotation: canvasAnnotation,
+              scales: scales
+            }, undoAction.prevState.uuid, true);
+          }
+          break;
+      }
+      this.redoHistory.push(undoAction);
+    }
+  }
+
+  /**
+   * Redo the next action that has been undo.
+   */
+  public redo() {
+    let redoAction = this.redoHistory.pop();
+    if (redoAction) {
+
+      switch (redoAction.action) {
+        case 'add':
+          // undo == render annotation, save annotation on storage
+          if (this.canvases[redoAction.currentState.pageNumber]) {
+            let canvasAnnotation = this.renderAnnotationToCanvasSimple(this.canvases[redoAction.currentState.pageNumber], redoAction.currentState);
+            let scales: AnnotationScales = {
+              origLeft: (canvasAnnotation as any).origLeft,
+              origTop: (canvasAnnotation as any).origTop,
+              origScaleX: (canvasAnnotation as any).origScaleX,
+              origScaleY: (canvasAnnotation as any).origScaleY
+            };
+
+            redoAction.currentState = this.addNewAnnotation(redoAction.currentState.type, redoAction.currentState.pageNumber, {
+              pageNumber: redoAction.currentState.pageNumber,
+              annotationData: redoAction.currentState.data,
+              canvasAnnotation: canvasAnnotation,
+              scales: scales
+            }, redoAction.currentState.uuid, true);
+          }
+          break;
+        case 'edit':
+          // undo == delete current (not edited) annotation, render previous annotation, save edited annotation
+          let oldObject = this.annotationsObjects[redoAction.prevState.uuid];
+          let canvas = this.canvases[redoAction.prevState.pageNumber];
+          if (canvas) {
+            canvas.remove(oldObject);
+            this.renderAnnotationToCanvas(canvas, redoAction.currentState);
+            this.editAnnotation({
+              ...redoAction.prevState,
+              scales: {...redoAction.prevState.scales},
+              data: {...redoAction.prevState.data}
+            }, true);
+          }
+          break;
+        case 'delete':
+          // undo == delete annotation
+          this.deleteAnnotation(redoAction.prevState.uuid, redoAction.prevState.pageNumber, false, true);
+          break;
+      }
+      this.undoHistory.push(redoAction);
+    }
+  }
+
+  canUndo(): boolean {
+    return this.undoHistory.length !== 0;
+  }
+
+  canRedo(): boolean {
+    return this.redoHistory.length !== 0;
+  }
+
+  /**
+   * Add an action (add / delete / edit annotation) to the undo history.
+   * The redo history will be deleted due to new user action.
+   * @param action Action performed by the user.
+   */
+  addToUndoHistory(action: AnnotationAction) {
+    this.undoHistory.push(action);
+    this.redoHistory = [];
   }
 
   // ///////////////////////////

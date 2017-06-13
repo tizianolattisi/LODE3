@@ -36,6 +36,22 @@ export class AnnotationToolbarComponent {
     this.am.selectTool(type);
   };
 
+  undo() {
+    this.am.undo();
+  }
+
+  redo() {
+    this.am.redo();
+  }
+
+  canUndo() {
+    return this.am.canUndo();
+  }
+
+  canRedo() {
+    return this.am.canRedo();
+  }
+
   clearSelection(): void {
     this.am.deselectAllAnnotations();
   }

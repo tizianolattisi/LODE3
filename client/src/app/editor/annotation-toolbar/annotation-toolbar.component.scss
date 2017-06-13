@@ -1,5 +1,9 @@
 @import "../../../style/colors.scss";
 
+.btn-disabled {
+  color: #bbbbbb;
+}
+
 .rotate-90 {
   width: 36px;
   -ms-transform: rotate(90deg);

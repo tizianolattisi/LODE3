@@ -21,8 +21,21 @@
     </div>
 
     <input class="uk-input small-width" type="number" pattern="[0-9]*(\.[0-9]+)?" min="0"
-           [ngModel]="am.currentStrokeWidth" (ngModelChange)="setStrokeWidth($event)" title="Stroke/Text Width" uk-tooltip="pos: bottom">
+           [ngModel]="am.currentStrokeWidth" (ngModelChange)="setStrokeWidth($event)" title="Stroke/Text Width"
+           uk-tooltip="pos: bottom">
     <span uk-icon="icon: line-width; ratio: 0.85"></span>
+  </div>
+
+  <hr class="rotate-90">
+
+  <div class="uk-flex uk-flex-middle">
+    <button class="uk-icon-button uk-margin-small-right" uk-icon="icon: undo; ratio: 0.85"
+            [ngClass]="{'btn-disabled': !canUndo()}"
+            (click)="undo()" title="Undo" uk-tooltip="pos: bottom" [disabled]="!canUndo()"></button>
+
+    <button class="uk-icon-button" uk-icon="icon: redo; ratio: 0.85"
+            [ngClass]="{'btn-disabled': !canRedo()}"
+            (click)="redo()" title="Redo" uk-tooltip="pos: bottom" [disabled]="!canRedo()"></button>
   </div>
 
   <hr class="rotate-90">
