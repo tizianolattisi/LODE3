@@ -1,0 +1,9 @@
+<div *ngIf="error" class="box">
+  <div [ngSwitch]="error.status">
+    <div *ngSwitchCase="400">{{messages[400]}}</div>
+    <div *ngSwitchCase="401">{{messages[401]}}</div>
+    <div *ngSwitchCase="404">{{messages[404]}}</div>
+    <div *ngSwitchCase="500">{{messages[500]}}</div>
+    <div *ngSwitchDefault>An error has occurred</div>
+  </div>
+</div>

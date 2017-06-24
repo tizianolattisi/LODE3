@@ -1,0 +1,87 @@
+<div fxLayout="column" l3FxFullHeight class="mat-typography">
+
+  <!-- TOP TOOLBAR -->
+  <div class="toolbar" l3FxFullWidth fxLayout="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="start center">
+    <div>
+      <span>{{currentSlideIndex + 1}}</span>
+      <span>/</span>
+      <span>{{slides?.length}}</span>
+    </div>
+    <div>
+      <l3-tools-bar></l3-tools-bar>
+    </div>
+  </div>
+
+  <div fxLayout fxLayoutAlign="center stretch" l3FxFullHeight>
+
+    <!-- LEFT TOOLBAR -->
+    <div class="left-toolbar" fxLayout="column" fxLayoutAlign="start center">
+      <button mat-icon-button (click)="onTabSelect('slides')">
+        <mat-icon svgIcon="note-multiple-outline"></mat-icon>
+      </button>
+      <button mat-icon-button (click)="onTabSelect('annotations')">
+        <mat-icon svgIcon="format-list-bulleted"></mat-icon>
+      </button>
+      <button mat-icon-button (click)="onTabSelect('download')">
+        <mat-icon svgIcon="cloud-download"></mat-icon>
+      </button>
+      <button mat-icon-button (click)="onTabSelect('video')">
+        <mat-icon svgIcon="video"></mat-icon>
+      </button>
+    </div>
+
+    <!-- LEFT LATERAL HIDDEN TOOLBAR -->
+    <div class="lateral-bar" *ngIf="currentTab">
+
+      <div [ngSwitch]="currentTab">
+        <ng-container *ngSwitchCase="'slides'">
+          <l3-lateral-bar-slides></l3-lateral-bar-slides>
+        </ng-container>
+        <ng-container *ngSwitchCase="'annotations'">
+          <l3-lateral-bar-annotations></l3-lateral-bar-annotations>
+        </ng-container>
+        <ng-container *ngSwitchCase="'download'">
+          <l3-lateral-bar-download></l3-lateral-bar-download>
+        </ng-container>
+        <ng-container *ngSwitchCase="'video'">
+          <l3-lateral-bar-video></l3-lateral-bar-video>
+        </ng-container>
+        <ng-container *ngSwitchDefault></ng-container>
+      </div>
+
+    </div>
+
+    <!-- CURRENT SLIDE -->
+    <div fxFlex="auto" fxLayout fxLayoutAlign="center center">
+
+      <div class="slide-container" *ngIf="currentSlide?.img">
+        <img [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight>
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT TOOLBAR -->
+    <div class="note-bar" *ngIf="!currentTab">
+      <l3-notes-bar></l3-notes-bar>
+    </div>
+
+    <!-- SLIDE ACTIONS -->
+    <div class="slide-actions">
+
+      <button mat-mini-fab (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
+        <mat-icon svgIcon="chevron-left"></mat-icon>
+      </button>
+
+      <button mat-fab (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
+        <mat-icon svgIcon="camera-enhance" *ngIf="screenshotStatus !== 'pending'"></mat-icon>
+        <mat-spinner *ngIf="screenshotStatus === 'pending'"></mat-spinner>
+      </button>
+
+      <button mat-mini-fab (click)="onSlideNext()" [disabled]="currentSlideIndex === (slides?.length - 1)">
+        <mat-icon svgIcon="chevron-right"></mat-icon>
+      </button>
+
+    </div>
+  </div>
+</div>

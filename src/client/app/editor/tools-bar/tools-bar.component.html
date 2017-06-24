@@ -1,0 +1,36 @@
+<div fxLayout fxLayoutAlign="stretch center">
+
+
+  <div>
+    <button mat-icon-button [ngClass]="{'selected': (selectedToolType === 'default' || !selectedToolType) }" (click)="onToolSelect('default')">
+      <mat-icon svgIcon="cursor-default-outline"></mat-icon>
+    </button>
+
+    <button mat-icon-button *ngFor="let tool of tools$ | async" [ngClass]="{'selected': tool.type === selectedToolType}" (click)="onToolSelect(tool.type)">
+      <mat-icon [svgIcon]="tool.icon"></mat-icon>
+    </button>
+  </div>
+
+  <hr class="divider">
+
+  <div fxLayout fxLayoutAlign="center center">
+
+    <mat-icon svgIcon="format-line-weight"></mat-icon>
+    <mat-form-field class="stroke-input">
+      <input type="number" min="0" matInput [ngModel]="stroke$ | async" (ngModelChange)="onStrokeChange($event)">
+    </mat-form-field>
+  </div>
+
+  <hr class="divider">
+
+  <div>
+    <button mat-icon-button (click)="onSelectAll()">
+      <mat-icon svgIcon="select"></mat-icon>
+    </button>
+
+    <button mat-icon-button (click)="onDelete()">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+
+</div>

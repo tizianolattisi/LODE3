@@ -1,0 +1,11 @@
+@import '../../../style/variables';
+
+.box {
+  box-sizing: border-box;
+  background: $color-error;
+  color: $color-light;
+  padding: 12px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+}
