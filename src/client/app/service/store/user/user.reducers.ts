@@ -1,8 +1,9 @@
 import {UserState} from '../../model/store/states/user.state';
-import {Action} from '@ngrx/store';
-import {UserAction} from './user.actions';
+import * as UserActions from './user.actions';
 import {AuthService} from '../../auth.service';
 import * as jwtDecode from 'jwt-decode';
+
+export type Action = UserActions.All;
 
 
 const initialState: UserState = {
@@ -41,14 +42,14 @@ export function userReducer(state: UserState = initialState, action: Action): Us
 
   switch (action.type) {
 
-    case UserAction.DO_LOGIN:
+    case UserActions.DO_LOGIN:
       return {
         ...state,
         loadingLogin: true,
         errorLogin: null
       };
 
-    case UserAction.LOGIN_SUCCESS:
+    case UserActions.LOGIN_SUCCESS:
       // Get extra info
       const decodedToken = AuthService.getTokenPayload(action.payload);
       return {
@@ -59,7 +60,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorLogin: null
       };
 
-    case UserAction.LOGIN_ERROR:
+    case UserActions.LOGIN_ERROR:
       return {
         ...state,
         email: '',
@@ -68,7 +69,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorLogin: action.payload
       };
 
-    case UserAction.DO_LOGOUT:
+    case UserActions.DO_LOGOUT:
       return {
         ...state,
         email: '',
@@ -77,7 +78,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorLogin: null
       };
 
-    case UserAction.DO_SIGNUP:
+    case UserActions.DO_SIGNUP:
       return {
         ...state,
         loadingSignup: true,
@@ -85,7 +86,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorSignup: null
       };
 
-    case UserAction.SIGNUP_SUCCESS:
+    case UserActions.SIGNUP_SUCCESS:
       return {
         ...state,
         loadingSignup: false,
@@ -93,7 +94,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorSignup: null
       };
 
-    case UserAction.SIGNUP_ERROR:
+    case UserActions.SIGNUP_ERROR:
       return {
         ...state,
         loadingSignup: false,
@@ -101,7 +102,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorSignup: action.payload
       };
 
-    case UserAction.DO_CONFIRM_ACCOUNT:
+    case UserActions.DO_CONFIRM_ACCOUNT:
       return {
         ...state,
         loadingConfirmAccount: true,
@@ -109,7 +110,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorConfirmAccount: null
       };
 
-    case UserAction.CONFIRM_ACCOUNT_SUCCESS:
+    case UserActions.CONFIRM_ACCOUNT_SUCCESS:
       return {
         ...state,
         loadingConfirmAccount: false,
@@ -117,7 +118,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorConfirmAccount: null
       };
 
-    case UserAction.CONFIRM_ACCOUNT_ERROR:
+    case UserActions.CONFIRM_ACCOUNT_ERROR:
       return {
         ...state,
         loadingConfirmAccount: false,
@@ -125,7 +126,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorConfirmAccount: action.payload
       };
 
-    case UserAction.DO_PASSWORD_FORGOT:
+    case UserActions.DO_PASSWORD_FORGOT:
       return {
         ...state,
         loadingPasswordForgot: true,
@@ -133,7 +134,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorPasswordForgot: null
       };
 
-    case UserAction.PASSWORD_FORGOT_SUCCESS:
+    case UserActions.PASSWORD_FORGOT_SUCCESS:
       return {
         ...state,
         loadingPasswordForgot: false,
@@ -141,7 +142,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorPasswordForgot: null
       };
 
-    case UserAction.PASSWORD_FORGOT_ERROR:
+    case UserActions.PASSWORD_FORGOT_ERROR:
       return {
         ...state,
         loadingPasswordForgot: false,
@@ -149,7 +150,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorPasswordForgot: action.payload
       };
 
-    case UserAction.DO_CHANGE_PASSWORD:
+    case UserActions.DO_CHANGE_PASSWORD:
       return {
         ...state,
         loadingChangePassword: true,
@@ -157,7 +158,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorChangePassword: null
       };
 
-    case UserAction.CHANGE_PASSWORD_SUCCESS:
+    case UserActions.CHANGE_PASSWORD_SUCCESS:
       return {
         ...state,
         loadingChangePassword: false,
@@ -165,7 +166,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorChangePassword: null
       };
 
-    case UserAction.CHANGE_PASSWORD_ERROR:
+    case UserActions.CHANGE_PASSWORD_ERROR:
       return {
         ...state,
         loadingChangePassword: false,
@@ -173,7 +174,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorChangePassword: action.payload
       };
 
-    case UserAction.DO_CHANGE_PASSWORD_WITH_CODE:
+    case UserActions.DO_CHANGE_PASSWORD_WITH_CODE:
       return {
         ...state,
         loadingChangePasswordWithCode: true,
@@ -181,7 +182,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorChangePasswordWithCode: null
       };
 
-    case UserAction.CHANGE_PASSWORD_WITH_CODE_SUCCESS:
+    case UserActions.CHANGE_PASSWORD_WITH_CODE_SUCCESS:
       return {
         ...state,
         loadingChangePasswordWithCode: false,
@@ -189,7 +190,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorChangePasswordWithCode: null
       };
 
-    case UserAction.CHANGE_PASSWORD_WITH_CODE_ERROR:
+    case UserActions.CHANGE_PASSWORD_WITH_CODE_ERROR:
       return {
         ...state,
         loadingChangePasswordWithCode: false,
@@ -197,7 +198,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorChangePasswordWithCode: action.payload
       };
 
-    case UserAction.DO_NEW_CONFIRMATION_CODE:
+    case UserActions.DO_NEW_CONFIRMATION_CODE:
       return {
         ...state,
         loadingNewConfirmationCode: true,
@@ -205,7 +206,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorNewConfirmationCode: null
       };
 
-    case UserAction.NEW_CONFIRMATION_CODE_SUCCESS:
+    case UserActions.NEW_CONFIRMATION_CODE_SUCCESS:
       return {
         ...state,
         loadingNewConfirmationCode: false,
@@ -213,7 +214,7 @@ export function userReducer(state: UserState = initialState, action: Action): Us
         errorNewConfirmationCode: null
       };
 
-    case UserAction.NEW_CONFIRMATION_CODE_ERROR:
+    case UserActions.NEW_CONFIRMATION_CODE_ERROR:
       return {
         ...state,
         loadingNewConfirmationCode: false,

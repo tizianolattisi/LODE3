@@ -15,14 +15,13 @@ import {HttpAuth} from './http-auth.service';
 import {AppState} from './model/store/app-state';
 import {rootReducer} from './store/rootReducer';
 import {environment} from '../../environments/environment';
-import {UserAction} from './store/user/user.actions';
 import {UserEffects} from './store/user/user.effects';
 
 @NgModule({
   imports: [
-    StoreModule.provideStore(rootReducer),
-    EffectsModule.run(UserEffects),
-    !environment.production ? StoreDevtoolsModule.instrumentOnlyWithExtension({maxAge: 50}) : []
+    StoreModule.forRoot(rootReducer),
+    EffectsModule.forRoot([UserEffects]),
+    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 50}) : []
   ]
 })
 export class ServiceModule {
@@ -34,22 +33,19 @@ export class ServiceModule {
         {
           provide: HttpAuth,
           useFactory: httpAuthFactory,
-          deps: [XHRBackend, RequestOptions, Store, UserAction, Router]
+          deps: [XHRBackend, RequestOptions, Store, Router]
         },
         AnnotationService,
         AnnotationStorageService,
         AuthService,
         LectureService,
         ToolService,
-        VideoService,
-
-        UserAction
+        VideoService
       ]
     }
   }
 }
 
-export function httpAuthFactory(backend: XHRBackend, options: RequestOptions,
-  store: Store<AppState>, userActions: UserAction, router: Router): HttpAuth {
-  return new HttpAuth(backend, options, store, userActions, router);
+export function httpAuthFactory(backend: XHRBackend, options: RequestOptions, store: Store<AppState>, router: Router): HttpAuth {
+  return new HttpAuth(backend, options, store, router);
 }

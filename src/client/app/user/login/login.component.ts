@@ -4,8 +4,10 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs/Rx';
 import {AppState} from '../../service/model/store/app-state';
-import {UserAction} from '../../service/store/user/user.actions';
+import * as UserActions from '../../service/store/user/user.actions';
 import {ErrorResponse} from '../../service/model/error-response';
+import {Credentials} from '../../service/model/credentials';
+import {PasswordForgot} from '../../service/store/user/user.actions';
 
 @Component({
   selector: 'l3-login',
@@ -38,7 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     500: this.defaultMsg,
   };
 
-  public constructor(private store: Store<AppState>, private fb: FormBuilder, private router: Router, private userAction: UserAction) {
+  public constructor(private store: Store<AppState>, private fb: FormBuilder, private router: Router) {
 
     this.loginSubscription = this.store.select(s => s.user).map(u => u.token).subscribe(token => {
       // redirect if user is already logged or just logged
@@ -73,8 +75,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.currentPage = page;
   }
 
-  doLogin(form: any) {
-    this.userAction.doLogin(form);
+  doLogin(credentials: Credentials) {
+    this.store.dispatch(new UserActions.Login(credentials));
 
     // this.userService.login(form.email, form.password)
     //   .subscribe(res => {
@@ -96,8 +98,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     // });
   }
 
-  doPasswordForgot(form: any) {
-    this.userAction.doPasswordForgot(form.email);
+  doPasswordForgot(val: any) {
+    this.store.dispatch(new UserActions.PasswordForgot(val.email));
+
     // this.userService.passwordForgot(form.email)
     //   .subscribe(res => {
     //       this.success = true;
@@ -113,8 +116,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     //     });
   }
 
-  doEmailConfirm(form: any) {
-    this.userAction.doRequestNewConfirmationCode(form.email);
+  doEmailConfirm(val: any) {
+    this.store.dispatch(new UserActions.NewConfirmationCode(val.email));
 
     // this.userService.requestNewConfirmationCode(form.email)
     //   .subscribe(res => {

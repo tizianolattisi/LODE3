@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import uuid = require('node-uuid');
+import * as uuidv4 from 'uuid/v4';
 
 export interface IPasswordResetCode extends mongoose.Document {
   email: string,
@@ -27,11 +27,11 @@ const PasswordResetCodeSchema = new mongoose.Schema({
 });
 
 PasswordResetCodeSchema.methods.generatePasswordResetCode = function (): string {
-  return uuid.v4() + uuid.v4();
+  return uuidv4() + uuidv4();
 };
 
 PasswordResetCodeSchema.methods.getNewExpirationDate = function (): Date {
-  let exp = new Date();
+  const exp = new Date();
   exp.setMinutes(exp.getMinutes() + 30);
   return exp;
 };

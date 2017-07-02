@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
-import uuid = require('node-uuid');
-import { Schema, Types } from "mongoose";
+import * as uuidv4 from 'uuid/v4';
+import {Schema, Types} from 'mongoose';
 
 export interface IConfirmCode extends mongoose.Document {
   uid: Types.ObjectId,
@@ -21,7 +21,7 @@ const ConfirmCodeSchema = new mongoose.Schema({
 });
 
 ConfirmCodeSchema.methods.generateConfirmCode = function (): string {
-  return uuid.v4();
+  return uuidv4();
 };
 
 export const ConfirmCode = mongoose.model<IConfirmCode>('ConfirmCode', ConfirmCodeSchema);

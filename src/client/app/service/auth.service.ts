@@ -3,7 +3,9 @@ import {Response} from '@angular/http';
 import {HttpAuth} from './http-auth.service';
 import {Credentials} from './model/credentials';
 import {Observable} from 'rxjs/Observable';
-import {UserAction} from '../service/store/user/user.actions';
+import {AppState} from './model/store/app-state';
+import {Store} from '@ngrx/store';
+import * as UserActions from '../service/store/user/user.actions';
 import * as jwtDecode from 'jwt-decode';
 
 @Injectable()
@@ -25,11 +27,11 @@ export class AuthService {
     return jwtDecode(token);
   }
 
-  constructor(private http: HttpAuth, private userAction: UserAction) {
+  constructor(private http: HttpAuth, private store: Store<AppState>) {
     // Authenticate user if token is present
     const token: string = localStorage.getItem(AuthService.LS_TOKEN_KEY);
     if (token && AuthService.isTokenExpired(token)) {
-      this.userAction.loginSuccess(token);
+      this.store.dispatch(new UserActions.LoginSuccess(token));
     }
   }
 

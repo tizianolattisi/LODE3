@@ -1,7 +1,41 @@
-<p>
-  lecture-editor works!
-</p>
-<p>Path {{path | json}}</p>
-<p>Path {{path}}</p>
+<div fxLayout="column" l3FxFullHeight>
+  <md-toolbar class="toolbar">
+    <div l3FxFullWidth fxLayout="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="start center">
+      <div>
+        1
+      </div>
+      <div>
+        2
+      </div>
+    </div>
+  </md-toolbar>
 
-<img [src]="path">
+  <div fxLayout fxLayoutAlign="center stretch" l3FxFullHeight>
+    <md-toolbar class="left-toolbar">
+      <div fxLayout="column">
+        <button md-icon-button>
+          <md-icon svgIcon="home"></md-icon>
+        </button>
+        <button md-icon-button>
+          <md-icon svgIcon="home"></md-icon>
+        </button>
+      </div>
+    </md-toolbar>
+    <div class="lateral-bar">
+      lateral
+    </div>
+    <div fxFlex="auto" fxLayout fxLayoutAlign="center center">
+
+      <div class="slide-container">
+        <img [src]="path" l3FxFullHeight l3FxFullWidth>
+      </div>
+
+    </div>
+    <div class="note-bar">
+      notes
+    </div>
+    <button md-fab class="snapshot-btn" (click)="getSnapshot()">
+      <md-icon svgIcon="home"></md-icon>
+    </button>
+  </div>
+</div>

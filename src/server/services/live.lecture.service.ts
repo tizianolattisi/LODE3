@@ -1,11 +1,12 @@
 import Socket = SocketIO.Socket;
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject, ConnectableObservable} from 'rxjs/Rx';
+import {STORAGE_PATH, STORAGE_SLIDES_FOLDER, SERVER_STORAGE_PATH} from '../commons/config';
 import * as chalk from 'chalk';
 import * as fs from 'fs';
+import * as mkdirp from 'mkdirp';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/take';
-import {STORAGE_PATH, STORAGE_SLIDES_FOLDER, SERVER_STORAGE_PATH} from '../commons/config';
 
 type SnapshotStatus = 'no-updates' | 'new-available' | 'fetch-pending';
 
@@ -28,13 +29,9 @@ class LiveLectureService {
     if (!this.liveLectures[lectureId]) {
       // TODO save lecture in db and check if already exists
 
-      const lectureStorageUrl = `${STORAGE_PATH}/${lectureId}`;
-      if (!fs.existsSync(lectureStorageUrl)) {
-        fs.mkdirSync(lectureStorageUrl);
-      }
-      const lectureSlidesStorageUrl = `${lectureStorageUrl}/${STORAGE_SLIDES_FOLDER}`;
+      const lectureSlidesStorageUrl = `${STORAGE_PATH}/${lectureId}/${STORAGE_SLIDES_FOLDER}`;
       if (!fs.existsSync(lectureSlidesStorageUrl)) {
-        fs.mkdirSync(lectureSlidesStorageUrl);
+        mkdirp.sync(lectureSlidesStorageUrl);
       }
 
 

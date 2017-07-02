@@ -1,5 +1,7 @@
 import Server from './server';
 import * as chalk from 'chalk';
+import * as fs from 'fs';
+import * as mkdirp from 'mkdirp';
 import * as mongoose from 'mongoose';
 import {
   ENV_VAR_JWT_SECRET,
@@ -24,6 +26,14 @@ if (!process.env[ENV_VAR_DB_URL] || !process.env[ENV_VAR_DB_NAME]) {
 }
 if (!process.env[ENV_VAR_STORAGE_PATH]) {
   console.warn(chalk.bold.yellow(`> Storage path has not been provided. Use the default one (${STORAGE_PATH}).`));
+}
+if (!fs.existsSync(STORAGE_PATH)) {
+  console.log(chalk.bold.blue(`> Folder "${STORAGE_PATH}" does not exists. It will be created.`));
+  const fodler = mkdirp.sync(STORAGE_PATH);
+  if (fodler == null) {
+    console.error(chalk.bold.red(`> Unable to create folder "${STORAGE_PATH}". Please provide a valid path`));
+    process.exit(-1);
+  }
 }
 if (!process.env[ENV_VAR_SENDGRID_API_KEY]) {
   console.error(

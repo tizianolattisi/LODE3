@@ -1,28 +1,48 @@
 # Lode3
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.1.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Install npm dependencies with `npm install`.
 
-## Running unit tests
+Use the following npm scripts to build the whole application:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+``` bash
+$ npm run server:build:prod 
+$ npm run client:build:prod 
+```
+The commands will generate the *dist* folder that will contains the compiled client and server.
 
-## Running end-to-end tests
+Use `npm start` to start the server.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+Before starting the server, some environment variables must be setted:
 
-## Further help
+|ENVIRONMENT VARIABLE| DESCRIPTION                           |
+|--------------------|---------------------------------------|
+| SERVER_PORT        | Server's port                         |
+| JWT_SECRET         | JWT secret string                     |
+| DB_URL             | Url of a mongo database (eg. "mongodb://localhost:27017/") (mandatory) |
+| DB_NAME            | Database name (mandatory)            |
+| STORAGE_PATH       | Path where lesson's slides are stored |
+| SENDGRID_API_KEY   | Sendgrid API Key (mandatory)          |
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Development
+
+To develop the server it is possible to run the following commands:
+
+```bash
+# Build the server and keep looking for code changes
+$ npm run server:build:w 
+# Start the server and restart it whenever the code changes
+$ npm run server:start:w 
+```
+
+To develop the client it is possible to run the following commands:
+
+```bash
+# Build the client, look for changes, start a simple server that serves
+# client files and redirect the API requests to the main server on port 8080 
+# (the server must be already running) 
+$ npm run client:serve
+```
