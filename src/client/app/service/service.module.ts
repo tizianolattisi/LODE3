@@ -15,12 +15,16 @@ import {HttpAuth} from './http-auth.service';
 import {AppState} from './model/store/app-state';
 import {rootReducer} from './store/rootReducer';
 import {environment} from '../../environments/environment';
+import {AnnotationEffects} from './store/annotation/annotation.effects';
+import {ToolEffects} from './store/tool/tool.effects';
 import {UserEffects} from './store/user/user.effects';
+import {VideoEffects} from './store/video/video.effects';
+import {LectureEffects} from './store/lecture/lecture.effects';
 
 @NgModule({
   imports: [
     StoreModule.forRoot(rootReducer),
-    EffectsModule.forRoot([UserEffects]),
+    EffectsModule.forRoot([UserEffects, LectureEffects, VideoEffects, AnnotationEffects, ToolEffects]),
     !environment.production ? StoreDevtoolsModule.instrument({maxAge: 50}) : []
   ]
 })
