@@ -8,6 +8,63 @@ const PATH = '/lecture';
 
 const router: Router = Router();
 
+/**
+ * Get all the lectures (live excluded if not made explicit).
+ */
+router.get(PATH, (req, res, next) => {
+
+  const liveLectures = req.query.live;
+
+  console.log('live', liveLectures);
+  if (liveLectures === 'true') {
+    const lectures = LiveLectureService.getLiveLectures();
+    res.send(lectures);
+  } else {
+    // Exclude live lectures from result list
+    Lecture.find({uuid: {$nin: LiveLectureService.getLiveLectureIds()}})
+      .then((lectures: Lecture[]) => res.send(lectures.map(l => l.toJSON())))
+      .catch(err => next(err));
+  }
+});
+
+
+/**
+ * Take a snapshot of the slide that is currently displayed during a lecture.
+ */
+router.get(PATH + '/:lectureId/snapshot', (req, res, next) => {
+  // TODO implement
+  const lectureId = req.params['lectureId'];
+  console.log('> REQUEST SNAP FOR ' + lectureId);
+  LiveLectureService.getNextScreenshot(lectureId)
+    .subscribe(snapshotPath => {
+      console.log('> SNAPSHOT AQUIRED: ' + snapshotPath);
+      return res.json(snapshotPath);
+    }, err => {
+      return next(err);
+    });
+});
+
+
+/**
+ * Get all the data regarding a lecture (name, screenshots, ...).
+ */
+router.get(PATH + '/:lectureId', (req, res, next) => {
+
+  const lectureId = req.params['lectureId'];
+  Lecture.findOne({uuid: lectureId})
+    .then(lecture => {
+      if (!lecture) {
+        return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
+      }
+
+      return res.send(lecture.toJSON()); // TODO toJSON  + add screenshots
+    })
+    .catch(err => {
+      return next(err);
+    })
+  return res.sendStatus(501);
+});
+
 
 /**
  * Create a pdf with all the slides and the annotations of a student for a lecture.
@@ -52,50 +109,6 @@ router.get(PATH + '/:lectureId/pdf', (req, res, next) => {
     res.sendStatus(404);
   }
   */
-});
-
-/**
- * Take a snapshot of the slide that is currently displayed during a lecture.
- */
-router.get(PATH + '/:lectureId/snapshot', (req, res, next) => {
-  // TODO implement
-  const lectureId = req.param('lectureId');
-  console.log('> REQUEST SNAP FOR ' + lectureId);
-  LiveLectureService.getNextSnapshot(lectureId)
-    .subscribe(snapshotPath => {
-      console.log('> SNAPSHOT AQUIRED: ' + snapshotPath);
-      return res.json(snapshotPath);
-    }, err => {
-      return next(err);
-    });
-});
-
-/**
- * Get all the slides (as an array of image urls) saved for a lecture.
- */
-router.get(PATH + '/:lectureId/slides', (req, res, next) => {
-  // TODO implement
-  return res.sendStatus(501);
-});
-
-/**
- * Get lecture infromation.
- */
-router.get(PATH + '/:lectureId', (req, res, next) => {
-
-  const lectureId = req.param('lectureId');
-  Lecture.findOne({uuid: lectureId})
-    .then(lecture => {
-      if (!lecture) {
-        return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
-      }
-
-      return res.send(lecture.toJSON());
-    })
-    .catch(err => {
-      return next(err);
-    })
-  return res.sendStatus(501);
 });
 
 export {router as LectureRouter, PATH as LECTURE_PATH};

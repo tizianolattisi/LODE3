@@ -9,7 +9,7 @@ import {ResetPasswordComponent} from './reset-password/reset-password.component'
 import {CodeParamGuard} from './code-param.guard';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from '../material/material.module';
-import { ErrorMessageComponent } from './error-message/error-message.component';
+import {ErrorMessageComponent} from './error-message/error-message.component';
 
 @NgModule({
   imports: [

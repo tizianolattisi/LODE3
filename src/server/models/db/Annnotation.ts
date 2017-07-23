@@ -1,14 +1,14 @@
 import * as mongoose from 'mongoose';
-import { Schema, Types } from 'mongoose';
+import {Schema, Types} from 'mongoose';
 
 export interface IAnnotation extends mongoose.Document {
-  uuid: string,
-  lectureId: string,
-  slideId: string,
-  type: string, // Type of annotation
-  userId: Types.ObjectId,
-  timestamp: Date, // When the note was taken
-  data?: any // Annotation data
+  uuid: string;
+  lectureId: string;
+  slideId: string;
+  type: string; // Type of annotation
+  userId: Types.ObjectId;
+  timestamp: Date; // When the note was taken
+  data?: any; // Annotation data
 }
 
 const AnnotationSchema = new mongoose.Schema({
@@ -40,7 +40,7 @@ const AnnotationSchema = new mongoose.Schema({
 });
 
 // Db annotation to JSON annotation conversion. Remove some data that should not be exposed through the APIs
-AnnotationSchema.set('toJSON', { getters: false, virtuals: false });
+AnnotationSchema.set('toJSON', {getters: false, virtuals: false});
 (<any>AnnotationSchema).options.toJSON.transform = function (doc, ret, options) {
   // Delete unuseful data
   delete ret._id;
@@ -50,7 +50,7 @@ AnnotationSchema.set('toJSON', { getters: false, virtuals: false });
 };
 
 // Ensure there no exists 2 annotations with the same uuid on the same slide
-AnnotationSchema.index({ uuid: 1, lectureId: 1, slideId: 1 }, { unique: true });
+AnnotationSchema.index({uuid: 1, lectureId: 1, slideId: 1}, {unique: true});
 
 
 export function isAnnotation(annotation: IAnnotation): annotation is IAnnotation {

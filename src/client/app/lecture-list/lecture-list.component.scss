@@ -1,0 +1,14 @@
+:host {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+md-list {
+  width: 40%;
+  // TODO set according to media screen
+}
+
+.lecture-card {
+  margin: 1rem;
+}

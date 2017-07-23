@@ -8,7 +8,8 @@ import {
   MdIconModule,
   MdCardModule,
   MdToolbarModule,
-  MdInputModule
+  MdInputModule,
+  MdListModule
 } from '@angular/material';
 
 @NgModule({
@@ -18,7 +19,8 @@ import {
     MdIconModule,
     MdCardModule,
     MdToolbarModule,
-    MdInputModule
+    MdInputModule,
+    MdListModule
   ],
   exports: [
     FlexLayoutModule,
@@ -27,6 +29,7 @@ import {
     MdCardModule,
     MdToolbarModule,
     MdInputModule,
+    MdListModule,
     FxFullHeightDirective,
     FxFullWidthDirective
   ],

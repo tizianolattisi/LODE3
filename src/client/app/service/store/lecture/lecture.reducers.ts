@@ -1,20 +1,39 @@
 import {LectureState} from '../../model/store/states/lecture.state';
 import * as LectureActions from './lecture.actions';
-import {NEXT_SLIDE, GET_SNAPSHOT} from './lecture.actions';
 
 export type Action = LectureActions.All;
 
 
 const initialState: LectureState = {
+  lectures: [],
+  liveLectures: [],
+  lecturesLoadError: null,
+
   lectureId: '',
   slides: [],
   currentSlideIndex: -1,
-  snapshotStatus: '' // TODO set proper value
+  snapshotStatus: '' // TODO set proper value,
 }
 
 export function lectureReducer(state: LectureState = initialState, action: Action): LectureState {
 
   switch (action.type) {
+
+    case LectureActions.UPDATE_LECTURE_LIST:
+      return state;
+
+    case LectureActions.SET_LECTURE_LIST:
+      return {
+        ...state,
+        lectures: action.payload.lectures,
+        liveLectures: action.payload.live
+      };
+
+    case LectureActions.UPDATE_LECTURE_LIST_ERROR:
+      return {
+        ...state,
+        lecturesLoadError: action.payload
+      };
 
     case LectureActions.ADD_SLIDES:
       return {

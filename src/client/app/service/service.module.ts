@@ -1,3 +1,5 @@
+import {AuthInterceptor} from './auth-interceptor';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RequestOptions, XHRBackend} from '@angular/http';
@@ -11,7 +13,6 @@ import {AuthService} from '../service/auth.service';
 import {LectureService} from '../service/lecture.service';
 import {ToolService} from '../service/tool.service';
 import {VideoService} from '../service/video.service';
-import {HttpAuth} from './http-auth.service';
 import {AppState} from './model/store/app-state';
 import {rootReducer} from './store/rootReducer';
 import {environment} from '../../environments/environment';
@@ -35,9 +36,9 @@ export class ServiceModule {
       ngModule: ServiceModule,
       providers: [
         {
-          provide: HttpAuth,
-          useFactory: httpAuthFactory,
-          deps: [XHRBackend, RequestOptions, Store, Router]
+          provide: HTTP_INTERCEPTORS,
+          useClass: AuthInterceptor,
+          multi: true
         },
         AnnotationService,
         AnnotationStorageService,
@@ -48,8 +49,4 @@ export class ServiceModule {
       ]
     }
   }
-}
-
-export function httpAuthFactory(backend: XHRBackend, options: RequestOptions, store: Store<AppState>, router: Router): HttpAuth {
-  return new HttpAuth(backend, options, store, router);
 }

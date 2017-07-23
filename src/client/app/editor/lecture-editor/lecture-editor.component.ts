@@ -19,7 +19,7 @@ export class LectureEditorComponent implements OnInit {
 
   getSnapshot() {
     console.log('Req');
-    this.service.getSnapShot('lecture1').subscribe(path => {
+    this.service.getSnapShot('bd2485fa-bb5d-404b-87dc-cb17e05980f6').subscribe(path => {
 
       this.path = path;
       this.changeDetectorRef.detectChanges();

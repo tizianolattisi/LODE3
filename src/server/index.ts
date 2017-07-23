@@ -48,12 +48,10 @@ if (!process.env[ENV_VAR_SENDGRID_API_KEY]) {
 
 (mongoose as any).Promise = global.Promise;
 
-console.log(chalk.bold.blue(`> Connecting to database "${DB_COMPLETE_URL}"`));
-mongoose.connect(DB_COMPLETE_URL, {}, (err) => {
-  if (err) {
-    console.error(chalk.bold.red('> Database connection error'), err);
-  }
-});
+console.log(chalk.bold.blue(`> Connecting to database "${DB_COMPLETE_URL}"...`));
+mongoose.connect(DB_COMPLETE_URL, {useMongoClient: true})
+  .then(() => console.log(chalk.bold.green('> Connected to database')))
+  .catch(err => console.error(chalk.bold.red('> Database connection error'), err));
 
 
 // /////////////////////////////////////////

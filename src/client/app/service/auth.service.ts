@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {HttpAuth} from './http-auth.service';
+import {HttpClient} from '@angular/common/http';
 import {Credentials} from './model/credentials';
 import {Observable} from 'rxjs/Observable';
 import {AppState} from './model/store/app-state';
@@ -27,7 +26,7 @@ export class AuthService {
     return jwtDecode(token);
   }
 
-  constructor(private http: HttpAuth, private store: Store<AppState>) {
+  constructor(private http: HttpClient, private store: Store<AppState>) {
     // Authenticate user if token is present
     const token: string = localStorage.getItem(AuthService.LS_TOKEN_KEY);
     if (token && AuthService.isTokenExpired(token)) {
@@ -36,10 +35,10 @@ export class AuthService {
   }
 
   login(credentials: Credentials): Observable<string> {
-    return this.http.post(`${this.USER_PATH}/login`, credentials).map(res => res.json());
+    return this.http.post<string>(`${this.USER_PATH}/login`, credentials);
   }
 
-  logout(): Observable<Response> {
+  logout(): Observable<any> {
     return this.http.get(`${this.USER_PATH}/logout`);
   }
 

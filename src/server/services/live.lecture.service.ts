@@ -1,107 +1,107 @@
 import Socket = SocketIO.Socket;
 import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject, ConnectableObservable} from 'rxjs/Rx';
-import {STORAGE_PATH, STORAGE_SLIDES_FOLDER, SERVER_STORAGE_PATH} from '../commons/config';
+import {LiveLecture} from './live-lecture';
+import {Lecture} from '../models/db/Lecture';
 import * as chalk from 'chalk';
-import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/take';
 
-type SnapshotStatus = 'no-updates' | 'new-available' | 'fetch-pending';
-
-interface LiveLecture {
-  socket: Socket,
-  snapshotStatus: SnapshotStatus,
-  slidePath$: Observable<string>
-}
 
 class LiveLectureService {
 
-  // TODO for each lesson
-  // 1. The last image available (url)
-  // 2. Boolean setted by the raspberry to say if there is a new image ready to download
-  // 3. Observable
-  liveLectures: {[lessionId: string]: LiveLecture} = {};
+  private liveLectures: {[lectureId: string]: LiveLecture} = {};
 
+  getLiveLectureIds(): string[] {
+    return Object.keys(this.liveLectures);
+  }
 
-  registerLecture(socket: Socket, lectureId: string): void {
+  getLiveLectures(): Lecture[] {
+    return Object.keys(this.liveLectures).map(lId => this.liveLectures[lId].toLectureModel() as Lecture);
+  }
+
+  registerLecture(lectureId: string, socket: Socket, data: {name?: string; pin: string}): void {
     if (!this.liveLectures[lectureId]) {
-      // TODO save lecture in db and check if already exists
-
-      const lectureSlidesStorageUrl = `${STORAGE_PATH}/${lectureId}/${STORAGE_SLIDES_FOLDER}`;
-      if (!fs.existsSync(lectureSlidesStorageUrl)) {
-        mkdirp.sync(lectureSlidesStorageUrl);
-      }
-
-
-      const subject = new BehaviorSubject(null);
-      let snapshotCounter = 0;
-
-      socket.on('new-snapshot-available', (data) => {
-        console.log(chalk.bold.blue(`New snapshot available for lecture ${lectureId}`));
-        this.liveLectures[lectureId].snapshotStatus = 'new-available';
-      });
-
-      socket.on('send-snapshot', (data) => {
-
-        snapshotCounter++;
-        console.log(chalk.bold.blue(`Save snapshot data for lecture ${lectureId} - counter ${snapshotCounter}`));
-
-        const snapshotFile = `${snapshotCounter}.png`;
-        const snapshotStorageUrl = `${lectureSlidesStorageUrl}/${snapshotFile}`;
-
-        fs.writeFile(snapshotStorageUrl, data, 'base64', err => {
-          if (err) {
-            console.error(err);
-          } else {
-            this.liveLectures[lectureId].snapshotStatus = 'no-updates';
-            subject.next(`${SERVER_STORAGE_PATH}/${lectureId}/${STORAGE_SLIDES_FOLDER}/${snapshotFile}`);
-          }
-        });
-      });
-
-      socket.on('disconnect', err => {
-        console.log(chalk.bold.blue(`${lectureId} Disconnected.` + err));
-        subject.complete();
-        delete this.liveLectures[lectureId];
-      });
-
-      this.liveLectures[lectureId] = {
-        socket: socket,
-        snapshotStatus: 'no-updates',
-        slidePath$: subject.asObservable()
-      }
+      const liveLecture = new LiveLecture(lectureId, socket, data.pin, data.name);
+      this.addLiveLecture(lectureId, liveLecture);
     }
+    // TODO handle
   }
 
-  getNextSnapshot(lectureId: string): Observable<string> {
-    // TODO decide if trigger new snapshot request based on snapshot[lId].newDownloadableImageBoolean
-
-    if (this.liveLectures[lectureId]) {
-      const liveLecture = this.liveLectures[lectureId];
-      switch (liveLecture.snapshotStatus) {
-
-        case 'no-updates':
-          console.log(chalk.blue('> [Get Snapshot] No updates'));
-          // Send latest snapshot available
-          return liveLecture.slidePath$.take(1);
-        case 'new-available':
-          console.log(chalk.blue('> [Get Snapshot] New snapshot available'));
-          // Fetch the latest snapshot and wait for it
-          liveLecture.snapshotStatus = 'fetch-pending';
-          liveLecture.socket.emit('get-snapshot');
-          return liveLecture.slidePath$.skip(1).take(1);
-        case 'fetch-pending':
-          console.log(chalk.blue('> [Get Snapshot] fetch pending'));
-          // Wait for latest snapshot fetch
-          return liveLecture.slidePath$.skip(1).take(1);
-      }
+  startLecture(lectureId: string) {
+    const ll = this.getLiveLecture(lectureId);
+    if (ll) {
+      ll.startLecture();
     } else {
-      // TODO lecture not exists
-      return Observable.throw('lecture not exists');
+      // TODO handle
+      console.error('LL not found');
     }
   }
+
+  newScreenshotAvailable(lectureId: string) {
+    const ll = this.getLiveLecture(lectureId);
+    if (ll) {
+      ll.newScreenshotAvailable();
+    } else {
+      // TODO handle
+      console.error('LL not found');
+    }
+  }
+
+  saveScreenshot(lectureId: string, data: {image: string; timestamp: number; name?: string}) { // TODO define data
+    const ll = this.getLiveLecture(lectureId);
+    if (ll) {
+      ll.saveScreenshot(data.image, data.timestamp, data.name);
+    } else {
+      // TODO handle
+      console.error('LL not found');
+    }
+  }
+
+  stopLecture(lectureId: string) {
+    const ll = this.getLiveLecture(lectureId);
+    if (ll) {
+      ll.stopLecture();
+      this.removeLiveLecture(lectureId);
+    } else {
+      // TODO handle
+      console.error('LL not found');
+    }
+  }
+
+  lectureDisconnected(lectureId: string) {
+    const ll = this.getLiveLecture(lectureId);
+    if (ll) {
+      ll.lectureDisconnected();
+      this.removeLiveLecture(lectureId);
+    } else {
+      // TODO handle
+      console.error('LL not found');
+    }
+  }
+
+
+  private addLiveLecture(lectureId: string, liveLecture: LiveLecture): void {
+    this.liveLectures[lectureId] = liveLecture;
+  }
+
+  private getLiveLecture(lectureId: string) {
+    return this.liveLectures[lectureId];
+  }
+
+  private removeLiveLecture(lectureId: string): void {
+    delete this.liveLectures[lectureId];
+  }
+
+  getNextScreenshot(lectureId: string): Observable<string> {
+    const ll = this.getLiveLecture(lectureId);
+    if (ll) {
+      return ll.getNextScreenshot();
+    } else {
+      return Observable.throw(new Error('Live Lecture not exists'));
+      // TODO handle
+    }
+  }
+
 }
 
 const service = new LiveLectureService();

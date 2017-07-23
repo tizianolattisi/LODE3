@@ -7,6 +7,7 @@ import {responseToError} from '../../model/error-response';
 import {AuthService} from '../../auth.service';
 import * as UserActions from './user.actions';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/do';
 
 @Injectable()
 export class UserEffects {

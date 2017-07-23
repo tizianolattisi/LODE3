@@ -3,10 +3,10 @@ import * as uuidv4 from 'uuid/v4';
 import {Schema, Types} from 'mongoose';
 
 export interface IConfirmCode extends mongoose.Document {
-  uid: Types.ObjectId,
-  code: string,
+  uid: Types.ObjectId;
+  code: string;
 
-  generateConfirmCode(): string
+  generateConfirmCode(): string;
 }
 
 const ConfirmCodeSchema = new mongoose.Schema({

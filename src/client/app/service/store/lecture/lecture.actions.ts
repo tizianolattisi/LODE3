@@ -6,6 +6,12 @@ import {Credentials} from '../../model/credentials';
 import {ChangePasswordData} from '../../model/change-password';
 import {ChangePasswordWithCodeData} from '../../model/change-password-with-code';
 import {ErrorResponse, responseToError} from '../../model/error-response';
+import {Lecture} from '../../model/lecture';
+
+
+export const UPDATE_LECTURE_LIST = '[Lecture] UPDATE_LECTURE_LIST';
+export const UPDATE_LECTURE_LIST_ERROR = '[Lecture] UPDATE_LECTURE_LIST_ERROR';
+export const SET_LECTURE_LIST = '[Lecture] SET_LECTURE_LIST';
 
 export const ADD_SNAPSHOT = '[Lecture] ADD_SNAPSHOT';
 export const ADD_SLIDES = '[Lecture] ADD_SLIDES';
@@ -15,6 +21,23 @@ export const PREV_SLIDE = '[Lecture] PREV_SLIDE';
 export const NEXT_SLIDE = '[Lecture] NEXT_SLIDE';
 export const GET_SNAPSHOT = '[Lecture] GET_SNAPSHOT';
 export const SET_SNAPSHOT_STATUS = '[Lecture] SET_SNAPSHOT_STATUS';
+
+
+export class UpdateLectureList implements Action {
+  readonly type = UPDATE_LECTURE_LIST;
+}
+
+export class SetLectureList implements Action {
+  readonly type = SET_LECTURE_LIST;
+
+  constructor(public payload: {live: Lecture[], lectures: Lecture[]}) {}
+}
+
+export class UpdateLectureListError implements Action {
+  readonly type = UPDATE_LECTURE_LIST_ERROR;
+
+  constructor(public payload: ErrorResponse) {}
+}
 
 export class AddSnapshot implements Action {
   readonly type = ADD_SNAPSHOT;
@@ -60,7 +83,10 @@ export class SetSnapshotStatus implements Action {
 
 
 export type All
-  = AddSnapshot
+  = UpdateLectureList
+  | SetLectureList
+  | UpdateLectureListError
+  | AddSnapshot
   | AddSlides
   | SetSlides
   | SetCurrentSlide

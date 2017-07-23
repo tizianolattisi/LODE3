@@ -5,7 +5,7 @@ export type Action = AnnotationActions.All;
 
 
 const initialState: AnnotationState = {
-  annotations: [],
+  annotations: {},
   selectedAnnotations: [],
   fetchedSlides: []
 }
@@ -20,14 +20,14 @@ export function annotationReducer(state: AnnotationState = initialState, action:
     case AnnotationActions.SET_ANNOTATIONS:
       return {
         ...state,
-        annotations: {...state.annotations, action.payload.annotations}, // TODO user correct prop
+        annotations: {...state.annotations, ...action.payload.annotations}, // TODO user correct prop
         fetchedSlides: [...state.fetchedSlides, action.payload.slideId] // TODO user correct prop
       };
 
     case AnnotationActions.SET_ANNOTATIONS_PER_SLIDE:
       return {
         ...state,
-        annotations: {...state.annotations, action.payload.annotations}, // TODO user correct prop
+        annotations: {...state.annotations, ...action.payload.annotations}, // TODO user correct prop
         fetchedSlides: [...state.fetchedSlides, action.payload.slideId] // TODO user correct prop
       };
 

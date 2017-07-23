@@ -9,12 +9,14 @@ export interface UserProfile {
 }
 
 export interface IUser extends UserProfile, mongoose.Document {
-  password: string,
-  enabled: boolean,
+  password: string;
+  enabled: boolean;
 
-  generatePasswordHash(password: string),
-  validPassword(password: string),
-  getUserProfile(): UserProfile
+  lectures?: {id: string; screenshots: string[]}[];
+
+  generatePasswordHash(password: string);
+  validPassword(password: string);
+  getUserProfile(): UserProfile;
 }
 
 const UserSchema = new mongoose.Schema({
@@ -33,7 +35,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  enabled: Boolean
+  enabled: Boolean,
+  lectures: [{
+    id: String,
+    screenshots: [String]
+  }]
 });
 
 
@@ -55,14 +61,18 @@ UserSchema.methods.getUserProfile = function (): UserProfile {
 };
 
 // Db user to JSON user conversion. Remove some data that should not be exposed through the APIs
-UserSchema.set('toJSON', { getters: false, virtuals: false });
+UserSchema.set('toJSON', {getters: false, virtuals: false});
 (<any>UserSchema).options.toJSON.transform = function (doc, ret, options) {
   ret.id = ret._id;
   delete ret._id;
   delete ret.__v;
   delete ret.password;
   delete ret.enabled;
+  delete ret.lectures;
   return ret;
 };
+
+UserSchema.index({email: 1}, {unique: true});
+// TODO "Foreign keys" for lectures and screenshots
 
 export const User = mongoose.model<IUser>('User', UserSchema);

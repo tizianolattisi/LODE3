@@ -1,14 +1,14 @@
-import { Router } from 'express';
-import { JWT_SECRET, PASSWORD_PATTERN, SERVER_API_PATH } from '../commons/config';
-import { generateAndSendConfirmCode, generateAndSendPasswordResetCode } from '../emails/email-utils';
-import { ErrorResponse } from '../models/api/ErrorResponse';
-import { NotAuthenticatedResponse } from '../models/api/NotAuthenticatedResponse';
-import { Validation } from '../models/Validation';
+import {Router} from 'express';
+import {JWT_SECRET, PASSWORD_PATTERN, SERVER_API_PATH} from '../commons/config';
+import {generateAndSendConfirmCode, generateAndSendPasswordResetCode} from '../emails/email-utils';
+import {ErrorResponse} from '../models/api/ErrorResponse';
+import {NotAuthenticatedResponse} from '../models/api/NotAuthenticatedResponse';
+import {Validation} from '../models/Validation';
 import * as jwt from 'jsonwebtoken';
 import * as validate from 'express-validation';
-import { User, IUser } from '../models/db/User';
-import { PasswordResetCode, IPasswordResetCode } from '../models/db/PasswordResetCode';
-import { ConfirmCode, IConfirmCode } from '../models/db/ConfirmCode';
+import {User, IUser} from '../models/db/User';
+import {PasswordResetCode, IPasswordResetCode} from '../models/db/PasswordResetCode';
+import {ConfirmCode, IConfirmCode} from '../models/db/ConfirmCode';
 
 
 const PATH = '/user';
@@ -31,7 +31,7 @@ const PUBLIC_PATHS = [
  */
 router.post(PATH + '/login', validate(Validation.credentials), (req, res, next) => {
 
-  User.findOne({ email: req.body.email }, (err, user: IUser) => {
+  User.findOne({email: req.body.email}, (err, user: IUser) => {
     if (err) {
       return next(err);
     }
@@ -43,7 +43,7 @@ router.post(PATH + '/login', validate(Validation.credentials), (req, res, next) 
     if (user.enabled && user.validPassword(req.body.password)) {
 
       // authenticated! -> generate new jwt token
-      return res.json({ token: jwt.sign(user.toJSON(), JWT_SECRET, { expiresIn: '4 days' }) });
+      return res.json({token: jwt.sign(user.toJSON(), JWT_SECRET, {expiresIn: '4 days'})});
     } else {
       return next(new NotAuthenticatedResponse());
     }
@@ -65,7 +65,7 @@ router.get(PATH + '/logout', (req, res, next) => {
 router.post(PATH + '/signup', validate(Validation.credentials), (req, res, next) => {
 
 
-  User.findOne({ email: req.body.email }, (err, user) => {
+  User.findOne({email: req.body.email}, (err, user) => {
     if (err) {
       return next(err);
     }
@@ -74,14 +74,14 @@ router.post(PATH + '/signup', validate(Validation.credentials), (req, res, next)
       return res.status(400).json(new ErrorResponse('user_already_exist', 'User already registered'));
     }
 
-    let u = new User();
+    const u = new User();
     u.email = req.body.email;
     u.password = u.generatePasswordHash(req.body.password);
     u.enabled = false;
 
-    u.save((err, savedUser: IUser) => {
-      if (err) {
-        return next(err);
+    u.save((e, savedUser: IUser) => {
+      if (e) {
+        return next(e);
       }
       res.sendStatus(204);
       generateAndSendConfirmCode(req.hostname, savedUser);
@@ -121,10 +121,12 @@ router.post(PATH + '/password-change-with-code', validate(Validation.passwordCod
 
   // check password constraint
   if (req.body.password.length < 6 || !PASSWORD_PATTERN.test(req.body.password)) {
-    return res.status(400).json(new ErrorResponse('BadPassword', 'Password should be at least 6 characters and contain at least a number.'));
+    return res
+      .status(400)
+      .json(new ErrorResponse('BadPassword', 'Password should be at least 6 characters and contain at least a number.'));
   }
 
-  PasswordResetCode.findOne({ code: req.body.code }, (err, passwordResetCode: IPasswordResetCode) => {
+  PasswordResetCode.findOne({code: req.body.code}, (err, passwordResetCode: IPasswordResetCode) => {
     if (err) {
       return next(err);
     }
@@ -135,7 +137,7 @@ router.post(PATH + '/password-change-with-code', validate(Validation.passwordCod
       return res.status(400).json(new ErrorResponse('CodeExpired', 'Provided code is expired'));
     }
 
-    User.findOne({ email: passwordResetCode.email }, (err, user: IUser) => {
+    User.findOne({email: passwordResetCode.email}, (err, user: IUser) => {
       if (err) {
         return next(err);
       }
@@ -173,7 +175,7 @@ router.post(PATH + '/password-forgot', validate(Validation.email), (req, res, ne
  */
 router.post(PATH + '/new-confirm-code', validate(Validation.email), (req, res, next) => {
 
-  User.findOne({ email: req.body.email }, (err, user: IUser) => {
+  User.findOne({email: req.body.email}, (err, user: IUser) => {
     if (err) {
       return next(err);
     }
@@ -197,7 +199,7 @@ router.post(PATH + '/new-confirm-code', validate(Validation.email), (req, res, n
  */
 router.post(PATH + '/enable-account', validate(Validation.code), (req, res, next) => {
 
-  ConfirmCode.findOne({ code: req.body.code }, (err, confirmCode: IConfirmCode) => {
+  ConfirmCode.findOne({code: req.body.code}, (err, confirmCode: IConfirmCode) => {
     if (err) {
       return next(err);
     }
@@ -224,4 +226,4 @@ router.post(PATH + '/enable-account', validate(Validation.code), (req, res, next
   });
 });
 
-export { router as UserRouter, PATH as USER_PATH, PUBLIC_PATHS as PUBLIC_USER_PATHS };
+export {router as UserRouter, PATH as USER_PATH, PUBLIC_PATHS as PUBLIC_USER_PATHS};

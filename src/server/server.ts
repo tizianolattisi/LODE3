@@ -1,3 +1,4 @@
+import {timeout} from 'rxjs/operator/timeout';
 import * as express from 'express';
 import * as morgan from 'morgan';
 import * as chalk from 'chalk';
@@ -11,6 +12,7 @@ import {USER_PATH, UserRouter, PUBLIC_USER_PATHS} from './api/user.router';
 import {LectureRouter} from './api/lecture.router';
 import {AnnotationSocketListener} from './sockets/annotation.socket';
 import {LectureSocketListener} from './sockets/lecture.socket';
+import {IUser} from './models/db/User';
 import {
   JWT_SECRET,
   SERVER_PORT,
@@ -25,6 +27,7 @@ import {
   BadRequestErrorHandler,
   NotAuthorizedErrorHandler
 } from './api/error.handlers.router';
+import * as jwt from 'jsonwebtoken'; // TODO remove
 
 
 const CLIENT_APP_FS_PATH = `${__dirname}/../client`;
@@ -33,6 +36,8 @@ export default class Server {
 
   // Express app
   private app: express.Application;
+
+  private authorizationMiddleware;
 
   private unprotectedPaths = {
     path: [
@@ -44,8 +49,13 @@ export default class Server {
   };
 
   constructor() {
+    console.log('L3 token ', jwt.sign({
+      email: 'lode@unitn.it',
+      type: 'professor'
+    } as IUser, JWT_SECRET, {}));
 
     this.app = express();
+    this.authorizationMiddleware = expressJwt({secret: JWT_SECRET}).unless(this.unprotectedPaths);
 
     this.setupMiddleware();
     this.setupApi();
@@ -60,8 +70,8 @@ export default class Server {
   }
 
   private setupApi(): void {
-    // Setup auth middleware
-    // this.app.use(SERVER_API_PATH, expressJwt({secret: JWT_SECRET}).unless(this.unprotectedPaths)); // TODO enable
+    // Setup API auth middleware
+    // this.app.use(SERVER_API_PATH, this.authorizationMiddleware);
 
     // Setup API paths
     this.app.get(SERVER_API_PATH, (req, res) => res.json({message: 'Hello!'}));
@@ -80,7 +90,7 @@ export default class Server {
     // Serve Client App
     this.app.use('/', express.static(CLIENT_APP_FS_PATH));
     // Serve Lode files
-    this.app.use(SERVER_STORAGE_PATH, express.static(STORAGE_PATH));
+    this.app.use(SERVER_STORAGE_PATH, this.authorizationMiddleware, express.static(STORAGE_PATH));
 
     // Any path -> serve index.html file
     this.app.get(/\/.*/, function (req, res) {
@@ -94,7 +104,7 @@ export default class Server {
     const server = http.createServer(this.app);
     server.listen(SERVER_PORT, () => { // Listen only for local connections
       const {address, port} = server.address();
-      console.log(chalk.bold.blue(`> Http Server listening on ${address}:${port}`));
+      console.log(chalk.bold.green(`> Http Server listening on ${address}:${port}`));
     });
 
     // Create and start socket
@@ -107,13 +117,20 @@ export default class Server {
     const lectureIO = io.of('/api/lecture');
 
     // Setup auth on socket // TODO enable
-    // io.on('connection', socketIOJwt.authorize({
-    //   secret: JWT_SECRET,
-    //   callback: SOCKET_AUTH_TIMEOUT
-    // }));
+    annotationIO.on('connection', socketIOJwt.authorize({
+      secret: JWT_SECRET,
+      timeout: SOCKET_AUTH_TIMEOUT
+    }));
+
+    lectureIO.on('connection', socketIOJwt.authorize({
+      secret: JWT_SECRET,
+      timeout: SOCKET_AUTH_TIMEOUT,
+      callback: true
+    }));
 
     annotationIO.on('connection', AnnotationSocketListener); // TODO change connection with authenticated
-    lectureIO.on('connection', LectureSocketListener); // TODO change connection with authenticated
+
+    lectureIO.on('authenticated', LectureSocketListener); // TODO change connection with authenticated
 
     return server;
   }

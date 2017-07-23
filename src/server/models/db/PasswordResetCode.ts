@@ -2,13 +2,13 @@ import * as mongoose from 'mongoose';
 import * as uuidv4 from 'uuid/v4';
 
 export interface IPasswordResetCode extends mongoose.Document {
-  email: string,
-  code: string,
-  expiration: Date
+  email: string;
+  code: string;
+  expiration: Date;
 
-  generatePasswordResetCode(): string,
-  getNewExpirationDate(): Date,
-  isExpired(): boolean
+  generatePasswordResetCode(): string;
+  getNewExpirationDate(): Date;
+  isExpired(): boolean;
 }
 
 const PasswordResetCodeSchema = new mongoose.Schema({

@@ -1,3 +1,4 @@
+import * as os from 'os';
 
 // /////////////////////////////////////////
 // Environment variables names
@@ -25,7 +26,7 @@ export const DB_NAME = (process.env[ENV_VAR_DB_NAME]) || 'lode';
 export const DB_COMPLETE_URL: string = (process.env[ENV_VAR_DB_URL]) ?
   (process.env[ENV_VAR_DB_URL] + DB_NAME) : ('mongodb://localhost:27017/' + DB_NAME);
 
-export const STORAGE_PATH: string = (process.env[ENV_VAR_STORAGE_PATH]) || '/tmp/lode';
+export const STORAGE_PATH: string = (process.env[ENV_VAR_STORAGE_PATH]) || `${os.tmpdir()}/lode`;
 export const STORAGE_SLIDES_FOLDER = 'slides';
 
 export const SENDGRID_API_KEY: string = (process.env[ENV_VAR_SENDGRID_API_KEY]) || '';
