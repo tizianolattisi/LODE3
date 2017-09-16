@@ -1,5 +1,5 @@
 <div fxLayout="column" class="app-wrapper">
-  <md-toolbar color="primary" class="toolbar">
+  <md-toolbar color="primary">
 
     <div fxLayout>
       <!--<img src="" alt="Logo">-->
@@ -17,12 +17,12 @@
       </ng-container>
 
       <ng-container *ngIf="email$ | async">
-        
-        <div fxLayout fxLayoutAlign="center center">
+
+        <div fxLayout fxLayoutAlign="center center" class="user-info">
           <md-icon svgIcon="account"></md-icon>
           <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
         </div>
-        
+
         <button md-icon-button (click)="onLogout()" fxFlexOffset="6px">
             <md-icon svgIcon="logout"></md-icon>
         </button>

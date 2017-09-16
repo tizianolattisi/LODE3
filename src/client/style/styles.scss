@@ -19,7 +19,7 @@ html, body, main {
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
 $l3-app-primary:     mat-palette($mat-yellow, A700);
-$l3-app-accent:      mat-palette($mat-grey, 50, 50, 50);
+$l3-app-accent:      mat-palette($mat-blue, 600, 500, 500);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $l3-app-theme: mat-light-theme($l3-app-primary, $l3-app-accent);

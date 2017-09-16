@@ -1,144 +1,158 @@
-<div>
+<div fxLayout fxLayoutAlign="center center" fxFlexFill>
 
-  <md-card *ngIf="currentPage == 0">
-    <md-card-title>Login</md-card-title>
-    <md-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="doLogin(loginForm.value)">
-        <div *ngIf="errorLogin$ | async">
-          <l3-error-message [error]="errorLogin$ | async" [messages]="loginErrMsgs"></l3-error-message>
-        </div>
+  <ng-container *ngIf="currentPage === 0">
+    <md-card fxFlex.lt-md="auto" fxFlex.md="60%" fxFlex.gt-md="40%" class="card">
+      <md-card-title>Login</md-card-title>
+      <md-card-content fxLayout="column">
+        <form [formGroup]="loginForm" (ngSubmit)="doLogin(loginForm.value)" fxLayout="column">
+          <div *ngIf="errorLogin$ | async">
+            <l3-error-message [error]="errorLogin$ | async" [messages]="loginErrMsgs"></l3-error-message>
+          </div>
 
-        <div fxLayout="column">
-          <md-form-field>
-            <md-icon mdPrefix svgIcon="account" class="prefix-icon"></md-icon>
-            <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
-            <md-error *ngIf="loginForm.get('email').getError('required')">
-              Email is required
-            </md-error>
-            <md-error *ngIf="loginForm.get('email').getError('email')">
-              Email must belong to domain "@unitn.it"
-            </md-error>
-          </md-form-field>
+          <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill fxFlexOffeset="24px">
+            <md-form-field class="input-field">
+              <md-icon mdPrefix svgIcon="account" class="prefix-icon"></md-icon>
+              <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
+              <md-error *ngIf="loginForm.get('email').getError('required')">
+                Email is required
+              </md-error>
+              <md-error *ngIf="loginForm.get('email').getError('email')">
+                Email must belong to domain "@unitn.it"
+              </md-error>
+            </md-form-field>
 
-          <md-form-field>
-            <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
-            <input type="password" mdInput placeholder="Password" [formControl]="loginForm.controls['password']">
-            <md-error *ngIf="loginForm.get('password').getError('required')">
-              Password is required
-            </md-error>
-            <md-error *ngIf="loginForm.get('password').getError('minlength')">
-              Password must have at least 6 characters
-            </md-error>
-          </md-form-field>
+            <md-form-field class="input-field">
+              <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
+              <input type="password" mdInput placeholder="Password" [formControl]="loginForm.controls['password']">
+              <md-error *ngIf="loginForm.get('password').getError('required')">
+                Password is required
+              </md-error>
+              <md-error *ngIf="loginForm.get('password').getError('minlength')">
+                Password must have at least 6 characters
+              </md-error>
+            </md-form-field>
 
-          <button type="submit" md-button [disabled]="!loginForm.valid" fxFlexAlign="end">
+            <button type="submit" md-raised-button color="accent" [disabled]="!loginForm.valid" fxFlexAlign="end">
               <span>Login</span>
               <md-icon svgIcon="send"></md-icon>
           </button>
-        </div>
-      </form>
-
-      <hr>
-
-      <div fxLayout="column">
-        <a (click)="showPage(1)">Password forgot? Click here</a>
-        <a (click)="showPage(2)">Account Confirmation email not received? Click here</a>
-      </div>
-      <hr>
-      <div>
-        <a (click)="goToSignUp()"><b>Don't have an account yet? Click here</b></a>
-      </div>
-
-    </md-card-content>
-  </md-card>
-
-  <md-card *ngIf="currentPage == 1">
-    <md-card-content>
-      <div (click)="showPage(0)">
-        <a fxLayout fxLayoutAlign="center center">
-          <md-icon svgIcon="chevron-left"></md-icon>
-          <span>Go to login</span>
-        </a>
-      </div>
-
-      <form [formGroup]="loginForm" (ngSubmit)="doPasswordForgot(loginForm.value)">
-        <div *ngIf="errorPasswordForgot$ | async">
-          <div [ngSwitch]="(errorPasswordForgot$ | async).status">
-            <div *ngSwitchCase="400 || 404">
-              <span>It seems that this email is not registered. Are you sure you have insert the right email?</span>
-            </div>
-            <div *ngSwitchDefault>
-              <span>Something goes wrong... please retry.</span>
-            </div>
           </div>
+        </form>
+
+        <div fxFlexOffset="4rem">
+          <hr>
         </div>
 
         <div fxLayout="column">
-          <md-form-field>
-            <!--TODO icon-->
-            <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
-            <md-error></md-error>
-            <!--TODO Error-->
-          </md-form-field>
+          <a md-button color="accent" (click)="showPage(1)">Password forgot? Click here</a>
+          <a md-button color="accent" (click)="showPage(2)">Account Confirmation email not received? Click here</a>
+        </div>
 
-          <button type="submit" md-button [disabled]="!loginForm.controls['email'].valid" fxFlexAlign="end">
+        <div>
+          <hr>
+        </div>
+
+        <div fxLayout="column">
+          <a md-button color="accent" (click)="goToSignUp()"><b>Don't have an account yet? Click here</b></a>
+        </div>
+
+      </md-card-content>
+    </md-card>
+  </ng-container>
+
+  <ng-container *ngIf="currentPage === 1">
+    <md-card>
+
+      <md-card-content>
+        <div (click)="showPage(0)">
+          <a fxLayout fxLayoutAlign="center center">
+            <md-icon svgIcon="chevron-left"></md-icon>
+            <span>Go to login</span>
+          </a>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="doPasswordForgot(loginForm.value)">
+          <div *ngIf="errorPasswordForgot$ | async">
+            <div [ngSwitch]="(errorPasswordForgot$ | async).status">
+              <div *ngSwitchCase="400 || 404">
+                <span>It seems that this email is not registered. Are you sure you have insert the right email?</span>
+              </div>
+              <div *ngSwitchDefault>
+                <span>Something goes wrong... please retry.</span>
+              </div>
+            </div>
+          </div>
+
+          <div fxLayout="column">
+            <md-form-field>
+              <!--TODO icon-->
+              <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
+              <md-error></md-error>
+              <!--TODO Error-->
+            </md-form-field>
+
+            <button type="submit" md-button [disabled]="!loginForm.controls['email'].valid" fxFlexAlign="end">
               <span>Recover password</span>
           </button>
+          </div>
+        </form>
+
+        <div *ngIf="passwordForgotSuccess$ | async">
+          <span>Good. Now you will receive an email with the instructions about how recover your password.</span>
         </div>
-      </form>
+      </md-card-content>
 
-      <div *ngIf="passwordForgotSuccess$ | async">
-        <span>Good. Now you will receive an email with the instructions about how recover your password.</span>
-      </div>
-    </md-card-content>
-  </md-card>
+    </md-card>
+  </ng-container>
 
-  <md-card *ngIf="currentPage == 2">
+  <ng-container *ngIf="currentPage === 2">
+    <md-card>
 
-    <md-card-content>
-      <div (click)="showPage(0)">
-        <a fxLayout fxLayoutAlign="center center">
-          <md-icon svgIcon="chevron-left"></md-icon>
-          <span>Go to login</span>
-        </a>
-      </div>
+      <md-card-content>
+        <div (click)="showPage(0)">
+          <a fxLayout fxLayoutAlign="center center">
+            <md-icon svgIcon="chevron-left"></md-icon>
+            <span>Go to login</span>
+          </a>
+        </div>
 
 
 
-      <form [formGroup]="loginForm" (ngSubmit)="doEmailConfirm(loginForm.value)">
-        <div *ngIf="errorNewConfirmationCode$ | async">
-          <div [ngSwitch]="(errorNewConfirmationCode$ | async).status">
-            <div *ngSwitchCase="400 || 404">
-              <span>It seems that this email is not registered. Are you sure you have insert the right email?</span>
-            </div>
-            <div *ngSwitchDefault>
-              <span>Something goes wrong... please retry.</span>
+        <form [formGroup]="loginForm" (ngSubmit)="doEmailConfirm(loginForm.value)">
+          <div *ngIf="errorNewConfirmationCode$ | async">
+            <div [ngSwitch]="(errorNewConfirmationCode$ | async).status">
+              <div *ngSwitchCase="400 || 404">
+                <span>It seems that this email is not registered. Are you sure you have insert the right email?</span>
+              </div>
+              <div *ngSwitchDefault>
+                <span>Something goes wrong... please retry.</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div fxLayout="column">
-          <md-form-field>
-            <!--TODO icon-->
-            <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
-            <md-error></md-error>
-            <!--TODO Error-->
-          </md-form-field>
+          <div fxLayout="column">
+            <md-form-field>
+              <!--TODO icon-->
+              <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
+              <md-error></md-error>
+              <!--TODO Error-->
+            </md-form-field>
 
-          <button type="submit" md-button [disabled]="!loginForm.controls['email'].valid" fxFlexAlign="end">
+            <button type="submit" md-button [disabled]="!loginForm.controls['email'].valid" fxFlexAlign="end">
               <span>Request account confirm link</span>
           </button>
-        </div>
-      </form>
+          </div>
+        </form>
 
-      <div *ngIf="newConfirmationCodeSuccess$ | async">
-        <span>Now you will receive an email a confirmation link and more instructions.
+        <div *ngIf="newConfirmationCodeSuccess$ | async">
+          <span>Now you will receive an email a confirmation link and more instructions.
             If you don\'t receive any mail,  please check the spam box.</span>
-      </div>
+        </div>
 
-    </md-card-content>
+      </md-card-content>
 
-  </md-card>
+    </md-card>
+  </ng-container>
 
 </div>
 <!--

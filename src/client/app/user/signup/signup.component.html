@@ -1,22 +1,24 @@
-<div>
+<div fxLayout fxLayoutAlign="center center" fxFlexFill>
 
-  <md-card>
+  <md-card fxFlex.lt-md="auto" fxFlex.md="60%" fxFlex.gt-md="40%" class="card">
     <md-card-title>Register</md-card-title>
 
-    <md-card-content *ngIf="signupSuccess$ | async; else signupFormTmpl">
-      <p>You has been registered successfully! Now you will receive an email.</p>
-      <p>Click on the link in the email to activate your account!</p>
-    </md-card-content>
+    <ng-container *ngIf="signupSuccess$ | async; else signupFormTmpl">
+      <md-card-content fxLayout="column">
+        <p class="mat-body-1">You has been registered successfully! Now you will receive an email.</p>
+        <p class="mat-body-1">Click on the link in the email to activate your account!</p>
+      </md-card-content>
+    </ng-container>
 
     <ng-template #signupFormTmpl>
-      <md-card-content>
-        <form [formGroup]="form" (ngSubmit)="doSignUp(form.value)">
+      <md-card-content fxLayout="column">
+        <form [formGroup]="form" (ngSubmit)="doSignUp(form.value)" fxLayout="column">
           <div *ngIf="errorSignup$ | async">
             <l3-error-message [error]="errorSignup$ | async" [messages]="errMsgs"></l3-error-message>
           </div>
 
-          <div fxLayout="column">
-            <md-form-field>
+          <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill fxFlexOffeset="24px">
+            <md-form-field class="input-field">
               <md-icon mdPrefix svgIcon="account" class="prefix-icon"></md-icon>
               <input type="email" mdInput placeholder="Email" formControlName="email">
 
@@ -28,7 +30,7 @@
               </md-error>
             </md-form-field>
 
-            <md-form-field>
+            <md-form-field class="input-field">
               <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
               <input type="password" mdInput placeholder="Password" formControlName="password">
               <md-error *ngIf="form.get('password').getError('required')">
@@ -43,10 +45,9 @@
               <md-error *ngIf="form.get('password').getError('passwordmismatch')">
                 Passwords does not match
               </md-error>
-
             </md-form-field>
 
-            <md-form-field>
+            <md-form-field class="input-field">
               <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
               <input type="password" mdInput placeholder="Retype Password" formControlName="password_retype">
               <md-error *ngIf="form.get('password_retype').getError('required')">
@@ -61,7 +62,7 @@
 
             </md-form-field>
 
-            <button type="submit" md-button [disabled]="!form.valid" fxFlexAlign="end">
+            <button type="submit" md-raised-button color="accent" [disabled]="!form.valid" fxFlexAlign="end">
                   <span>Register</span>
                   <md-icon svgIcon="send"></md-icon>
             </button>

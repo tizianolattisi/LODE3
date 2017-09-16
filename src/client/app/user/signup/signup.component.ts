@@ -48,7 +48,6 @@ export class SignupComponent implements OnInit {
   }
 
   doSignUp(credentials: Credentials) {
-    console.log(credentials);
 
     // Check password matching
     if (credentials.password !== (credentials as any).password_retype) {
