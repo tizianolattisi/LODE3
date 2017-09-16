@@ -33,7 +33,7 @@ class LiveLectureService {
       ll.startLecture();
     } else {
       // TODO handle
-      console.error('LL not found');
+      console.error(`Live lecture with id ${lectureId} not found.`);
     }
   }
 
@@ -43,7 +43,7 @@ class LiveLectureService {
       ll.newScreenshotAvailable();
     } else {
       // TODO handle
-      console.error('LL not found');
+      console.error(`Live lecture with id ${lectureId} not found.`);
     }
   }
 
@@ -53,7 +53,7 @@ class LiveLectureService {
       ll.saveScreenshot(data.image, data.timestamp, data.name);
     } else {
       // TODO handle
-      console.error('LL not found');
+      console.error(`Live lecture with id ${lectureId} not found.`);
     }
   }
 
@@ -64,7 +64,7 @@ class LiveLectureService {
       this.removeLiveLecture(lectureId);
     } else {
       // TODO handle
-      console.error('LL not found');
+      console.error(`Live lecture with id ${lectureId} not found.`);
     }
   }
 
@@ -75,7 +75,7 @@ class LiveLectureService {
       this.removeLiveLecture(lectureId);
     } else {
       // TODO handle
-      console.error('LL not found');
+      console.error(`Live lecture with id ${lectureId} not found.`);
     }
   }
 
@@ -97,7 +97,7 @@ class LiveLectureService {
     if (ll) {
       return ll.getNextScreenshot();
     } else {
-      return Observable.throw(new Error('Live Lecture not exists'));
+      return Observable.throw(new Error(`Live lecture with id ${lectureId} not found.`));
       // TODO handle
     }
   }

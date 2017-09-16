@@ -116,7 +116,7 @@ export default class Server {
     const annotationIO = io.of('/api/annotation');
     const lectureIO = io.of('/api/lecture');
 
-    // Setup auth on socket // TODO enable
+    // Setup auth on socket
     annotationIO.on('connection', socketIOJwt.authorize({
       secret: JWT_SECRET,
       timeout: SOCKET_AUTH_TIMEOUT
@@ -128,9 +128,9 @@ export default class Server {
       callback: true
     }));
 
-    annotationIO.on('connection', AnnotationSocketListener); // TODO change connection with authenticated
+    annotationIO.on('authenticated', AnnotationSocketListener);
 
-    lectureIO.on('authenticated', LectureSocketListener); // TODO change connection with authenticated
+    lectureIO.on('authenticated', LectureSocketListener);
 
     return server;
   }

@@ -44,10 +44,12 @@ export class LiveLecture {
 
     this.nextScreenshotId$ = new BehaviorSubject(null);
     this.nextScreenshotIdObs$ = this.nextScreenshotId$.asObservable();
+    console.log(chalk.green(`> New live lecture registered to server (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
   }
 
 
   startLecture() {
+    console.log(chalk.blue(`> Starting lecture ${this.lectureId}...`));
     this.started = true;
 
     // Save lecture in db
@@ -68,6 +70,7 @@ export class LiveLecture {
         }
 
         // TODO emit "lecture is started" / or let do it to livelecturesservice
+        console.log(chalk.green(`> Lecture started (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
       })
       .catch(err => {
         console.error(err);
@@ -77,9 +80,11 @@ export class LiveLecture {
 
   newScreenshotAvailable() {
     this.screenshotStatus = 'new-available';
+    console.log(chalk.blue(`> New screenshot for lecture ${this.lectureId} is available (but still not downloaded to server).`));
   }
 
   saveScreenshot(image: string, timestamp: number, name?: string) {
+    console.log(chalk.blue(`> Saving a new screenshot for lecture ${this.lectureId} (screenshot timestamp: ${timestamp})...`));
 
     const screenshotFile = `${timestamp}.png`; // TODO name
     const screenshotPath = `${this.screenshotFolderUrl}/${screenshotFile}`;
@@ -100,15 +105,21 @@ export class LiveLecture {
           .then(res => {
             // Update next screenshot available
             this.screenshotStatus = 'no-updates';
+
+            // TODO decide
+            // this.nextScreenshotId$.next(`${SERVER_STORAGE_PATH}/${this.lectureId}/${STORAGE_SLIDES_FOLDER}/${screenshotFile}`);
             this.nextScreenshotId$.next(lectureScreenshot.id)
+            console.log(chalk.green(`> Screenshot with timestamp ${timestamp} saved in ${screenshotPath}`));
           })
           .catch(e => console.error(e)); // TODO handle error
       }
     });
+
   }
 
   stopLecture() {
     this.nextScreenshotId$.complete();
+    console.log(chalk.yellow(`> Lecture ${this.lectureId} stopped.`));
     Lecture.update({uuid: this.lectureId}, {live: false})
       .then(res => console.log('ok')) // TODO handle
       .catch(e => console.error(e)); // TODO handle error
@@ -116,25 +127,31 @@ export class LiveLecture {
 
   lectureDisconnected() {
     this.stopLecture();
+    console.log(chalk.red(`> Lecture ${this.lectureId} disconnected.`));
   }
 
   getNextScreenshot(): Observable<string> {
+    console.log(chalk.bold.blue(`> Screenshot request for lecture ${this.lectureId}...`));
+
     switch (this.screenshotStatus) {
 
       case 'no-updates':
-        console.log(chalk.blue('> [Get Screenshot] No updates'));
+        console.log(chalk.bold.white('> No fresh screenshot from raspberry -> send latest available.'));
         // Send latest screenshot available
         return this.nextScreenshotIdObs$.take(1);
 
       case 'new-available':
-        console.log(chalk.blue('> [Get Screenshot] New Screenshot available'));
+        console.log(
+          chalk.bold.white('> New screenshot from raspberry is available but not downloaded -> fetch it and make applicant wait.')
+        );
+
         // Fetch the latest screenshot and wait for it
         this.screenshotStatus = 'fetch-pending';
         this.socket.emit(LectureSocketEvents.Server.GET_SCREENSHOT);
         return this.nextScreenshotIdObs$.skip(1).take(1);
 
       case 'fetch-pending':
-        console.log(chalk.blue('> [Get Screenshot] Fetch pending'));
+        console.log(chalk.bold.white('> New screenshot from raspberry is available and server is fetching it -> make applicant wait.'));
         // Wait for latest screenshot fetch
         return this.nextScreenshotIdObs$.skip(1).take(1);
     }
@@ -143,7 +160,7 @@ export class LiveLecture {
   toLectureModel() { // TODO improve
     return {
       uuid: this.lectureId,
-      course: 'courceName', // TODO set proper course name
+      course: 'Course Name', // TODO set proper course name
       name: this.name,
       live: true
     }
