@@ -1,10 +1,12 @@
+import {of} from 'rxjs/observable/of';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, toPayload} from '@ngrx/effects';
-import {Observable} from 'rxjs/Observable';
+import {AuthService} from '../../service/auth.service';
+
 import * as UserActions from './user.actions';
+
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
-import {AuthService} from '../../service/auth.service';
 
 @Injectable()
 export class UserEffects {
@@ -14,8 +16,15 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.login(payload)
       .map(token => new UserActions.LoginSuccess(token.token))
-      .catch(err => Observable.of(new UserActions.LoginError(err)))
+      .catch(err => of(new UserActions.LoginError(err)))
     );
+
+  @Effect()
+  loadToken$ = this.actions$.ofType(UserActions.LOAD_TOKEN)
+    .map(toPayload)
+    .switchMap(payload => {
+      return of(new UserActions.SetToken(localStorage.getItem(AuthService.LS_TOKEN_KEY)));
+    });
 
   @Effect({dispatch: false})
   loginSuccess$ = this.actions$.ofType(UserActions.LOGIN_SUCCESS)
@@ -38,7 +47,7 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.signup(payload)
       .map(res => new UserActions.SignupSuccess())
-      .catch(err => Observable.of(new UserActions.SignupError(err)))
+      .catch(err => of(new UserActions.SignupError(err)))
     );
 
   @Effect()
@@ -46,7 +55,7 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.confirmAccount(payload)
       .map(res => new UserActions.ConfirmAccountSuccess())
-      .catch(err => Observable.of(new UserActions.ConfirmAccountError(err)))
+      .catch(err => of(new UserActions.ConfirmAccountError(err)))
     );
 
   @Effect()
@@ -54,7 +63,7 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.passwordForgot(payload)
       .map(res => new UserActions.PasswordForgotSuccess())
-      .catch(err => Observable.of(new UserActions.PasswordForgotError(err)))
+      .catch(err => of(new UserActions.PasswordForgotError(err)))
     );
 
   @Effect()
@@ -62,7 +71,7 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.changePassword(payload.email, payload.oldPassword, payload.newPassword)
       .map(res => new UserActions.ChangePasswordSuccess())
-      .catch(err => Observable.of(new UserActions.ChangePasswordError(err)))
+      .catch(err => of(new UserActions.ChangePasswordError(err)))
     );
 
   @Effect()
@@ -70,7 +79,7 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.changePasswordWithCode(payload.code, payload.newPassword)
       .map(res => new UserActions.ChangePasswordWithCodeSuccess())
-      .catch(err => Observable.of(new UserActions.ChangePasswordWithCodeError(err)))
+      .catch(err => of(new UserActions.ChangePasswordWithCodeError(err)))
     );
 
   @Effect()
@@ -78,7 +87,7 @@ export class UserEffects {
     .map(toPayload)
     .switchMap(payload => this.authService.requestNewConfirmationCode(payload)
       .map(res => new UserActions.NewConfirmationCodeSuccess())
-      .catch(err => Observable.of(new UserActions.NewConfirmationCodeError(err)))
+      .catch(err => of(new UserActions.NewConfirmationCodeError(err)))
     );
 
 

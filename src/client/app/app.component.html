@@ -1,10 +1,35 @@
 <div fxLayout="column" class="app-wrapper">
-  <md-toolbar color="primary">
-    <!--<img src="" alt="Logo">-->
-    <span class="app-title" routerLink="/">Lode3</span>
-    <span fxFlex="1"></span>
-    <button md-raised-button routerLink='/user/login'>Login</button>
-    <button md-raised-button routerLink='/lecture-list'>Lectures</button>
+  <md-toolbar color="primary" class="toolbar">
+
+    <div fxLayout>
+      <!--<img src="" alt="Logo">-->
+      <span class="app-title" routerLink="/">Lode3</span>
+      <button md-button routerLink='/lecture-list' *ngIf="email$ | async" fxFlexOffset="24px">Lectures</button>
+    </div>
+
+    <div fxFlex="auto">
+    </div>
+
+    <div fxLayout fxLayoutAlign="center center">
+
+      <ng-container *ngIf="!(email$ | async)">
+        <button md-raised-button routerLink='/user/login'>Login</button>
+      </ng-container>
+
+      <ng-container *ngIf="email$ | async">
+        
+        <div fxLayout fxLayoutAlign="center center">
+          <md-icon svgIcon="account"></md-icon>
+          <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
+        </div>
+        
+        <button md-icon-button (click)="onLogout()" fxFlexOffset="6px">
+            <md-icon svgIcon="logout"></md-icon>
+        </button>
+      </ng-container>
+
+    </div>
+
   </md-toolbar>
 
   <main fxLayout fxLayoutAlign="center center">

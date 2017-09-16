@@ -41,6 +41,18 @@ export function userReducer(state: UserState = initialState, action: Action): Us
 
   switch (action.type) {
 
+    case UserActions.SET_TOKEN:
+      let dt = null;
+      if (action.payload) { // Token exists -> get extra info
+        dt = AuthService.getTokenPayload(action.payload);
+      }
+
+      return {
+        ...state,
+        email: dt ? dt.email : '',
+        token: action.payload
+      };
+
     case UserActions.DO_LOGIN:
       return {
         ...state,

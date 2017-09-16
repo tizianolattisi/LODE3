@@ -5,6 +5,9 @@ import {ErrorResponse, responseToError} from '../../service/model/error-response
 import {ChangePasswordData} from '../../service/model/change-password';
 import {ChangePasswordWithCodeData} from '../../service/model/change-password-with-code';
 
+export const LOAD_TOKEN = '[User] LOAD_TOKEN';
+export const SET_TOKEN = '[User] SET_TOKEN';
+
 export const DO_LOGIN = '[User] DO_LOGIN';
 export const LOGIN_SUCCESS = '[User] LOGIN_SUCCESS';
 export const LOGIN_ERROR = '[User] LOGIN_ERROR';
@@ -34,6 +37,16 @@ export const DO_NEW_CONFIRMATION_CODE = '[User] DO_NEW_CONFIRMATION_CODE';
 export const NEW_CONFIRMATION_CODE_SUCCESS = '[User] NEW_CONFIRMATION_CODE_SUCCESS';
 export const NEW_CONFIRMATION_CODE_ERROR = '[User] NEW_CONFIRMATION_CODE_ERROR';
 
+
+export class LoadToken implements Action {
+  readonly type = LOAD_TOKEN;
+}
+
+export class SetToken implements Action {
+  readonly type = SET_TOKEN;
+
+  constructor(public payload: string) {}
+}
 
 export class Login implements Action {
   readonly type = DO_LOGIN;
@@ -176,7 +189,9 @@ export class NewConfirmationCodeError implements Action {
 
 
 export type All
-  = Login
+  = LoadToken
+  | SetToken
+  | Login
   | LoginSuccess
   | LoginError
   | Logout
