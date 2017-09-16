@@ -9,19 +9,27 @@
         </div>
 
         <div fxLayout="column">
-          <md-input-container>
-            <!--TODO icon-->
+          <md-form-field>
+            <md-icon mdPrefix svgIcon="account" class="prefix-icon"></md-icon>
             <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
-            <md-error></md-error>
-            <!--TODO Error-->
-          </md-input-container>
+            <md-error *ngIf="loginForm.get('email').getError('required')">
+              Email is required
+            </md-error>
+            <md-error *ngIf="loginForm.get('email').getError('email')">
+              Email must belong to domain "@unitn.it"
+            </md-error>
+          </md-form-field>
 
-          <md-input-container>
-            <!--TODO icon-->
+          <md-form-field>
+            <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
             <input type="password" mdInput placeholder="Password" [formControl]="loginForm.controls['password']">
-            <md-error></md-error>
-            <!--TODO Error-->
-          </md-input-container>
+            <md-error *ngIf="loginForm.get('password').getError('required')">
+              Password is required
+            </md-error>
+            <md-error *ngIf="loginForm.get('password').getError('minlength')">
+              Password must have at least 6 characters
+            </md-error>
+          </md-form-field>
 
           <button type="submit" md-button [disabled]="!loginForm.valid" fxFlexAlign="end">
               <span>Login</span>
@@ -66,12 +74,12 @@
         </div>
 
         <div fxLayout="column">
-          <md-input-container>
+          <md-form-field>
             <!--TODO icon-->
             <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
             <md-error></md-error>
             <!--TODO Error-->
-          </md-input-container>
+          </md-form-field>
 
           <button type="submit" md-button [disabled]="!loginForm.controls['email'].valid" fxFlexAlign="end">
               <span>Recover password</span>
@@ -110,12 +118,12 @@
         </div>
 
         <div fxLayout="column">
-          <md-input-container>
+          <md-form-field>
             <!--TODO icon-->
             <input type="email" mdInput placeholder="Email" [formControl]="loginForm.controls['email']">
             <md-error></md-error>
             <!--TODO Error-->
-          </md-input-container>
+          </md-form-field>
 
           <button type="submit" md-button [disabled]="!loginForm.controls['email'].valid" fxFlexAlign="end">
               <span>Request account confirm link</span>

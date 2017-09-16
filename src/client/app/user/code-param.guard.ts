@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 
 @Injectable()
-export class CodeParamGuard implements CanActivate {
+export class CodeParamGuard implements CanActivate, Resolve<string> {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const code = route.queryParams['code'];
@@ -15,5 +14,9 @@ export class CodeParamGuard implements CanActivate {
       this.router.navigate(['/']);
       return false;
     }
+  }
+
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): string {
+    return route.queryParams['code'];
   }
 }

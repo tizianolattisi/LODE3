@@ -12,9 +12,10 @@
     "client:lint": "ng lint",
     "client:e2e": "ng e2e",
     "server:start:w": "nodemon dist/server/index.js",
-    "server:build": "tsc -p src/server/tsconfig.app.json",
+    "server:build": "tsc -p src/server/tsconfig.app.json && npm run server:postbuild",
     "server:build:w": "tsc -p src/server/tsconfig.app.json -w",
-    "server:build:prod": "cross-env NODE_ENV=production tsc -p src/server/tsconfig.app.json --sourceMap false",
+    "server:build:prod": "cross-env NODE_ENV=production tsc -p src/server/tsconfig.app.json --sourceMap false && npm run server:postbuild",
+    "server:postbuild": "cp -r src/server/resources dist/server/resources",
     "clean": "rm -r dist",
     "l3:build:w": "tsc -p src/l3client/tsconfig.app.json -w",
     "l3:start:w": "nodemon dist/l3client/index.js"

@@ -64,7 +64,6 @@ router.get(PATH + '/logout', (req, res, next) => {
  */
 router.post(PATH + '/signup', validate(Validation.credentials), (req, res, next) => {
 
-
   User.findOne({email: req.body.email}, (err, user) => {
     if (err) {
       return next(err);
@@ -78,6 +77,8 @@ router.post(PATH + '/signup', validate(Validation.credentials), (req, res, next)
     u.email = req.body.email;
     u.password = u.generatePasswordHash(req.body.password);
     u.enabled = false;
+    u.type = 'student';
+    u.lectures = [];
 
     u.save((e, savedUser: IUser) => {
       if (e) {
@@ -185,8 +186,8 @@ router.post(PATH + '/new-confirm-code', validate(Validation.email), (req, res, n
         .then(done => {
           return res.sendStatus(204);
         })
-        .catch(err => {
-          return next(err);
+        .catch(error => {
+          return next(error);
         });
     } else {
       return res.status(400).json(new ErrorResponse('WrongUser', 'User note exist or already enabled'));

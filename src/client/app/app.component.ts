@@ -10,5 +10,6 @@ export class AppComponent {
   title = 'l3';
 
   constructor(private iconService: IconService) {
+    this.iconService.init();
   }
 }

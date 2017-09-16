@@ -1,3 +1,21 @@
-<p>
-  confirm-account works!
-</p>
+<div>
+
+  <md-card>
+    <md-card-title>Confirm Account</md-card-title>
+
+    <md-card-content *ngIf="success$ | async">
+      <p>The account has been activated! Now you can login.</p>
+      <button md-raised-button routerLink="/user/login">Login Page</button>
+    </md-card-content>
+
+    <md-card-content *ngIf="loading$ | async">
+      <md-spinner></md-spinner>
+    </md-card-content>
+
+    <md-card-content *ngIf="error$ | async">
+      <p>An error occurred while activating the account</p>
+    </md-card-content>
+
+  </md-card>
+
+</div>

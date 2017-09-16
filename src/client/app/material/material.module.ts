@@ -1,5 +1,5 @@
+import {HttpModule} from '@angular/http';
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FxFullHeightDirective} from './fx-full-height.directive';
 import {FxFullWidthDirective} from './fx-full-width.directive';
@@ -20,7 +20,8 @@ import {
     MdCardModule,
     MdToolbarModule,
     MdInputModule,
-    MdListModule
+    MdListModule,
+    HttpModule
   ],
   exports: [
     FlexLayoutModule,

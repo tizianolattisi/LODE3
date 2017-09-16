@@ -1,6 +1,6 @@
 import {ErrorResponse} from '../../service/model/error-response';
 
-import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
   selector: 'l3-error-message',

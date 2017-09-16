@@ -2,7 +2,7 @@ import Socket = SocketIO.Socket;
 import {BehaviorSubject} from 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
 import {Lecture} from '../models/db/Lecture';
-import {STORAGE_PATH, STORAGE_SLIDES_FOLDER, SERVER_STORAGE_PATH} from '../commons/config';
+import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from '../commons/config';
 import {LectureSocketEvents} from '../sockets/lecture.socket';
 import * as chalk from 'chalk';
 import * as fs from 'fs';

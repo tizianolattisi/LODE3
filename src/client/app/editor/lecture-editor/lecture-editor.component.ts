@@ -1,5 +1,5 @@
 import {LectureService} from '../../service/lecture.service';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'l3-lecture-editor',

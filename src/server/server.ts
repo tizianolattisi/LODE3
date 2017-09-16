@@ -1,4 +1,3 @@
-import {timeout} from 'rxjs/operator/timeout';
 import * as express from 'express';
 import * as morgan from 'morgan';
 import * as chalk from 'chalk';
@@ -8,7 +7,7 @@ import * as expressJwt from 'express-jwt';
 import * as http from 'http';
 import * as socketIO from 'socket.io';
 import * as socketIOJwt from 'socketio-jwt';
-import {USER_PATH, UserRouter, PUBLIC_USER_PATHS} from './api/user.router';
+import {UserRouter, PUBLIC_USER_PATHS} from './api/user.router';
 import {LectureRouter} from './api/lecture.router';
 import {AnnotationSocketListener} from './sockets/annotation.socket';
 import {LectureSocketListener} from './sockets/lecture.socket';

@@ -1,4 +1,4 @@
-import {User, IUser} from '../models/db/User';
+import {IUser} from '../models/db/User';
 import {ConfirmCode} from '../models/db/ConfirmCode';
 import {PasswordResetCode} from '../models/db/PasswordResetCode';
 import {MailData} from '@sendgrid/helpers/classes/mail';
@@ -7,6 +7,8 @@ import {EMAIL_SENDER, SENDGRID_API_KEY} from '../commons/config';
 
 const sgMail = require('@sendgrid/mail');
 import * as fs from 'fs';
+import * as path from 'path';
+import * as chalk from 'chalk';
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
@@ -29,7 +31,7 @@ export const generateAndSendConfirmCode = (hostname: string, user: IUser): Promi
         return reject(err);
       }
 
-      let emailContentString = fs.readFileSync(__dirname + '/../resources/email/confirm.html', 'UTF-8');
+      let emailContentString = fs.readFileSync(path.resolve(__dirname, '../resources/email/confirm.html'), 'UTF-8');
       emailContentString = emailContentString.replace(/\$\{CODE_URL}/g,
         'http://' + hostname + '/user/confirm-account?code=' + confirmCode.code);
 
@@ -37,19 +39,24 @@ export const generateAndSendConfirmCode = (hostname: string, user: IUser): Promi
       // Send email
       const mail: MailData = {
         to: user.email,
-        from: EMAIL_SENDER,
+        from: {email: EMAIL_SENDER, name: 'LODE'},
         subject: 'Account confirmation',
         html: emailContentString
       };
 
+      console.log(chalk.blue(`Sending a confirmation email...`));
+
       sgMail.send(mail)
         .then(res => {
-          console.log('Email sent');
-          console.log(res[0].statusCode + ' ' + res[0].body);
+          console.log(chalk.green(`Confirmation email sent (status: ${res[0].statusCode}, body: ${res[0].body})`));
           return resolve(true);
-        }, mailErr => {
-          console.error('Email sent error ', mailErr);
-          return reject(mailErr);
+        }, mErr => {
+          let mailErr = null;
+          if (mErr && mErr.response && mErr.response.body) {
+            mailErr = mErr.response.body.errors;
+          }
+          console.log(chalk.bold.red(`> Error while sending 'Accoun confirmation' email`), mailErr);
+          return reject(mErr);
         });
 
     });
@@ -76,7 +83,7 @@ export const generateAndSendPasswordResetCode = (hostname: string, email: string
         return reject(err);
       }
 
-      let emailContentString = fs.readFileSync(__dirname + '/../resources/email/password-recover.html', 'UTF-8');
+      let emailContentString = fs.readFileSync(path.resolve(__dirname, '../resources/email/password-recover.html'), 'UTF-8');
       emailContentString = emailContentString.replace(/\$\{CODE_URL}/g,
         'http://' + hostname + '/user/reset-password?code=' + passResetCode.code);
 
@@ -84,25 +91,26 @@ export const generateAndSendPasswordResetCode = (hostname: string, email: string
       // Send email
       const mail: MailData = {
         to: email,
-        from: EMAIL_SENDER,
+        from: {email: EMAIL_SENDER, name: 'LODE'},
         subject: 'Reset Account Password',
         html: emailContentString
       };
 
+      console.log(chalk.blue(`Sending a reset password account email...`));
+
       sgMail.send(mail)
         .then(res => {
+          console.log(chalk.green(`Reset password email sent (status: ${res[0].statusCode}, body: ${res[0].body})`));
           return resolve(true);
-        }, mailErr => {
-          console.error('Email sent error ', mailErr);
-          return reject(mailErr);
+        }, mErr => {
+          let mailErr = null;
+          if (mErr && mErr.response && mErr.response.body) {
+            mailErr = mErr.response.body.errors;
+          }
+          console.log(chalk.bold.red(`> Error while sending 'Reset Accoun Password' email`), mailErr);
+          return reject(mErr);
         });
 
     });
   });
 };
-
-
-const replaceAll = function (string, search, replacement) {
-  return string.replace(new RegExp(search, 'g'), replacement);
-};
-

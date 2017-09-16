@@ -10,7 +10,7 @@ export const ENV_VAR_DB_URL = 'DB_URL';
 export const ENV_VAR_DB_NAME = 'DB_NAME';
 export const ENV_VAR_STORAGE_PATH = 'STORAGE_PATH';
 export const ENV_VAR_SENDGRID_API_KEY = 'SENDGRID_API_KEY';
-export const ENV_VAR_EMAIL_SENDER = 'SENDGRID_API_KEY';
+export const ENV_VAR_EMAIL_SENDER = 'ENV_VAR_EMAIL_SENDER';
 
 // /////////////////////////////////////////
 // Configuration parameters

@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Credentials} from './model/credentials';
 import {Observable} from 'rxjs/Observable';
-import {AppState} from './model/store/app-state';
 import {Store} from '@ngrx/store';
-import * as UserActions from '../service/store/user/user.actions';
+import * as UserActions from '../store/user/user.actions';
 import * as jwtDecode from 'jwt-decode';
+import {AppState} from '../store/app-state';
 
 @Injectable()
 export class AuthService {
@@ -34,8 +34,8 @@ export class AuthService {
     }
   }
 
-  login(credentials: Credentials): Observable<string> {
-    return this.http.post<string>(`${this.USER_PATH}/login`, credentials);
+  login(credentials: Credentials): Observable<{token: string}> {
+    return this.http.post<{token: string}>(`${this.USER_PATH}/login`, credentials);
   }
 
   logout(): Observable<any> {

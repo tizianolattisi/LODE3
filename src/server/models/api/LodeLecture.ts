@@ -1,7 +1,7 @@
-import { LODE_BASE_URL } from "../../commons/config";
-import { Slide as LodeSlide } from "./LodeData";
+// import { LODE_BASE_URL } from "../../commons/config";
+// import { Slide as LodeSlide } from "./LodeData";
 
-const IMG_PATTERN = /img\/(\d+)\.png/;
+// const IMG_PATTERN = /img\/(\d+)\.png/;
 
 /**
  * Lecture data implementation
@@ -12,14 +12,14 @@ export default class Lecture implements LodeLecture {
   video: Video;
   slides: Slide[];
 
-  private static getPageFromThumbnail(relUrl: string): number {
-    let match = relUrl.match(IMG_PATTERN);
-    return (match) ? (parseInt(match[1])) : (0);
-  }
+  // private static getPageFromThumbnail(relUrl: string): number {
+  //   let match = relUrl.match(IMG_PATTERN);
+  //   return (match) ? (parseInt(match[1])) : (0);
+  // }
 
-  private static getThumbnailAbsoluteUrl(course: string, lecture: string, relUrl: string): string {
-    return LODE_BASE_URL + '/' + course + '/' + lecture + '/content/' + relUrl;
-  }
+  // private static getThumbnailAbsoluteUrl(course: string, lecture: string, relUrl: string): string {
+  //   return LODE_BASE_URL + '/' + course + '/' + lecture + '/content/' + relUrl;
+  // }
 
   addSlide(course: string, lecture: string, page: number, title: string, thumbnailUrl: string, time: number) {
     if (!this.slides) {

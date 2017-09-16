@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import {Schema, Types} from 'mongoose';
 
 export interface Lecture extends mongoose.Document {
   uuid: string;

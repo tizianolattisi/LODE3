@@ -1,4 +1,4 @@
-import {Response} from '@angular/http';
+import {HttpErrorResponse} from '@angular/common/http';
 
 export interface ErrorResponse {
   status: number;
@@ -6,8 +6,8 @@ export interface ErrorResponse {
   message: string;
 }
 
-export function responseToError(res: Response): ErrorResponse {
-  const payload = res ? res.json() : {};
+export function responseToError(res: HttpErrorResponse): ErrorResponse {
+  const payload = res ? res.error : {};
   return {
     status: res.status,
     code: payload.code,

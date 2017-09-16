@@ -1,11 +1,9 @@
 import Socket = SocketIO.Socket;
-import { Types } from "mongoose";
-import * as chalk from "chalk";
-import * as chalkd from "socketio-jwt";
-import { Annotation, IAnnotation, isAnnotation } from '../models/db/Annnotation';
-import { AnnotationSearch } from '../models/api/AnnotationSearch';
-import { AnnotationId } from '../models/api/AnnotationId';
-import { IUser } from '../models/db/User';
+import {Annotation, IAnnotation, isAnnotation} from '../models/db/Annnotation';
+import {AnnotationSearch} from '../models/api/AnnotationSearch';
+import {AnnotationId} from '../models/api/AnnotationId';
+import {Types} from 'mongoose';
+import * as chalk from 'chalk';
 
 const socketListener = (socket: Socket) => {
 
@@ -43,7 +41,7 @@ const socketListener = (socket: Socket) => {
   socket.on('add', (data: IAnnotation) => {
     try {
       if (isAnnotation(data)) {
-        let annotation = new Annotation();
+        const annotation = new Annotation();
         annotation.uuid = data.uuid;
         annotation.lectureId = data.lectureId;
         annotation.slideId = data.slideId;
@@ -84,8 +82,8 @@ const socketListener = (socket: Socket) => {
               lectureId: data.lectureId,
               slideId: data.slideId,
               userId: new Types.ObjectId(userId)
-            }, (err, annotation: IAnnotation) => {
-              if (!err && annotation) {
+            }, (error, annotation: IAnnotation) => {
+              if (!error && annotation) {
                 socket.emit('edit-fail', annotation);
               }
             });
@@ -115,8 +113,8 @@ const socketListener = (socket: Socket) => {
               uuid: data.uuid,
               lectureId: data.lectureId,
               userId: new Types.ObjectId(userId)
-            }, (err, annotation: IAnnotation) => {
-              if (!err && annotation) {
+            }, (error, annotation: IAnnotation) => {
+              if (!error && annotation) {
                 socket.emit('delete-fail', annotation);
               }
             });
@@ -133,4 +131,4 @@ function printError(err: any, event: string, payload: any) {
   console.error(chalk.bold.red(`> Annotation socket: An error occurred. Event "${event}". Payload:`), payload, err);
 }
 
-export { socketListener as AnnotationSocketListener };
+export {socketListener as AnnotationSocketListener};

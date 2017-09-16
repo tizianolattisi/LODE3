@@ -2,7 +2,6 @@ import Socket = SocketIO.Socket;
 import {Observable} from 'rxjs/Observable';
 import {LiveLecture} from './live-lecture';
 import {Lecture} from '../models/db/Lecture';
-import * as chalk from 'chalk';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/take';
 

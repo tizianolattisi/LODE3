@@ -2,10 +2,11 @@ import {Lecture} from '../service/model/lecture';
 import {FormControl} from '@angular/forms';
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState} from '../service/model/store/app-state';
 import {Observable} from 'rxjs/Observable';
-import * as Lectureactions from '../service/store/lecture/lecture.actions';
-import 'rxjs/add/operator/distinctUntilChanged';
+
+import * as Lectureactions from '../store/lecture/lecture.actions';
+
+import {AppState} from '../store/app-state';
 
 @Component({
   selector: 'l3-lecture-list',
@@ -26,8 +27,8 @@ export class LectureListComponent implements OnInit {
 
     this.store.dispatch(new Lectureactions.UpdateLectureList());
 
-    this.liveLectures$ = this.store.select(s => s.lecture).map(l => l.liveLectures).distinctUntilChanged();
-    this.lectures$ = this.store.select(s => s.lecture).map(l => l.lectures).distinctUntilChanged();
+    this.liveLectures$ = this.store.select(s => s.lecture.liveLectures);
+    this.lectures$ = this.store.select(s => s.lecture.lectures);
   }
 
 
