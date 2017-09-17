@@ -9,7 +9,10 @@ const initialState: LectureState = {
   liveLectures: [],
   lecturesLoadError: null,
 
-  lectureId: '',
+  currentLecture: null,
+  currentLectureFetchError: null,
+  currentPin: '',
+
   slides: [],
   currentSlideIndex: -1,
   snapshotStatus: '' // TODO set proper value,
@@ -33,6 +36,26 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
       return {
         ...state,
         lecturesLoadError: action.payload
+      };
+
+    case LectureActions.FETCH_LECTURE_ERROR:
+      return {
+        ...state,
+        currentLecture: null,
+        currentLectureFetchError: action.payload
+      };
+
+    case LectureActions.SET_CURRENT_LECTURE:
+      return {
+        ...state,
+        currentLecture: action.payload,
+        currentLectureFetchError: null
+      };
+
+    case LectureActions.SET_CURRENT_PIN:
+      return {
+        ...state,
+        currentPin: action.payload
       };
 
     case LectureActions.ADD_SLIDES:

@@ -23,7 +23,8 @@ export class UserEffects {
   loadToken$ = this.actions$.ofType(UserActions.LOAD_TOKEN)
     .map(toPayload)
     .switchMap(payload => {
-      return of(new UserActions.SetToken(localStorage.getItem(AuthService.LS_TOKEN_KEY)));
+      const token = localStorage.getItem(AuthService.LS_TOKEN_KEY);
+      return AuthService.isTokenExpired(token) ? of(new UserActions.SetToken(null)) : of(new UserActions.SetToken(token));
     });
 
   @Effect({dispatch: false})

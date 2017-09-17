@@ -1,7 +1,7 @@
 import Socket = SocketIO.Socket;
 import {BehaviorSubject} from 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
-import {Lecture} from '../models/db/Lecture';
+import {Lecture, ILecture} from '../models/db/Lecture';
 import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from '../commons/config';
 import {LectureSocketEvents} from '../sockets/lecture.socket';
 import * as chalk from 'chalk';
@@ -47,6 +47,9 @@ export class LiveLecture {
     console.log(chalk.green(`> New live lecture registered to server (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
   }
 
+  getPin() {
+    return this.pin;
+  }
 
   startLecture() {
     console.log(chalk.blue(`> Starting lecture ${this.lectureId}...`));
@@ -157,7 +160,7 @@ export class LiveLecture {
     }
   }
 
-  toLectureModel() { // TODO improve
+  toLectureModel(): ILecture {
     return {
       uuid: this.lectureId,
       course: 'Course Name', // TODO set proper course name

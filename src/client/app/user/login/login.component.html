@@ -1,7 +1,7 @@
 <div fxLayout fxLayoutAlign="center center" fxFlexFill>
 
   <ng-container *ngIf="currentPage === 0">
-    <md-card fxFlex.lt-md="auto" fxFlex.md="60%" fxFlex.gt-md="40%" class="card">
+    <md-card fxFlex.lt-md="auto" fxFlex.md="60%" fxFlex.gt-md="40%" class="card" l3FxFullWidth>
       <md-card-title>Login</md-card-title>
       <md-card-content fxLayout="column">
         <form [formGroup]="loginForm" (ngSubmit)="doLogin(loginForm.value)" fxLayout="column">
@@ -34,7 +34,7 @@
 
             <button type="submit" md-raised-button color="accent" [disabled]="!loginForm.valid" fxFlexAlign="end">
               <span>Login</span>
-              <md-icon svgIcon="send"></md-icon>
+              <md-icon svgIcon="chevron-right"></md-icon>
           </button>
           </div>
         </form>
@@ -44,8 +44,8 @@
         </div>
 
         <div fxLayout="column">
-          <a md-button color="accent" (click)="showPage(1)">Password forgot? Click here</a>
-          <a md-button color="accent" (click)="showPage(2)">Account Confirmation email not received? Click here</a>
+          <a md-button color="accent" (click)="showPage(1)" class="link-btn">Password forgot? Click here</a>
+          <a md-button color="accent" (click)="showPage(2)" class="link-btn">Account Confirmation email not received? Click here</a>
         </div>
 
         <div>
@@ -53,7 +53,7 @@
         </div>
 
         <div fxLayout="column">
-          <a md-button color="accent" (click)="goToSignUp()"><b>Don't have an account yet? Click here</b></a>
+          <a md-button color="accent" (click)="goToSignUp()" class="link-btn"><b>Don't have an account yet? Click here</b></a>
         </div>
 
       </md-card-content>

@@ -7,7 +7,10 @@ export interface LectureState {
   liveLectures: Lecture[];
   lecturesLoadError: ErrorResponse;
 
-  lectureId: string;
+  currentLecture: Lecture;
+  currentLectureFetchError: ErrorResponse;
+  currentPin: string;
+
   slides: string[]; // TODO type
   currentSlideIndex: number;
   snapshotStatus: string; // TODO type

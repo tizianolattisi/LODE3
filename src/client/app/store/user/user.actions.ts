@@ -1,7 +1,6 @@
-import {HttpErrorResponse} from '@angular/common/http';
 import {Credentials} from '../../service/model/credentials';
 import {Action} from '@ngrx/store';
-import {ErrorResponse, responseToError} from '../../service/model/error-response';
+import {ErrorResponse} from '../../service/model/error-response';
 import {ChangePasswordData} from '../../service/model/change-password';
 import {ChangePasswordWithCodeData} from '../../service/model/change-password-with-code';
 
@@ -62,11 +61,8 @@ export class LoginSuccess implements Action {
 
 export class LoginError implements Action {
   readonly type = LOGIN_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 export class Logout implements Action {
@@ -85,11 +81,8 @@ export class SignupSuccess implements Action {
 
 export class SignupError implements Action {
   readonly type = SIGNUP_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 export class ConfirmAccount implements Action {
@@ -104,11 +97,8 @@ export class ConfirmAccountSuccess implements Action {
 
 export class ConfirmAccountError implements Action {
   readonly type = CONFIRM_ACCOUNT_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 export class PasswordForgot implements Action {
@@ -123,11 +113,8 @@ export class PasswordForgotSuccess implements Action {
 
 export class PasswordForgotError implements Action {
   readonly type = PASSWORD_FORGOT_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 export class ChangePassword implements Action {
@@ -142,11 +129,8 @@ export class ChangePasswordSuccess implements Action {
 
 export class ChangePasswordError implements Action {
   readonly type = CHANGE_PASSWORD_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 export class ChangePasswordWithCode implements Action {
@@ -161,11 +145,8 @@ export class ChangePasswordWithCodeSuccess implements Action {
 
 export class ChangePasswordWithCodeError implements Action {
   readonly type = CHANGE_PASSWORD_WITH_CODE_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 export class NewConfirmationCode implements Action {
@@ -180,11 +161,8 @@ export class NewConfirmationCodeSuccess implements Action {
 
 export class NewConfirmationCodeError implements Action {
   readonly type = NEW_CONFIRMATION_CODE_ERROR;
-  readonly payload: ErrorResponse;
 
-  constructor(payload: HttpErrorResponse) {
-    this.payload = responseToError(payload);
-  }
+  constructor(public payload: ErrorResponse) {}
 }
 
 

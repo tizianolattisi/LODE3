@@ -1,3 +1,4 @@
+import {Lecture} from './service/model/lecture';
 import {Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {IconService} from './shared/icon.service';
@@ -15,6 +16,7 @@ import * as UserActions from './store/user/user.actions';
 export class AppComponent implements OnInit {
 
   email$: Observable<string>;
+  currentLecture$: Observable<Lecture>;
 
   constructor(private iconService: IconService, private store: Store<AppState>, private router: Router) {}
 
@@ -26,6 +28,8 @@ export class AppComponent implements OnInit {
 
     // Collect current logged user data (email)
     this.email$ = this.store.select(s => s.user.email);
+    // Current edited/viewed lecture
+    this.currentLecture$ = this.store.select(s => s.lecture.currentLecture);
   }
 
 

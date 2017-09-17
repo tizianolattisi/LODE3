@@ -1,41 +1,51 @@
 <div fxLayoutAlign="center center">
-  <md-list>
+  <md-list fxFlex.lt-md="auto" fxFlex.md="80%" fxFlex.gt-md="40%">
 
     <h3 md-subheader>Live Lectures</h3>
-    <md-card *ngFor="let lecture of liveLectures$ | async" class="lecture-card">
 
-      <md-card-header>
-        <div fxLayout fxLayoutAlign="space-between center" l3FxFullWidth>
-          <div fxLayout>
-            <div md-card-avatar>
-              <md-icon svgIcon="rec"></md-icon>
-            </div>
-            <md-card-title>{{lecture.uuid}}</md-card-title>
+    <md-expansion-panel *ngFor="let lecture of liveLectures$ | async" class="lecture-card">
+
+      <md-expansion-panel-header>
+        <md-panel-title>
+          <md-icon svgIcon="rec" color="warn"></md-icon>
+          <span class="mat-body-2">{{lecture.name}}</span>
+        </md-panel-title>
+        <md-panel-description>
+          <span *ngIf="lecture.course">{{lecture.course}}</span>
+        </md-panel-description>
+      </md-expansion-panel-header>
+
+      <div fxLayout="column">
+        <span class="mat-caption">Id: {{lecture.uuid}}</span>
+
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <div fxLayoutAlign="center center">
+            <b class="mat-body-2">PIN</b>
+            <md-form-field fxFlexOffset="12px">
+              <input mdInput [(ngModel)]="pin">
+            </md-form-field>
+            <button md-icon-button (click)="goToLiveLecture(lecture)">
+                  <md-icon svgIcon="chevron-right"></md-icon>
+                </button>
           </div>
-          <button md-icon-button>
-            <md-icon svgIcon="send"></md-icon>
-          </button>
+          <md-error *ngIf="invalidPin">Invalid PIN!</md-error>
         </div>
-      </md-card-header>
 
-      <md-card-content>
-
-        <md-input-container>
-          <input mdInput placeholder="Pin" type="number" [formControl]="pinForm">
-        </md-input-container>
-        <button md-icon-button (click)="goToLiveLecture(lecture)">
-          <md-icon svgIcon="send"></md-icon>
-        </button>
-      </md-card-content>
-
-    </md-card>
+      </div>
+    </md-expansion-panel>
 
     <md-divider></md-divider>
 
     <h3 md-subheader>Your lectures</h3>
-    <md-list-item *ngFor="let lecture of lectures$ | async">
-      <md-icon md-list-icon svgIcon="book-open"></md-icon>
-      <h4 md-line>{{lecture.uuid}}</h4>
-    </md-list-item>
+    <md-card *ngFor="let lecture of lectures$ | async" class="lecture-card">
+      <md-card-header fxLayout>
+        <md-icon svgIcon="book-open"></md-icon>
+        <span class="mat-body-2">{{lecture.name}}</span>
+      </md-card-header>
+      <md-card-content fxLayout="column">
+        <span class="mat-caption">Id: {{lecture.uuid}}</span>
+        <span class="mat-caption">Course: {{lecture.course}}</span>
+      </md-card-content>
+    </md-card>
   </md-list>
 </div>

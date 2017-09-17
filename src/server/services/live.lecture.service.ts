@@ -1,7 +1,8 @@
 import Socket = SocketIO.Socket;
 import {Observable} from 'rxjs/Observable';
 import {LiveLecture} from './live-lecture';
-import {Lecture} from '../models/db/Lecture';
+import {ILecture} from '../models/db/Lecture';
+
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/take';
 
@@ -14,8 +15,31 @@ class LiveLectureService {
     return Object.keys(this.liveLectures);
   }
 
-  getLiveLectures(): Lecture[] {
-    return Object.keys(this.liveLectures).map(lId => this.liveLectures[lId].toLectureModel() as Lecture);
+  getLiveLectures(): ILecture[] {
+    return Object.keys(this.liveLectures).map(lId => this.liveLectures[lId].toLectureModel());
+  }
+
+
+  private addLiveLecture(lectureId: string, liveLecture: LiveLecture): void {
+    this.liveLectures[lectureId] = liveLecture;
+  }
+
+  getLiveLecture(lectureId: string): ILecture {
+    const l = this.liveLectures[lectureId];
+    return l ? l.toLectureModel() : null;
+  }
+
+  private removeLiveLecture(lectureId: string): void {
+    delete this.liveLectures[lectureId];
+  }
+
+  liveLectureExists(lectureId: string): boolean {
+    return !!this.liveLectures[lectureId];
+  }
+
+  getPin(lectureId: string): string {
+    const l = this.liveLectures[lectureId];
+    return l ? l.getPin() : null;
   }
 
   registerLecture(lectureId: string, socket: Socket, data: {name?: string; pin: string}): void {
@@ -27,7 +51,7 @@ class LiveLectureService {
   }
 
   startLecture(lectureId: string) {
-    const ll = this.getLiveLecture(lectureId);
+    const ll = this.liveLectures[lectureId];
     if (ll) {
       ll.startLecture();
     } else {
@@ -37,7 +61,7 @@ class LiveLectureService {
   }
 
   newScreenshotAvailable(lectureId: string) {
-    const ll = this.getLiveLecture(lectureId);
+    const ll = this.liveLectures[lectureId];
     if (ll) {
       ll.newScreenshotAvailable();
     } else {
@@ -47,7 +71,7 @@ class LiveLectureService {
   }
 
   saveScreenshot(lectureId: string, data: {image: string; timestamp: number; name?: string}) { // TODO define data
-    const ll = this.getLiveLecture(lectureId);
+    const ll = this.liveLectures[lectureId];
     if (ll) {
       ll.saveScreenshot(data.image, data.timestamp, data.name);
     } else {
@@ -57,7 +81,7 @@ class LiveLectureService {
   }
 
   stopLecture(lectureId: string) {
-    const ll = this.getLiveLecture(lectureId);
+    const ll = this.liveLectures[lectureId];
     if (ll) {
       ll.stopLecture();
       this.removeLiveLecture(lectureId);
@@ -68,7 +92,7 @@ class LiveLectureService {
   }
 
   lectureDisconnected(lectureId: string) {
-    const ll = this.getLiveLecture(lectureId);
+    const ll = this.liveLectures[lectureId];
     if (ll) {
       ll.lectureDisconnected();
       this.removeLiveLecture(lectureId);
@@ -78,21 +102,8 @@ class LiveLectureService {
     }
   }
 
-
-  private addLiveLecture(lectureId: string, liveLecture: LiveLecture): void {
-    this.liveLectures[lectureId] = liveLecture;
-  }
-
-  private getLiveLecture(lectureId: string) {
-    return this.liveLectures[lectureId];
-  }
-
-  private removeLiveLecture(lectureId: string): void {
-    delete this.liveLectures[lectureId];
-  }
-
   getNextScreenshot(lectureId: string): Observable<string> {
-    const ll = this.getLiveLecture(lectureId);
+    const ll = this.liveLectures[lectureId];
     if (ll) {
       return ll.getNextScreenshot();
     } else {

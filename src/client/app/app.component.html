@@ -5,6 +5,12 @@
       <!--<img src="" alt="Logo">-->
       <span class="app-title" routerLink="/">Lode3</span>
       <button md-button routerLink='/lecture-list' *ngIf="email$ | async" fxFlexOffset="24px">Lectures</button>
+      <div *ngIf="currentLecture$ | async">
+        <span>
+          <span class="mat-body-2">{{(currentLecture$ | async).name}}</span>
+          <span class="mat-caption">{{(currentLecture$ | async).course}}</span>
+        </span>
+      </div>
     </div>
 
     <div fxFlex="auto">
@@ -23,7 +29,7 @@
           <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
         </div>
 
-        <button md-icon-button (click)="onLogout()" fxFlexOffset="6px">
+        <button md-icon-button (click)="onLogout()" fxFlexOffset="6px" class="user-info">
             <md-icon svgIcon="logout"></md-icon>
         </button>
       </ng-container>

@@ -5,6 +5,11 @@ export const editorRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    redirectTo: '/lecture-list'
+  },
+  {
+    path: ':lectureId',
+    pathMatch: 'full',
     component: LectureEditorComponent
   }
 ];

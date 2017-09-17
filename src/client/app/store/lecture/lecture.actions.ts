@@ -7,6 +7,11 @@ export const UPDATE_LECTURE_LIST = '[Lecture] UPDATE_LECTURE_LIST';
 export const UPDATE_LECTURE_LIST_ERROR = '[Lecture] UPDATE_LECTURE_LIST_ERROR';
 export const SET_LECTURE_LIST = '[Lecture] SET_LECTURE_LIST';
 
+export const FETCH_LECTURE = '[Lecture] FETCH_LECTURE';
+export const FETCH_LECTURE_ERROR = '[Lecture] FETCH_LECTURE_ERROR';
+export const SET_CURRENT_LECTURE = '[Lecture] SET_CURRENT_LECTURE';
+export const SET_CURRENT_PIN = '[Lecture] SET_CURRENT_PIN';
+
 export const ADD_SNAPSHOT = '[Lecture] ADD_SNAPSHOT';
 export const ADD_SLIDES = '[Lecture] ADD_SLIDES';
 export const SET_SLIDES = '[Lecture] SET_SLIDES';
@@ -32,6 +37,32 @@ export class UpdateLectureListError implements Action {
 
   constructor(public payload: ErrorResponse) {}
 }
+
+
+export class FetchLecture implements Action {
+  readonly type = FETCH_LECTURE;
+
+  constructor(public payload: string) {}
+}
+
+export class FetchLectureError implements Action {
+  readonly type = FETCH_LECTURE_ERROR;
+
+  constructor(public payload: ErrorResponse) {}
+}
+
+export class SetCurrentLecture implements Action {
+  readonly type = SET_CURRENT_LECTURE;
+
+  constructor(public payload: Lecture) {}
+}
+
+export class SetCurrentPin implements Action {
+  readonly type = SET_CURRENT_PIN;
+
+  constructor(public payload: string) {}
+}
+
 
 export class AddSnapshot implements Action {
   readonly type = ADD_SNAPSHOT;
@@ -80,6 +111,10 @@ export type All
   = UpdateLectureList
   | SetLectureList
   | UpdateLectureListError
+  | FetchLecture
+  | FetchLectureError
+  | SetCurrentLecture
+  | SetCurrentPin
   | AddSnapshot
   | AddSlides
   | SetSlides

@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export interface Lecture extends mongoose.Document {
+export interface ILecture {
   uuid: string;
   course?: string;
   name?: string;
@@ -9,11 +9,14 @@ export interface Lecture extends mongoose.Document {
   videoFileName?: string;
   videoDate?: Date;
 
-  screenshots: {
+  screenshots?: {
     id: string;
     name?: string;
     timestamp?: number;
   }[];
+}
+
+export interface Lecture extends ILecture, mongoose.Document {
 }
 
 const LectureSchema = new mongoose.Schema({

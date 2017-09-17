@@ -9,11 +9,13 @@ import {
   MdCardModule,
   MdToolbarModule,
   MdInputModule,
-  MdListModule
+  MdListModule,
+  MdExpansionModule
 } from '@angular/material';
 
 @NgModule({
   imports: [
+    HttpModule,
     FlexLayoutModule,
     MdButtonModule,
     MdIconModule,
@@ -21,7 +23,7 @@ import {
     MdToolbarModule,
     MdInputModule,
     MdListModule,
-    HttpModule
+    MdExpansionModule
   ],
   exports: [
     FlexLayoutModule,
@@ -31,6 +33,7 @@ import {
     MdToolbarModule,
     MdInputModule,
     MdListModule,
+    MdExpansionModule,
     FxFullHeightDirective,
     FxFullWidthDirective
   ],

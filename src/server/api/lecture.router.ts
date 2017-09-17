@@ -15,7 +15,6 @@ router.get(PATH, (req, res, next) => {
 
   const liveLectures = req.query.live;
 
-  console.log('live', liveLectures);
   if (liveLectures === 'true') {
     const lectures = LiveLectureService.getLiveLectures();
     res.send(lectures);
@@ -27,11 +26,58 @@ router.get(PATH, (req, res, next) => {
   }
 });
 
+/**
+ * Get basic data of a lecture (name, ...).
+ */
+router.get(PATH + '/:lectureId', (req, res, next) => {
+
+  const lectureId = req.params['lectureId'];
+
+  // First find in live lecture
+  const lecture = LiveLectureService.getLiveLecture(lectureId);
+
+  if (lecture) {
+    // Live lecture exists -> send it
+    res.send(lecture);
+  } else {
+    // Find lecture in db
+    Lecture.findOne({uuid: lectureId})
+      .then(l => {
+        if (!l) {
+          return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
+        }
+        res.send(l.toJSON())
+      })
+      .catch(err => next(err));
+  }
+
+});
+
+/**
+ * Get screenshots of a user.
+ */
+router.get(PATH + '/:lectureId/myscreenshots', (req, res, next) => {
+
+  // const lectureId = req.params['lectureId'];
+  // Lecture.findOne({uuid: lectureId})
+  //   .then(lecture => {
+  //     if (!lecture) {
+  //       return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
+  //     }
+
+  //     return res.send(lecture.toJSON()); // TODO toJSON  + add screenshots
+  //   })
+  //   .catch(err => {
+  //     return next(err);
+  //   })
+  return res.sendStatus(501);
+});
 
 /**
  * Take a snapshot of the slide that is currently displayed during a lecture.
  */
 router.get(PATH + '/:lectureId/snapshot', (req, res, next) => {
+  // TODO pin
   // TODO implement
   const lectureId = req.params['lectureId'];
   console.log('> REQUEST SNAP FOR ' + lectureId);
@@ -44,25 +90,26 @@ router.get(PATH + '/:lectureId/snapshot', (req, res, next) => {
     });
 });
 
-
 /**
- * Get all the data regarding a lecture (name, screenshots, ...).
+ * Validate Pin for a live lecture.
  */
-router.get(PATH + '/:lectureId', (req, res, next) => {
+router.post(PATH + '/:lectureId/verifypin', (req, res, next) => {
 
   const lectureId = req.params['lectureId'];
-  Lecture.findOne({uuid: lectureId})
-    .then(lecture => {
-      if (!lecture) {
-        return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
-      }
 
-      return res.send(lecture.toJSON()); // TODO toJSON  + add screenshots
-    })
-    .catch(err => {
-      return next(err);
-    })
-  return res.sendStatus(501);
+  if (!req.body.pin) {
+    return res.status(400).send(new ErrorResponse('missing-pin', 'Mmissing pin'));
+  }
+
+  if (!LiveLectureService.liveLectureExists(lectureId)) {
+    return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
+  }
+
+  if (LiveLectureService.getPin(lectureId) !== req.body.pin) {
+    return res.status(400).send(new ErrorResponse('wrong-pin', 'Pin is not valid'));
+  }
+
+  return res.sendStatus(204);
 });
 
 
