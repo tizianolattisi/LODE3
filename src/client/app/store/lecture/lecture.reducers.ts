@@ -1,3 +1,4 @@
+import {ActionTypes} from './lecture.actions';
 import * as LectureActions from './lecture.actions';
 import {LectureState} from './lecture.state';
 
@@ -16,7 +17,7 @@ const initialState: LectureState = {
   slides: [],
   slidesError: null,
   currentSlideIndex: -1,
-  snapshotStatus: '' // TODO set proper value,
+  snapshotStatus: 'done'
 }
 
 export function lectureReducer(state: LectureState = initialState, action: Action): LectureState {
@@ -25,17 +26,17 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
 
     // Lecture list //////////////////////////////////////////////////////
 
-    case LectureActions.UPDATE_LECTURE_LIST:
+    case ActionTypes.UPDATE_LECTURE_LIST:
       return state;
 
-    case LectureActions.SET_LECTURE_LIST:
+    case ActionTypes.SET_LECTURE_LIST:
       return {
         ...state,
         lectures: action.payload.lectures,
         liveLectures: action.payload.live
       };
 
-    case LectureActions.UPDATE_LECTURE_LIST_ERROR:
+    case ActionTypes.UPDATE_LECTURE_LIST_ERROR:
       return {
         ...state,
         lecturesLoadError: action.payload
@@ -44,21 +45,21 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
 
     // Specific lecture info ////////////////////////////////////////////
 
-    case LectureActions.FETCH_LECTURE_ERROR:
+    case ActionTypes.FETCH_LECTURE_ERROR:
       return {
         ...state,
         currentLecture: null,
         currentLectureFetchError: action.payload
       };
 
-    case LectureActions.SET_CURRENT_LECTURE:
+    case ActionTypes.SET_CURRENT_LECTURE:
       return {
         ...state,
         currentLecture: action.payload,
         currentLectureFetchError: null
       };
 
-    case LectureActions.SET_CURRENT_PIN:
+    case ActionTypes.SET_CURRENT_PIN:
       return {
         ...state,
         currentPin: action.payload
@@ -66,68 +67,68 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
 
     // User screenshots ///////////////////////////////////////////////
 
-    case LectureActions.FETCH_USER_SCREENSHOTS_ERROR:
+    case ActionTypes.FETCH_USER_SCREENSHOTS_ERROR:
       return {
         ...state,
         slidesError: action.payload
       };
 
-    case LectureActions.SET_USER_SCREENSHOTS:
+    case ActionTypes.SET_USER_SCREENSHOTS:
       return {
         ...state,
         slides: action.payload
       };
 
-    case LectureActions.SET_USER_SCREENSHOTS_IMG:
+    case ActionTypes.SET_USER_SCREENSHOTS_IMG:
+      return {
+        ...state,
+        slides: action.payload,
+        currentSlideIndex: 0
+      };
+
+    case ActionTypes.SET_SLIDES:
       return {
         ...state,
         slides: action.payload
       };
 
-
-    // case LectureActions.ADD_SLIDES:
-    //   return {
-    //     ...state,
-    //     slides: [...state.slides, ...action.payload]
-    //   };
-
-    // case LectureActions.ADD_SNAPSHOT:
-    //   return {
-    //     ...state,
-    //     slides: [...state.slides, action.payload]
-    //   };
-
-    // case LectureActions.SET_SLIDES:
-    //   return {
-    //     ...state,
-    //     slides: action.payload
-    //   };
-
-    case LectureActions.SET_CURRENT_SLIDE:
+    case ActionTypes.SET_CURRENT_SLIDE:
       return {
         ...state,
         currentSlideIndex: action.payload
       };
 
-    case LectureActions.PREV_SLIDE:
+    case ActionTypes.PREV_SLIDE:
       return {
         ...state,
         currentSlideIndex: state.currentSlideIndex > 0 ? state.currentSlideIndex - 1 : state.currentSlideIndex
       };
 
-    case LectureActions.NEXT_SLIDE:
+    case ActionTypes.NEXT_SLIDE:
       return {
         ...state,
         currentSlideIndex: (state.currentSlideIndex < state.slides.length - 1) ? state.currentSlideIndex + 1 : state.currentSlideIndex
       };
 
-    case LectureActions.GET_SNAPSHOT:
+    case ActionTypes.GET_SCREENSHOT:
       return {
         ...state,
-        snapshotStatus: 'pending' // TODO set proper value
+        snapshotStatus: 'pending'
       };
 
-    case LectureActions.SET_SNAPSHOT_STATUS:
+    case ActionTypes.GET_SCREENSHOT_COMPLETE:
+      const getScreenshotSlides = [...state.slides, action.payload];
+      return {
+        ...state,
+        slides: getScreenshotSlides,
+        currentSlideIndex: getScreenshotSlides.length - 1,
+        snapshotStatus: 'done'
+      };
+
+    case ActionTypes.GET_SCREENSHOT_ERROR:
+      return {...state, snapshotStatus: 'done'};
+
+    case ActionTypes.SET_SCREENSHOT_STATUS:
       return {
         ...state,
         snapshotStatus: action.payload

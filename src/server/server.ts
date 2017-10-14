@@ -91,9 +91,6 @@ export default class Server {
     // Serve Lode files
     this.app.use(SERVER_STORAGE_PATH, this.authorizationMiddleware, express.static(STORAGE_PATH),
       (req, res) => {
-        console.log('AAAAAAAAAAAAAa'); // TODO remove all
-        console.log(req);
-        console.log(res);
         res.send(501);
       }
     );

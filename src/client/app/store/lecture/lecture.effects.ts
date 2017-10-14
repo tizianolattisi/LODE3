@@ -2,8 +2,18 @@ import {AppState} from '../app-state';
 import {LectureService} from '../../service/lecture.service';
 import {Lecture} from '../../service/model/lecture';
 import {Injectable} from '@angular/core';
-import {Actions, Effect, toPayload} from '@ngrx/effects';
+import {Actions, Effect} from '@ngrx/effects';
 import {Observable} from 'rxjs/Observable';
+import {Store} from '@ngrx/store';
+import {Screenshot} from '../../service/model/screenshot';
+import {
+  ActionTypes,
+  FetchLecture,
+  FetchUserScreenshots,
+  GetScreenshot,
+  SetUserScreenshots,
+  UpdateLectureList,
+} from './lecture.actions';
 
 import * as LectureActions from './lecture.actions';
 
@@ -13,14 +23,12 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/withLatestFrom';
-import {Action, Store} from '@ngrx/store';
-import {Screenshot} from '../../service/model/screenshot';
 
 @Injectable()
 export class LectureEffects {
 
   @Effect()
-  updateLectureList$ = this.actions$.ofType(LectureActions.UPDATE_LECTURE_LIST)
+  updateLectureList$ = this.actions$.ofType<UpdateLectureList>(ActionTypes.UPDATE_LECTURE_LIST)
     .switchMap(payload => Observable.forkJoin([
       this.lectureService.getLectures(),
       this.lectureService.getLectures(true)])
@@ -29,8 +37,8 @@ export class LectureEffects {
     );
 
   @Effect()
-  fetchCurrentLecture$ = this.actions$.ofType(LectureActions.FETCH_LECTURE)
-    .map(toPayload)
+  fetchCurrentLecture$ = this.actions$.ofType<FetchLecture>(ActionTypes.FETCH_LECTURE)
+    .map(a => a.payload)
     .switchMap(lectureId =>
       this.lectureService.getLecture(lectureId)
         .map((lecture: Lecture) => new LectureActions.SetCurrentLecture(lecture))
@@ -38,8 +46,8 @@ export class LectureEffects {
     );
 
   @Effect()
-  fetchUserScreenshots$ = this.actions$.ofType(LectureActions.FETCH_USER_SCREENSHOTS)
-    .map(toPayload)
+  fetchUserScreenshots$ = this.actions$.ofType<FetchUserScreenshots>(ActionTypes.FETCH_USER_SCREENSHOTS)
+    .map(a => a.payload)
     .switchMap(lectureId =>
       this.lectureService.getUserScreenshots(lectureId)
         .map(screenshots => new LectureActions.SetUserScreenshots(screenshots))
@@ -47,8 +55,8 @@ export class LectureEffects {
     );
 
   @Effect()
-  fetchUserScreenshotsImgs$ = this.actions$.ofType(LectureActions.SET_USER_SCREENSHOTS)
-    .map<Action, Screenshot[]>(toPayload)
+  fetchUserScreenshotsImgs$ = this.actions$.ofType<SetUserScreenshots>(ActionTypes.SET_USER_SCREENSHOTS)
+    .map(a => a.payload)
     .withLatestFrom(this.store.select(s => s.lecture.currentLecture))
     .switchMap(([ss, lecture]) =>
 
@@ -59,6 +67,22 @@ export class LectureEffects {
         .map(updatedSS => new LectureActions.SetUserScreenshotsImg(updatedSS))
         .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err))) // TODO different action
     );
+
+  @Effect({dispatch: false})
+  getScreenshot$ = this.actions$.ofType<GetScreenshot>(ActionTypes.GET_SCREENSHOT)
+    .map(a => a.payload)
+    .do(payload => {
+
+      this.lectureService.getScreenshot(payload.lectureId, payload.pin).subscribe(s => {
+        console.log(s);
+        this.store.dispatch(new LectureActions.GetScreenshotComplete(s));
+      }, err => {
+        console.log('Err', err);
+        this.store.dispatch(new LectureActions.SetScreenshotStatus('done'));
+      });
+
+    });
+
 
   constructor(private actions$: Actions, private lectureService: LectureService, private store: Store<AppState>) {}
 }

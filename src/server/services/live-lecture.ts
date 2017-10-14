@@ -79,6 +79,17 @@ export class LiveLecture {
         console.error(err);
         // TODO what to do?
       });
+
+
+    // Stop lecture if server stops
+
+    //do something when app is closing
+    process.on('exit', () => this.stopLecture());
+    //catches ctrl+c event
+    process.on('SIGINT', () => this.stopLecture());
+    // catches "kill pid" (for example: nodemon restart)
+    process.on('SIGUSR1', () => this.stopLecture());
+    process.on('SIGUSR2', () => this.stopLecture());
   }
 
   newScreenshotAvailable() {
@@ -143,7 +154,7 @@ export class LiveLecture {
     this.nextScreenshot$.complete();
     console.log(chalk.yellow(`> Lecture ${this.lectureId} stopped.`));
     Lecture.update({uuid: this.lectureId}, {live: false})
-      .then(res => console.log('ok')) // TODO handle
+      .then(res => console.log(chalk.yellow(`Lecture ${this.lectureId} stop registered in db`))) // TODO handle
       .catch(e => console.error(e)); // TODO handle error
   }
 

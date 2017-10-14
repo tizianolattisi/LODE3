@@ -1,0 +1,19 @@
+<div fxLayout fxLayoutAlign="stretch">
+
+  <button md-icon-button [ngClass]="{'selected': (selectedToolType === 'default' || !selectedToolType) }" (click)="onToolSelect('default')">
+    <md-icon svgIcon="cursor-default-outline"></md-icon>
+  </button>
+
+  <button md-icon-button *ngFor="let tool of tools$ | async" [ngClass]="{'selected': tool.type === selectedToolType}" (click)="onToolSelect(tool.type)">
+    <md-icon [svgIcon]="tool.icon"></md-icon>
+  </button>
+
+  <button md-icon-button (click)="onSelectAll()">
+    <md-icon svgIcon="select"></md-icon>
+  </button>
+
+  <button md-icon-button (click)="onDelete()">
+    <md-icon svgIcon="delete"></md-icon>
+  </button>
+
+</div>

@@ -25,8 +25,8 @@
               <input mdInput [(ngModel)]="pin">
             </md-form-field>
             <button md-icon-button (click)="goToLiveLecture(lecture)">
-                  <md-icon svgIcon="chevron-right"></md-icon>
-                </button>
+              <md-icon svgIcon="chevron-right"></md-icon>
+            </button>
           </div>
           <md-error *ngIf="invalidPin">Invalid PIN!</md-error>
         </div>
@@ -37,12 +37,12 @@
     <md-divider></md-divider>
 
     <h3 md-subheader>Your lectures</h3>
-    <md-card *ngFor="let lecture of lectures$ | async" class="lecture-card">
+    <md-card *ngFor="let lecture of lectures$ | async" class="lecture-card" (click)="goToLecture(lecture)">
       <md-card-header fxLayout>
         <md-icon svgIcon="book-open"></md-icon>
-        <span class="mat-body-2">{{lecture.name}}</span>
+        <span class="mat-body-2" fxFlexOffset="12px">{{lecture.name}}</span>
       </md-card-header>
-      <md-card-content fxLayout="column">
+      <md-card-content fxLayout="column" class="lecture-item-content">
         <span class="mat-caption">Id: {{lecture.uuid}}</span>
         <span class="mat-caption">Course: {{lecture.course}}</span>
       </md-card-content>

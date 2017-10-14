@@ -1,3 +1,4 @@
+import {base64ArrayBuffer} from './array-to-base64';
 import {Lecture} from './model/lecture';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
@@ -43,9 +44,8 @@ export class LectureService {
 
   getScreenshotImage(lectureId: string, screenshot: Screenshot): Observable<Screenshot> {
     return this.http.get(`/storage/${lectureId}/slides/${screenshot.fileName}`, {responseType: 'arraybuffer'})
-      .map(img => {
-        return {...screenshot, img};
-      })
+      .map(arrayBuffer => base64ArrayBuffer(arrayBuffer)) // Convert binary img to bas64
+      .map(img => ({...screenshot, img})) // Return screenshot with data + img
       .catch(toApiErrorResponse);
   }
 

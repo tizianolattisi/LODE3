@@ -54,4 +54,10 @@ export class LectureListComponent implements OnInit {
       });
   }
 
+  goToLecture(lecture: Lecture) {
+    // Save current lecture
+    this.store.dispatch(new Lectureactions.SetCurrentLecture(lecture));
+    this.router.navigate(['editor', lecture.uuid]);
+  }
+
 }

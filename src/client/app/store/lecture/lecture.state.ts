@@ -2,6 +2,8 @@ import {Screenshot} from '../../service/model/screenshot';
 import {ErrorResponse} from '../../service/model/error-response';
 import {Lecture} from '../../service/model/lecture';
 
+export type ScreenshotStatus = 'pending' | 'done';
+
 export interface LectureState {
 
   lectures: Lecture[];
@@ -15,5 +17,5 @@ export interface LectureState {
   slides: Screenshot[];
   slidesError: ErrorResponse;
   currentSlideIndex: number;
-  snapshotStatus: string; // TODO type
+  snapshotStatus: ScreenshotStatus;
 }

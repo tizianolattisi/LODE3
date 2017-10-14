@@ -9,10 +9,21 @@
 }
 
 .left-toolbar {
-  width: 64px;
+  width: 56px;
+  background: whitesmoke;
+
+  button {
+    margin-bottom: 6px;
+  }
 }
 
-.snapshot-btn {
+.lateral-bar {
+  background: #eeeeee;
+  width: 20%;
+  overflow-y: auto;
+}
+
+.slide-actions {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -21,4 +32,5 @@
 .slide-container {
   width: 90%;
   height: 90%;
+  text-align: center;
 }
