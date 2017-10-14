@@ -1,26 +1,33 @@
 import * as io from 'socket.io-client';
 import Socket = SocketIOClient.Socket;
 import * as fs from 'fs';
+import * as path from 'path';
 
+
+// //////////////////////////////////////
+//  Socket events
+// //////////////////////////////////////
 
 const LectureSocketEvents = {
   Client: {
-    REGISTER_LECTURE: 'register-lecture',
-    START_LECTURE: 'start-lecture',
-    NEW_SCREENSHOT_AVAILABLE: 'new-screenshot-available',
-    SEND_SCREENSHOT: 'send-screenshot',
-    STOP_LECTURE: 'stop-lecture'
+    REGISTER_LECTURE: 'register-lecture', // Il raspberry registra una nuova lezione "live" presso il server
+    START_LECTURE: 'start-lecture', // Il raspberry inizia la lezione
+    NEW_SCREENSHOT_AVAILABLE: 'new-screenshot-available', // Un nuovo screenshot e' disponibile al download
+    SEND_SCREENSHOT: 'send-screenshot', // Il raspberry invia lo screenshot attuale (l'ultimo catturato) al server
+    STOP_LECTURE: 'stop-lecture' // Il raspberry termina la lezione
   },
   Server: {
-    GET_SCREENSHOT: 'get-screenshot'
+    GET_SCREENSHOT: 'get-screenshot' // Il server richiede l'ultimo screenshot catturato dal raspberry
   }
 };
 
 
-let currentSlide = '/home/andrea/Desktop/' + getRandomInt(1, 3) + '.png';
+let currentSlide = path.resolve(__dirname, `../../img/${getRandomInt(1, 3)}.png`);
 let slideTimestamp = new Date().getTime();
 
-// Connect
+
+// 1) Connessione al server /////////////////////////////////////////////
+
 const host = 'http://127.0.0.1:8080';
 console.log('> Connecting to ' + host);
 // const socket = io.connect(host, {path: '/api/lecture'});
@@ -33,60 +40,65 @@ socket
   })
 
   .on('unauthorized', function (msg) {
-    console.log('unauthorized: ' + JSON.stringify(msg.data));
+    console.log('Unauthorized: ' + JSON.stringify(msg.data));
     throw new Error(msg.data.type);
   })
 
   .on('connect', () => {
-    console.log('> Connected');
+    // 2) Il raspberry e' connesso e deve autenticarsi con il jwt token /////////////////////////////////////////////
 
-    // Auth
-    console.log('Emit auth...');
+    console.log('> Connected');
     socket.emit('authenticate', {
-      token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxvZGVAdW5pdG4uaXQiLCJ0eXBlIjoicHJvZmVzc29yIiwiaWF0IjoxNTAwNDkwMjAyfQ.gF1ur6reYSutHh5PBtq-01go74tsS6yJnzZ89i290HU`
+      // tslint:disable-next-line:max-line-length
+      token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxvZGVAdW5pdG4uaXQiLCJ0eXBlIjoicHJvZmVzc29yIiwiaWF0IjoxNTA1Njc0MTg3fQ._9O8kKQAkvapWd1YKHK4HB6Nfr-lO1Fmo2mbHo0IIIw`
     });
 
   })
 
 
   // Start lecture
-  .on('authenticated', () => { // TODO with authentication -> register lecture to server only when authenticated
-    // Start lecture
-    console.log('> Authneticated!');
+  .on('authenticated', () => {
+
+    // 3) Il raspberry e' autenticato e puo' registrare una nuova lezione presso il server /////////////////////////////////////////////
+
+    console.log('> Authenticated!');
     console.log('> Register lecture');
+
+
     // TODO do when socket is authenticated -> obtains more info...
     socket.emit(LectureSocketEvents.Client.REGISTER_LECTURE, {
       pin: '1234',
-      name: 'Lez1' // Opzionale
+      name: 'Lesson 1' // Opzionale
     });
 
     setTimeout(() => {
+      // 4) Una volta registrata la lezione e' possibile iniziarla con l'evento 'start-lecture' /////////////////////////////////
       console.log('> Start lecture');
       socket.emit(LectureSocketEvents.Client.START_LECTURE);
     }, 1000);
   });
 
 
-process.on('exit', disconnect.bind(null, socket));
-process.on('SIGINT', disconnect.bind(null, socket));
-// process.on('uncaughtException', disconnect.bind(null, socket));
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 setInterval(() => {
 
+  // 5) Ogni volta che un nuovo screenshot e' disponibile -> invia al server l'evento 'new-screenshot-available' ////////////
+
+  currentSlide = path.resolve(__dirname, `../../img/${getRandomInt(1, 3)}.png`);
+  slideTimestamp = new Date().getTime();
   // Inform server about current slide changed
   socket.emit(LectureSocketEvents.Client.NEW_SCREENSHOT_AVAILABLE);
-  currentSlide = '/home/andrea/Desktop/' + getRandomInt(1, 3) + '.png';
-  slideTimestamp = new Date().getTime();
   console.log('> Screenshot changed: ' + currentSlide);
-}, 15000);
+}, 10000);
 
+// 6) Quando il server richiede uno screenshot -> invia al server lo screenshot e il suo timestamp /////////////////////
 
 // Server request for last slide
 socket.on(LectureSocketEvents.Server.GET_SCREENSHOT, data => {
-  console.log('> Get Screenshot');
+
+  console.log('> [Server] Get Screenshot');
   fs.readFile(currentSlide, (err, buffer) => {
     if (err) {
       console.error(err);
@@ -95,9 +107,9 @@ socket.on(LectureSocketEvents.Server.GET_SCREENSHOT, data => {
       console.log('> Send Screenshot: ' + currentSlide);
       socket.emit(LectureSocketEvents.Client.SEND_SCREENSHOT,
         {
-          image: buffer.toString('base64'),
-          timestamp: slideTimestamp,
-          name: 'Screenshot 1' // Opzionale
+          image: buffer.toString('base64'), // Lo screenshot in "base64"
+          timestamp: slideTimestamp, // Il timestamp legato allo screenshot
+          name: 'Screenshot 1' // Opzionale, il nome dello screenshot
         }
       );
     }
@@ -107,6 +119,8 @@ socket.on(LectureSocketEvents.Server.GET_SCREENSHOT, data => {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+process.on('exit', disconnect.bind(null, socket));
+process.on('SIGINT', disconnect.bind(null, socket));
 
 function disconnect(s: Socket) {
   console.log('> Disconnect');

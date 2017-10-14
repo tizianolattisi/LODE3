@@ -1,8 +1,9 @@
+import * as chalk from 'chalk';
 import {Router} from 'express';
 import {Lecture} from '../models/db/Lecture';
 import {ErrorResponse} from '../models/api/ErrorResponse';
 import {LiveLectureService} from '../services/live.lecture.service';
-
+import {User} from '../models/db/User';
 
 const PATH = '/lecture';
 
@@ -58,33 +59,106 @@ router.get(PATH + '/:lectureId', (req, res, next) => {
  */
 router.get(PATH + '/:lectureId/myscreenshots', (req, res, next) => {
 
-  // const lectureId = req.params['lectureId'];
-  // Lecture.findOne({uuid: lectureId})
-  //   .then(lecture => {
-  //     if (!lecture) {
-  //       return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
-  //     }
+  const userId = req.user.id;
+  const lectureId = req.params['lectureId'];
 
-  //     return res.send(lecture.toJSON()); // TODO toJSON  + add screenshots
-  //   })
-  //   .catch(err => {
-  //     return next(err);
-  //   })
-  return res.sendStatus(501);
+  User.findById(userId)
+    .then(user => {
+
+      if (!user) {
+        return res.status(404).send(new ErrorResponse('not-found', 'User not found'));
+      }
+
+      if (!user.lectures) {
+        return res.json([]);
+      }
+
+      const userLecture = user.lectures.filter(l => l.uuid === lectureId)[0];
+
+      if (!userLecture) {
+        return res.json([]);
+      }
+
+      const userScreenshots = userLecture.screenshots || [];
+
+      // Get all info about screenshots
+      Lecture.findOne({uuid: lectureId})
+        .then(lecture => {
+
+          if (!lecture) {
+            return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
+          }
+
+          const ss = lecture.screenshots.filter(s => userScreenshots.indexOf(s.fileName) !== -1);
+
+          res.json(ss);
+        })
+        .catch(err => next(err));
+
+    })
+    .catch(err => next(err));
 });
 
 /**
- * Take a snapshot of the slide that is currently displayed during a lecture.
+ * Take a screenshots of the slide that is currently displayed during a lecture.
  */
-router.get(PATH + '/:lectureId/snapshot', (req, res, next) => {
-  // TODO pin
-  // TODO implement
+router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
+
+  const userId = req.user.id;
   const lectureId = req.params['lectureId'];
-  console.log('> REQUEST SNAP FOR ' + lectureId);
+  const pin = req.header('pin');
+
+  // Request has no pin
+  if (!pin) {
+    return res.status(400).send(new ErrorResponse('missing-pin', 'Pin for live lecture is missing'));
+  }
+
+  const lPin = LiveLectureService.getPin(lectureId);
+
+  // Check pin
+  if (lPin !== pin) {
+    return res.status(401).send(new ErrorResponse('wrong-pin', 'Pin for live lecture is wrong'));
+  }
+
+  console.log(chalk.blue(`> User "${userId}" requests a screenshot for lecture "${lectureId}".`));
+
+
   LiveLectureService.getNextScreenshot(lectureId)
-    .subscribe(snapshotPath => {
-      console.log('> SNAPSHOT AQUIRED: ' + snapshotPath);
-      return res.json(snapshotPath);
+    .subscribe(screenshot => {
+
+      // Save screenshot into user's lectures list
+      User.findById(userId)
+        .then(user => {
+          const userLecture = user.lectures.filter(l => l.uuid === lectureId)[0];
+
+          if (userLecture) {
+            // TODO check if user has already the screenshot (maybe using Mongo index)
+            if (userLecture.screenshots.indexOf(screenshot.fileName) === -1) {
+              userLecture.screenshots.push(screenshot.fileName);
+            }
+          } else {
+            user.lectures.push({uuid: lectureId, screenshots: [screenshot.fileName]});
+          }
+
+          user.save()
+            .then(() => {
+              res.json(screenshot);
+            })
+            .catch(err => next(err));
+
+        })
+        .catch(err => next(err));
+
+      // User.update(
+      //   {_id: userId, 'lectures._id': lectureId},
+      //   {'$push': {'lectures.$.screenshots': screenshot.fileName}}
+      // )
+      //   .then(() => {
+      //     return res.json(screenshot);
+      //   })
+      //   .catch(err => next(err));
+
+
     }, err => {
       return next(err);
     });

@@ -76,7 +76,7 @@ export default class Server {
     this.app.get(SERVER_API_PATH, (req, res) => res.json({message: 'Hello!'}));
 
     this.app.use(SERVER_API_PATH, UserRouter);
-    this.app.use(SERVER_API_PATH, LectureRouter);
+    this.app.use(SERVER_API_PATH, this.authorizationMiddleware, LectureRouter);
 
     // Setup error handlers
     this.app.use(SERVER_API_PATH, NotFoundErrorHandler);
@@ -89,7 +89,14 @@ export default class Server {
     // Serve Client App
     this.app.use('/', express.static(CLIENT_APP_FS_PATH));
     // Serve Lode files
-    this.app.use(SERVER_STORAGE_PATH, this.authorizationMiddleware, express.static(STORAGE_PATH));
+    this.app.use(SERVER_STORAGE_PATH, this.authorizationMiddleware, express.static(STORAGE_PATH),
+      (req, res) => {
+        console.log('AAAAAAAAAAAAAa'); // TODO remove all
+        console.log(req);
+        console.log(res);
+        res.send(501);
+      }
+    );
 
     // Any path -> serve index.html file
     this.app.get(/\/.*/, function (req, res) {

@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import * as mongoose from 'mongoose';
+import {DocumentArray} from 'mongoose/lib/types/documentarray';
 
 type UserType = 'student' | 'professor';
 
@@ -8,16 +9,29 @@ export interface UserProfile {
   type: UserType
 }
 
+export interface UserLecture extends mongoose.Document {
+  screenshots: string[];
+}
+
 export interface IUser extends UserProfile, mongoose.Document {
   password: string;
   enabled: boolean;
 
-  lectures?: {id: string; screenshots: string[]}[];
+  lectures?: DocumentArray<UserLecture>;
 
   generatePasswordHash(password: string);
   validPassword(password: string);
   getUserProfile(): UserProfile;
 }
+
+const LectureSchema = new mongoose.Schema({
+  uuid: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  screenshots: [String]
+});
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -35,10 +49,11 @@ const UserSchema = new mongoose.Schema({
     required: true
   },
   enabled: Boolean,
-  lectures: [{
-    id: String,
-    screenshots: [String]
-  }]
+  lectures: [LectureSchema]
+  // lectures: [{
+  //   _id: String,
+  //   screenshots: [String]
+  // }]
 });
 
 
@@ -72,6 +87,7 @@ UserSchema.set('toJSON', {getters: false, virtuals: false});
 };
 
 UserSchema.index({email: 1}, {unique: true});
+UserSchema.index({'lectures.id': 1}, {unique: true});
 // TODO "Foreign keys" for lectures and screenshots
 
 export const User = mongoose.model<IUser>('User', UserSchema);

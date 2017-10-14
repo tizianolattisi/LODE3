@@ -1,3 +1,4 @@
+import {AppState} from '../app-state';
 import {LectureService} from '../../service/lecture.service';
 import {Lecture} from '../../service/model/lecture';
 import {Injectable} from '@angular/core';
@@ -11,6 +12,9 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/withLatestFrom';
+import {Action, Store} from '@ngrx/store';
+import {Screenshot} from '../../service/model/screenshot';
 
 @Injectable()
 export class LectureEffects {
@@ -33,5 +37,28 @@ export class LectureEffects {
         .catch(err => Observable.of(new LectureActions.FetchLectureError(err)))
     );
 
-  constructor(private actions$: Actions, private lectureService: LectureService) {}
+  @Effect()
+  fetchUserScreenshots$ = this.actions$.ofType(LectureActions.FETCH_USER_SCREENSHOTS)
+    .map(toPayload)
+    .switchMap(lectureId =>
+      this.lectureService.getUserScreenshots(lectureId)
+        .map(screenshots => new LectureActions.SetUserScreenshots(screenshots))
+        .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err)))
+    );
+
+  @Effect()
+  fetchUserScreenshotsImgs$ = this.actions$.ofType(LectureActions.SET_USER_SCREENSHOTS)
+    .map<Action, Screenshot[]>(toPayload)
+    .withLatestFrom(this.store.select(s => s.lecture.currentLecture))
+    .switchMap(([ss, lecture]) =>
+
+      // TODO lecture can be null
+
+      // Foreach screenshot download it and save base64
+      Observable.forkJoin<Screenshot>(ss.map(screenshot => this.lectureService.getScreenshotImage(lecture.uuid, screenshot)))
+        .map(updatedSS => new LectureActions.SetUserScreenshotsImg(updatedSS))
+        .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err))) // TODO different action
+    );
+
+  constructor(private actions$: Actions, private lectureService: LectureService, private store: Store<AppState>) {}
 }

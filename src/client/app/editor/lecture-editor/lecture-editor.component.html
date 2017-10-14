@@ -26,8 +26,8 @@
     </div>
     <div fxFlex="auto" fxLayout fxLayoutAlign="center center">
 
-      <div class="slide-container">
-        <img [src]="path" l3FxFullHeight l3FxFullWidth>
+      <div class="slide-container" *ngIf="tmpS && tmpS.img">
+        <img [src]="'data:image/png;base64,' + tmpS.img" l3FxFullHeight l3FxFullWidth>
       </div>
 
     </div>

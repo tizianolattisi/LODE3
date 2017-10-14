@@ -1,3 +1,4 @@
+import {Screenshot} from '../../service/model/screenshot';
 import {ErrorResponse} from '../../service/model/error-response';
 import {Lecture} from '../../service/model/lecture';
 
@@ -11,7 +12,8 @@ export interface LectureState {
   currentLectureFetchError: ErrorResponse;
   currentPin: string;
 
-  slides: string[]; // TODO type
+  slides: Screenshot[];
+  slidesError: ErrorResponse;
   currentSlideIndex: number;
   snapshotStatus: string; // TODO type
 }

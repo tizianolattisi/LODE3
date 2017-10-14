@@ -1,7 +1,7 @@
 import Socket = SocketIO.Socket;
 import {Observable} from 'rxjs/Observable';
 import {LiveLecture} from './live-lecture';
-import {ILecture} from '../models/db/Lecture';
+import {ILecture, IScreenshotComplete} from '../models/db/Lecture';
 
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/take';
@@ -102,7 +102,7 @@ class LiveLectureService {
     }
   }
 
-  getNextScreenshot(lectureId: string): Observable<string> {
+  getNextScreenshot(lectureId: string): Observable<IScreenshotComplete> {
     const ll = this.liveLectures[lectureId];
     if (ll) {
       return ll.getNextScreenshot();

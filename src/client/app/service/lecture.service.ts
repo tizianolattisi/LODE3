@@ -5,6 +5,8 @@ import {toApiErrorResponse} from './to-error-response';
 import {Observable} from 'rxjs/Rx';
 import {ErrorResponse} from './model/error-response';
 import {of} from 'rxjs/observable/of';
+import {HttpHeaders} from '@angular/common/http';
+import {Screenshot} from './model/screenshot';
 
 @Injectable()
 export class LectureService {
@@ -28,8 +30,22 @@ export class LectureService {
       .catch((err: ErrorResponse) => of(false));
   }
 
-  getSnapShot(lectureId: string) {
-    return this.http.get<string>(`/api/lecture/${lectureId}/snapshot`)
+  getScreenshot(lectureId: string, pin: string): Observable<Screenshot> {
+    const headers = new HttpHeaders({'pin': pin});
+    return this.http.get<string>(`/api/lecture/${lectureId}/screenshot`, {headers})
+      .catch(toApiErrorResponse);
+  }
+
+  getUserScreenshots(lectureId: string): Observable<Screenshot[]> {
+    return this.http.get<string>(`/api/lecture/${lectureId}/myscreenshots`)
+      .catch(toApiErrorResponse);
+  }
+
+  getScreenshotImage(lectureId: string, screenshot: Screenshot): Observable<Screenshot> {
+    return this.http.get(`/storage/${lectureId}/slides/${screenshot.fileName}`, {responseType: 'arraybuffer'})
+      .map(img => {
+        return {...screenshot, img};
+      })
       .catch(toApiErrorResponse);
   }
 

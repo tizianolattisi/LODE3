@@ -1,14 +1,16 @@
+import {Lecture} from '../../service/model/lecture';
+import {Screenshot} from '../../service/model/screenshot';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../store/app-state';
 import {Store} from '@ngrx/store';
-import {LectureService} from '../../service/lecture.service';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs/Rx';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
+import {Subscription, Observable} from 'rxjs/Rx';
 
 import * as LectureActions from '../../store/lecture/lecture.actions';
 
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
+import {LectureService} from '../../service/lecture.service';
 
 @Component({
   selector: 'l3-lecture-editor',
@@ -18,7 +20,13 @@ import 'rxjs/add/operator/first';
 })
 export class LectureEditorComponent implements OnInit, OnDestroy {
 
-  path: string;
+  tmpS: Screenshot;
+
+
+  private pin: string;
+  lecture: Lecture;
+
+  slides$: Observable<Screenshot[]>;
 
   private lectureSubscr: Subscription;
 
@@ -27,12 +35,17 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private service: LectureService,
-    private cd: ChangeDetectorRef) {}
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.lectureSubscr = this.store.select(s => s.lecture.currentLecture)
       .withLatestFrom(this.store.select(s => s.lecture.currentPin))
       .subscribe(([lecture, pin]) => {
+
+        // Save info
+        this.lecture = lecture;
+        this.pin = pin;
 
         if (lecture) {
 
@@ -41,6 +54,7 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
           } else {
             // TODO load users slides
             console.log('OK!', lecture, pin);
+            this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid));
           }
         } else {
           // No lecture exists in store -> fetch it
@@ -49,19 +63,22 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
 
       });
 
+    this.slides$ = this.store.select(s => s.lecture.slides);
+
+    this.slides$.subscribe(ss => { // TODO remove
+      console.log('SLides', ss);
+    })
   }
 
   getSnapshot() {
     console.log('Req');
-    this.service.getSnapShot('bd2485fa-bb5d-404b-87dc-cb17e05980f6').subscribe(path => {
+    this.service.getScreenshot(this.lecture.uuid, this.pin).subscribe(s => {
 
-      this.path = path;
+      this.tmpS = s;
       this.cd.detectChanges();
-      console.log('Path', this.path);
+      console.log('Screenshot!', this.tmpS);
     }, err => {
-      const e = err.json();
-      console.log('Err', e);
-      this.path = e;
+      console.log('Err', err);
     });
   }
 

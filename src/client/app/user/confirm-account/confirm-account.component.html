@@ -3,9 +3,9 @@
   <md-card>
     <md-card-title>Confirm Account</md-card-title>
 
-    <md-card-content *ngIf="success$ | async">
+    <md-card-content *ngIf="success$ | async" class="success-box" fxLayout="column" fxLayoutAlign="center">
       <p>The account has been activated! Now you can login.</p>
-      <button md-raised-button routerLink="/user/login">Login Page</button>
+      <button md-raised-button routerLink="/user/login" color="accent">Login Page</button>
     </md-card-content>
 
     <md-card-content *ngIf="loading$ | async">

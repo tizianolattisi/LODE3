@@ -14,6 +14,7 @@ const initialState: LectureState = {
   currentPin: '',
 
   slides: [],
+  slidesError: null,
   currentSlideIndex: -1,
   snapshotStatus: '' // TODO set proper value,
 }
@@ -21,6 +22,8 @@ const initialState: LectureState = {
 export function lectureReducer(state: LectureState = initialState, action: Action): LectureState {
 
   switch (action.type) {
+
+    // Lecture list //////////////////////////////////////////////////////
 
     case LectureActions.UPDATE_LECTURE_LIST:
       return state;
@@ -37,6 +40,9 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
         ...state,
         lecturesLoadError: action.payload
       };
+
+
+    // Specific lecture info ////////////////////////////////////////////
 
     case LectureActions.FETCH_LECTURE_ERROR:
       return {
@@ -58,23 +64,44 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
         currentPin: action.payload
       };
 
-    case LectureActions.ADD_SLIDES:
+    // User screenshots ///////////////////////////////////////////////
+
+    case LectureActions.FETCH_USER_SCREENSHOTS_ERROR:
       return {
         ...state,
-        slides: [...state.slides, ...action.payload]
+        slidesError: action.payload
       };
 
-    case LectureActions.ADD_SNAPSHOT:
-      return {
-        ...state,
-        slides: [...state.slides, action.payload]
-      };
-
-    case LectureActions.SET_SLIDES:
+    case LectureActions.SET_USER_SCREENSHOTS:
       return {
         ...state,
         slides: action.payload
       };
+
+    case LectureActions.SET_USER_SCREENSHOTS_IMG:
+      return {
+        ...state,
+        slides: action.payload
+      };
+
+
+    // case LectureActions.ADD_SLIDES:
+    //   return {
+    //     ...state,
+    //     slides: [...state.slides, ...action.payload]
+    //   };
+
+    // case LectureActions.ADD_SNAPSHOT:
+    //   return {
+    //     ...state,
+    //     slides: [...state.slides, action.payload]
+    //   };
+
+    // case LectureActions.SET_SLIDES:
+    //   return {
+    //     ...state,
+    //     slides: action.payload
+    //   };
 
     case LectureActions.SET_CURRENT_SLIDE:
       return {

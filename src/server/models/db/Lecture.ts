@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import {DocumentArray} from 'mongoose/lib/types/documentarray';
 
 export interface ILecture {
   uuid: string;
@@ -9,15 +10,39 @@ export interface ILecture {
   videoFileName?: string;
   videoDate?: Date;
 
-  screenshots?: {
-    id: string;
-    name?: string;
-    timestamp?: number;
-  }[];
+  screenshots?: DocumentArray<Screenshot>;
 }
 
 export interface Lecture extends ILecture, mongoose.Document {
 }
+
+export interface IScreenshot {
+  fileName: string;
+  name?: string;
+  timestamp: number;
+  img?: string;
+}
+
+export interface IScreenshotComplete extends IScreenshot {
+  img?: string;
+}
+
+export interface Screenshot extends IScreenshot, mongoose.Document {
+}
+
+
+const ScreenshotSchema = new mongoose.Schema({
+  fileName: {
+    type: String,
+    required: true
+  },
+  name: String,
+  timestamp: {
+    type: Number,
+    required: true
+  }
+});
+
 
 const LectureSchema = new mongoose.Schema({
   uuid: {
@@ -31,18 +56,9 @@ const LectureSchema = new mongoose.Schema({
   videoFileName: String,
   videoDate: Date,
 
-  screenshots: [{
-    id: {
-      type: String,
-      required: true
-    },
-    name: String,
-    timestamp: {
-      type: Number,
-      required: true
-    }
-  }]
+  screenshots: [ScreenshotSchema]
 });
+
 
 // Db lecture to JSON lecture conversion. Remove some data that should not be exposed through the APIs
 LectureSchema.set('toJSON', {getters: false, virtuals: false});

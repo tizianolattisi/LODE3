@@ -4,7 +4,7 @@
     <md-card-title>Register</md-card-title>
 
     <ng-container *ngIf="signupSuccess$ | async; else signupFormTmpl">
-      <md-card-content fxLayout="column">
+      <md-card-content fxLayout="column" class="success-box">
         <p class="mat-body-1">You has been registered successfully! Now you will receive an email.</p>
         <p class="mat-body-1">Click on the link in the email to activate your account!</p>
       </md-card-content>
