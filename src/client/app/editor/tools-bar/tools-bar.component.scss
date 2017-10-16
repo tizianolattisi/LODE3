@@ -4,3 +4,19 @@
   background: $color-accent;
   color: $color-light;
 }
+
+.stroke-input {
+  width: 36px;
+
+  input {
+    text-align: center;
+  }
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  margin: 12px;
+  background: #dddddd;
+  border: 0;
+}

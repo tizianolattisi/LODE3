@@ -4,12 +4,9 @@
     <div fxLayout>
       <!--<img src="" alt="Logo">-->
       <span class="app-title" routerLink="/">Lode3</span>
-      <button md-button routerLink='/lecture-list' *ngIf="email$ | async" fxFlexOffset="24px">Lectures</button>
-      <div *ngIf="currentLecture$ | async">
-        <span>
-          <span class="mat-body-2">{{(currentLecture$ | async).name}}</span>
-          <span class="mat-caption">{{(currentLecture$ | async).course}}</span>
-        </span>
+      <div *ngIf="currentLecture$ | async" fxFlexOffset="24px" class="lecture-title">
+        <b class="mat-body-2">{{(currentLecture$ | async).name}}</b>
+        <span class="mat-caption">{{(currentLecture$ | async).course}}</span>
       </div>
     </div>
 
@@ -17,22 +14,25 @@
     </div>
 
     <div fxLayout fxLayoutAlign="center center">
+      <button md-raised-button routerLink='/lecture-list' *ngIf="email$ | async" fxFlexOffset="24px">Lectures</button>
 
-      <ng-container *ngIf="!(email$ | async)">
-        <button md-raised-button routerLink='/user/login'>Login</button>
-      </ng-container>
+      <div fxFlexOffset="12px">
+        <ng-container *ngIf="!(email$ | async)">
+          <button md-raised-button routerLink='/user/login'>Login</button>
+        </ng-container>
 
-      <ng-container *ngIf="email$ | async">
+        <ng-container *ngIf="email$ | async">
 
-        <div fxLayout fxLayoutAlign="center center" class="user-info">
-          <md-icon svgIcon="account"></md-icon>
-          <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
-        </div>
+          <div fxLayout fxLayoutAlign="center center" class="user-info">
+            <md-icon svgIcon="account"></md-icon>
+            <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
+          </div>
 
-        <button md-icon-button (click)="onLogout()" fxFlexOffset="6px" class="user-info">
+          <button md-icon-button (click)="onLogout()" fxFlexOffset="6px" class="user-info">
             <md-icon svgIcon="logout"></md-icon>
-        </button>
-      </ng-container>
+          </button>
+        </ng-container>
+      </div>
 
     </div>
 

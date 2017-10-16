@@ -5,7 +5,13 @@
 }
 
 .lecture-card {
+  cursor: pointer;
   margin: 16px;
+
+
+  &:hover {
+    background: #eeeeee;
+  }
 }
 
 .lecture-item-content {

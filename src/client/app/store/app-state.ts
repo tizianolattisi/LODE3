@@ -2,7 +2,7 @@ import {UserState} from './user/user.state';
 import {VideoState} from './video/video.state';
 import {LectureState} from './lecture/lecture.state';
 import {AnnotationState} from './annotation/annotation.state';
-import {ToolState} from './tool/tool.state';
+import {EditorState} from './editor/editor.state';
 
 export interface AppState {
 
@@ -10,5 +10,5 @@ export interface AppState {
   readonly video: VideoState;
   readonly lecture: LectureState;
   readonly annotation: AnnotationState;
-  readonly tool: ToolState;
+  readonly editor: EditorState;
 }

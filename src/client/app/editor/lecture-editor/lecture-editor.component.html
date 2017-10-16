@@ -1,18 +1,16 @@
-<div fxLayout="column" l3FxFullHeight>
+<div fxLayout="column" l3FxFullHeight class="mat-typography">
 
   <!-- TOP TOOLBAR -->
-  <md-toolbar class="toolbar">
-    <div l3FxFullWidth fxLayout="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="start center">
-      <div>
-        <span>{{currentScreenshotIndex + 1}}</span>
-        <span>/</span>
-        <span>{{slides?.length}}</span>
-      </div>
-      <div>
-        <l3-tools-bar></l3-tools-bar>
-      </div>
+  <div class="toolbar" l3FxFullWidth fxLayout="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="start center">
+    <div>
+      <span>{{currentScreenshotIndex + 1}}</span>
+      <span>/</span>
+      <span>{{slides?.length}}</span>
     </div>
-  </md-toolbar>
+    <div>
+      <l3-tools-bar></l3-tools-bar>
+    </div>
+  </div>
 
   <div fxLayout fxLayoutAlign="center stretch" l3FxFullHeight>
 
@@ -65,7 +63,7 @@
 
     <!-- RIGHT TOOLBAR -->
     <div class="note-bar" *ngIf="!currentTab">
-      notes
+      <l3-notes-bar></l3-notes-bar>
     </div>
 
     <!-- SLIDE ACTIONS -->
@@ -76,7 +74,8 @@
       </button>
 
       <button md-fab (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
-        <md-icon svgIcon="camera-enhance"></md-icon>
+        <md-icon svgIcon="camera-enhance" *ngIf="screenshotStatus !== 'pending'"></md-icon>
+        <md-spinner class="screenshot-spinner" *ngIf="screenshotStatus === 'pending'"></md-spinner>
       </button>
 
       <button md-mini-fab (click)="onSlideNext()" [disabled]="currentScreenshotIndex === (slides?.length - 1)">

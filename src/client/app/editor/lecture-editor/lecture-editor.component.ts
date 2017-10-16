@@ -1,14 +1,14 @@
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Subscription} from 'rxjs/Subscription';
+import {SetTools} from '../../store/editor/editor.actions';
 import {Tool} from '../../service/tools/tool';
 import {TOOLS} from '../../service/tools/tool-opaque-token';
-import {SetTools} from '../../store/tool/tool.actions';
 import {ScreenshotStatus} from '../../store/lecture/lecture.state';
 import {Lecture} from '../../service/model/lecture';
 import {Screenshot} from '../../service/model/screenshot';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../store/app-state';
-import {Store} from '@ngrx/store';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
 
 import * as LectureActions from '../../store/lecture/lecture.actions';
 

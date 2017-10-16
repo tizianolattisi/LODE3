@@ -8,7 +8,7 @@ import {UserEffects} from './user/user.effects';
 import {LectureEffects} from './lecture/lecture.effects';
 import {VideoEffects} from './video/video.effects';
 import {AnnotationEffects} from './annotation/annotation.effects';
-import {ToolEffects} from './tool/tool.effects';
+import {EditorEffects} from './editor/editor.effects';
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import {ToolEffects} from './tool/tool.effects';
       LectureEffects,
       VideoEffects,
       AnnotationEffects,
-      ToolEffects
+      EditorEffects
     ]),
     !environment.production ? StoreDevtoolsModule.instrument({maxAge: 50}) : []
   ]

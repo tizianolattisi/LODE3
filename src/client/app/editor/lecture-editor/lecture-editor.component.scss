@@ -4,8 +4,11 @@
 }
 
 .toolbar {
+  background: whitesmoke;
   min-height: 56px;
   height: 56px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .left-toolbar {
@@ -33,4 +36,9 @@
   width: 90%;
   height: 90%;
   text-align: center;
+}
+
+.screenshot-spinner {
+  width: 24px;
+  height: 24px;
 }

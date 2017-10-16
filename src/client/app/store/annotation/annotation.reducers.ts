@@ -76,14 +76,3 @@ export function annotationReducer(state: AnnotationState = initialState, action:
       return state;
   }
 }
-
-export const FETCH_ANNOTATIONS = '[Annotation] FETCH_ANNOTATIONS';
-export const SET_ANNOTATIONS = '[Annotation] SET_ANNOTATIONS';
-export const SET_ANNOTATIONS_PER_SLIDE = '[Annotation] SET_ANNOTATIONS_PER_SLIDE';
-export const RESET_SELECTION = '[Annotation] RESET_SELECTION';
-export const TOGGLE_SELECTED_ANNOTATION = '[Annotation] TOGGLE_SELECTED_ANNOTATION';
-export const SET_SELECTED = '[Annotation] SET_SELECTED';
-export const ADD_ANNOTATION = '[Annotation] ADD_ANNOTATION';
-export const EDIT_ANNOTATION = '[Annotation] EDIT_ANNOTATION';
-export const DELETE_ANNOTATION = '[Annotation] DELETE_ANNOTATION';
-
