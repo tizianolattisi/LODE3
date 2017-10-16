@@ -1,7 +1,5 @@
-import * as AnnotationActions from './annotation.actions';
 import {AnnotationState} from './annotation.state';
-
-export type Action = AnnotationActions.All;
+import {ActionTypes, All} from './annotation.actions';
 
 
 const initialState: AnnotationState = {
@@ -10,67 +8,109 @@ const initialState: AnnotationState = {
   fetchedSlides: []
 }
 
-export function annotationReducer(state: AnnotationState = initialState, action: Action): AnnotationState {
+export function annotationReducer(state: AnnotationState = initialState, action: All): AnnotationState {
 
   switch (action.type) {
 
-    case AnnotationActions.FETCH_ANNOTATIONS:
-      return state;
+    case ActionTypes.SET_ANNOTATIONS:
 
-    case AnnotationActions.SET_ANNOTATIONS:
       return {
         ...state,
-        annotations: {...state.annotations, ...action.payload.annotations}, // TODO user correct prop
-        fetchedSlides: [...state.fetchedSlides, action.payload.slideId] // TODO user correct prop
+        annotations: action.payload,
+        fetchedSlides: Object.keys(action.payload)
       };
 
-    case AnnotationActions.SET_ANNOTATIONS_PER_SLIDE:
+    case ActionTypes.SET_ANNOTATIONS_PER_SLIDE:
+
+      // Copy annotations
+      const annotations = {...state.annotations};
+
+      // If not exists, add "bucket" for annotations in the slide
+      if (!annotations[action.payload.slideId]) {
+        annotations[action.payload.slideId] = {};
+      }
+
+      // Update annotations for the slide
+      annotations[action.payload.slideId] = {...annotations[action.payload.slideId], ...action.payload.annotations};
+
+      // Update fetched slides
+      const _fetchedSlides = [...state.fetchedSlides];
+      if (_fetchedSlides.indexOf(action.payload.slideId) === -1) {
+        _fetchedSlides.push(action.payload.slideId);
+      }
+
       return {
         ...state,
-        annotations: {...state.annotations, ...action.payload.annotations}, // TODO user correct prop
-        fetchedSlides: [...state.fetchedSlides, action.payload.slideId] // TODO user correct prop
+        annotations,
+        fetchedSlides: _fetchedSlides
       };
 
-    case AnnotationActions.RESET_SELECTION:
+    case ActionTypes.RESET_SELECTION:
       return {
         ...state,
         selectedAnnotations: []
       };
 
-    case AnnotationActions.TOGGLE_SELECTED_ANNOTATION:
+    case ActionTypes.TOGGLE_SELECTED_ANNOTATION:
       return {
         ...state,
         selectedAnnotations: state.selectedAnnotations.filter(uuid => uuid !== action.payload)
       };
 
-    case AnnotationActions.SET_SELECTED:
+    case ActionTypes.SET_SELECTED:
       return {
         ...state,
         selectedAnnotations: [...state.selectedAnnotations, action.payload]
       };
 
-    case AnnotationActions.ADD_ANNOTATION:
-      const anns = {...state.annotations};
-      // TODO add annotaton
+    case ActionTypes.ADD_ANNOTATION:
+      // Copy annotations
+      const annsAdd = {...state.annotations};
+
+      // Init annotations "bucket" for slide
+      if (!annsAdd[action.payload.slideId]) {
+        annsAdd[action.payload.slideId] = {};
+      }
+
+      // Add the annotation
+      annsAdd[action.payload.slideId][action.payload.uuid] = action.payload;
+
       return {
         ...state,
-        annotations: anns
+        annotations: annsAdd
       };
 
-    case AnnotationActions.EDIT_ANNOTATION:
-      const annss = {...state.annotations};
-      // TODO edit annotaton
+    case ActionTypes.EDIT_ANNOTATION:
+      const annsEdit = {...state.annotations};
+
+      // Init annotations "bucket" for slide
+      if (!annsEdit[action.payload.slideId]) {
+        annsEdit[action.payload.slideId] = {};
+      }
+
+      // Overwrite the annotation
+      annsEdit[action.payload.slideId][action.payload.uuid] = action.payload;
+
       return {
         ...state,
-        annotations: annss
+        annotations: annsEdit
       };
 
-    case AnnotationActions.DELETE_ANNOTATION:
-      // TODO delete annotation
+    case ActionTypes.DELETE_ANNOTATION:
+      const annsDel = {...state.annotations};
+
+      if (annsDel[action.payload.slideId]) {
+        // Delete annotation
+        delete annsDel[action.payload.slideId][action.payload.annotationId];
+      }
+
       return {
         ...state,
-        annotations: anns
+        annotations: annsDel
       };
+
+    case ActionTypes.CLEAR_ANNOTATIONS_WORKSPACE:
+      return initialState;
 
     default:
       return state;

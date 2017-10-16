@@ -1,3 +1,4 @@
+import {of} from 'rxjs/observable/of';
 import {AppState} from '../app-state';
 import {LectureService} from '../../service/lecture.service';
 import {Lecture} from '../../service/model/lecture';
@@ -6,11 +7,13 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import {Screenshot} from '../../service/model/screenshot';
+import {ClearAnnotationWorkspace} from '../annotation/annotation.actions';
 import {
   ActionTypes,
   FetchLecture,
   FetchUserScreenshots,
   GetScreenshot,
+  SetCurrentLecture,
   SetUserScreenshots,
   UpdateLectureList,
 } from './lecture.actions';
@@ -35,6 +38,11 @@ export class LectureEffects {
       .map((lectures: Lecture[][]) => new LectureActions.SetLectureList({lectures: lectures[0], live: lectures[1]}))
       .catch(err => Observable.of(new LectureActions.UpdateLectureListError(err)))
     );
+
+  @Effect()
+  setCurrentLecture$ = this.actions$.ofType<SetCurrentLecture>(ActionTypes.SET_CURRENT_LECTURE)
+    .map(a => a.payload)
+    .switchMap(lecture => of(new ClearAnnotationWorkspace()));
 
   @Effect()
   fetchCurrentLecture$ = this.actions$.ofType<FetchLecture>(ActionTypes.FETCH_LECTURE)

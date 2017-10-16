@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import {Injectable, isDevMode} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {WsFromServerEvents, WsMsg} from './model/ws-msg';
+import {WsFromClientEvents, WsFromServerEvents, WsMsg} from './model/ws-msg';
 
 import * as io from 'socket.io-client';
 
@@ -9,6 +9,7 @@ import * as io from 'socket.io-client';
 export class SocketService {
 
   private BASE_PATH = '/api/annotation';
+  private HOST = isDevMode() ? 'localhost:8080' : location.host;
 
   private socket: SocketIOClient.Socket;
   private observer: Subject<WsMsg>;
@@ -23,14 +24,14 @@ export class SocketService {
     this.close();
 
     // Open and listen on a new soket
-    this.socket = io.connect(location.host, {path: this.BASE_PATH});
+    this.socket = io.connect(this.HOST + this.BASE_PATH);
     this.initListen(token);
   }
 
   close() {
     if (this.socket) {
       this.socket.disconnect();
-      this.socket.close();
+      // this.socket.close();
       this.socket = null;
     }
   }
@@ -43,13 +44,16 @@ export class SocketService {
     return this.observer.asObservable();
   }
 
-  send(eventType: WsFromServerEvents, data: any) {
+  send(eventType: WsFromClientEvents, data: any) {
     if (this.socket) {
       this.socket.emit(eventType, data);
+    } else {
+      throw new Error('Socket is closed!');
     }
   }
 
   private initListen(token: string) {
+
     this.socket
       .on('connect', () => {
         // Authenticate user
@@ -58,7 +62,7 @@ export class SocketService {
         // Close ws when browser windows is closed
         window.onbeforeunload = () => {
           this.socket.disconnect();
-          this.socket.close();
+          // this.socket.close();
           this.socket = null;
         };
       })

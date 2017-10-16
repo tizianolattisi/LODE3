@@ -3,7 +3,7 @@
   <!-- TOP TOOLBAR -->
   <div class="toolbar" l3FxFullWidth fxLayout="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="start center">
     <div>
-      <span>{{currentScreenshotIndex + 1}}</span>
+      <span>{{currentSlideIndex + 1}}</span>
       <span>/</span>
       <span>{{slides?.length}}</span>
     </div>
@@ -54,8 +54,8 @@
     <!-- CURRENT SLIDE -->
     <div fxFlex="auto" fxLayout fxLayoutAlign="center center">
 
-      <div class="slide-container" *ngIf="currentScreenshot?.img">
-        <img [src]="'data:image/png;base64,' + currentScreenshot?.img" l3FxFullHeight>
+      <div class="slide-container" *ngIf="currentSlide?.img">
+        <img [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight>
       </div>
 
     </div>
@@ -69,7 +69,7 @@
     <!-- SLIDE ACTIONS -->
     <div class="slide-actions">
 
-      <button md-mini-fab (click)="onSlidePrev()" [disabled]="currentScreenshotIndex === 0">
+      <button md-mini-fab (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
         <md-icon svgIcon="chevron-left"></md-icon>
       </button>
 
@@ -78,7 +78,7 @@
         <md-spinner class="screenshot-spinner" *ngIf="screenshotStatus === 'pending'"></md-spinner>
       </button>
 
-      <button md-mini-fab (click)="onSlideNext()" [disabled]="currentScreenshotIndex === (slides?.length - 1)">
+      <button md-mini-fab (click)="onSlideNext()" [disabled]="currentSlideIndex === (slides?.length - 1)">
         <md-icon svgIcon="chevron-right"></md-icon>
       </button>
 

@@ -11,7 +11,8 @@ import {
   MdInputModule,
   MdListModule,
   MdExpansionModule,
-  MdProgressSpinnerModule
+  MdProgressSpinnerModule,
+  MdSnackBarModule
 } from '@angular/material';
 
 @NgModule({
@@ -25,7 +26,8 @@ import {
     MdInputModule,
     MdListModule,
     MdExpansionModule,
-    MdProgressSpinnerModule
+    MdProgressSpinnerModule,
+    MdSnackBarModule
   ],
   exports: [
     FlexLayoutModule,
@@ -38,7 +40,8 @@ import {
     MdExpansionModule,
     MdProgressSpinnerModule,
     FxFullHeightDirective,
-    FxFullWidthDirective
+    FxFullWidthDirective,
+    MdSnackBarModule
   ],
   declarations: [
     FxFullHeightDirective,

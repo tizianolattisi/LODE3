@@ -7,7 +7,7 @@ export interface IAnnotation extends mongoose.Document {
   slideId: string;
   type: string; // Type of annotation
   userId: Types.ObjectId;
-  timestamp: Date; // When the note was taken
+  timestamp: number; // When the note was taken
   data?: any; // Annotation data
 }
 
@@ -33,7 +33,7 @@ const AnnotationSchema = new mongoose.Schema({
     required: true
   },
   timestamp: {
-    type: Date,
+    type: Number,
     required: true
   },
   data: Schema.Types.Mixed

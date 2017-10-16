@@ -1,8 +1,8 @@
+import {NgModule, ModuleWithProviders} from '@angular/core';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {AnnotationService} from './annotation.service';
 import {PencilTool} from './tools/pencil-tool';
 import {AuthInterceptor} from './auth-interceptor';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {NgModule, ModuleWithProviders} from '@angular/core';
-import {AnnotationService} from '../service/annotation.service';
 import {SocketService} from './socket.service';
 import {AuthService} from '../service/auth.service';
 import {LectureService} from '../service/lecture.service';
@@ -26,10 +26,10 @@ export class ServiceModule {
           multi: true
         },
         SocketService,
-        AnnotationService,
         AuthService,
         LectureService,
-        VideoService
+        VideoService,
+        AnnotationService
       ]
     }
   }

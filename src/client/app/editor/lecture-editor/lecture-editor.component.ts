@@ -1,4 +1,8 @@
+import {FetchAnnotations, SetAnnotations, SetAnnotationsPerSlide} from '../../store/annotation/annotation.actions';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Annotation} from '../../service/model/annotation';
+import {WsFromServerEvents} from '../../service/model/ws-msg';
+import {SocketService} from '../../service/socket.service';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {SetTools} from '../../store/editor/editor.actions';
@@ -14,6 +18,7 @@ import * as LectureActions from '../../store/lecture/lecture.actions';
 
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
+import {MdSnackBar} from '@angular/material';
 
 @Component({
   selector: 'l3-lecture-editor',
@@ -29,20 +34,23 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
   lecture: Lecture;
 
   slides: Screenshot[];
-  currentScreenshot: Screenshot;
-  currentScreenshotIndex: number;
+  currentSlide: Screenshot;
+  currentSlideIndex: number;
   screenshotStatus: ScreenshotStatus;
 
   private lectureSubscr: Subscription;
   private slidesSubscr: Subscription;
   private screenshotStatusSubscr: Subscription;
-  private currentScreenshotSubscr: Subscription;
+  private currentSlideSubscr: Subscription;
+  private socketSubscr: Subscription;
 
   constructor(
     private store: Store<AppState>,
     private router: Router,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
+    private socketService: SocketService,
+    private snackBar: MdSnackBar,
     @Inject(TOOLS) private tools: Tool[]
   ) {}
 
@@ -51,62 +59,117 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
     // Init tools
     this.store.dispatch(new SetTools(this.tools.map(t => t.getDescription())))
 
-    // Init lecture
-    this.lectureSubscr = this.store.select(s => s.lecture.currentLecture)
-      .withLatestFrom(this.store.select(s => s.lecture.currentPin))
-      .subscribe(([lecture, pin]) => {
+    // Collect data about the annotations taken in the current lecture
+    this.initAnnotations();
 
-        // Save info
+    // Collect data about the current lecture to show
+    this.initLecture();
+
+    // Collect data about the slides of the current lecture
+    this.initSlides();
+
+  }
+
+
+  initLecture() {
+
+    // Init lecture -> collect data about the current lecture
+    this.lectureSubscr = this.store.select(s => s.lecture.currentLecture)
+      // Get the pin (present in the store if current lecture is a live lecture)
+      .withLatestFrom(this.store.select(s => s.lecture.currentPin), this.store.select(s => s.user.token))
+      .subscribe(([lecture, pin, token]) => {
+
+        // Save info in the component
         this.lecture = lecture;
         this.pin = pin;
 
+        // Check if "current selected lecture" exists in the store
         if (lecture) {
 
-          if (lecture.live && !pin) { // Lecture exists, it is live, but pin is missing -> go to lecture list
-            console.log('No live!', lecture, pin);
+          if (lecture.live && !pin) { // Lecture exists, it is live, but pin is missing -> go back to lecture list
             this.router.navigate(['/lecture-list']);
           } else {
-            // TODO load users slides
-            console.log('OK!', lecture, pin);
+            // Lecture exists -> fetch screenshots of this user
             this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid));
+            this.socketService.open(token);
           }
+
         } else {
-          // No lecture exists in store -> fetch it
+          // No lecture exists in store (page was opened directly using url and not from lecture list page) -> fetch lecture info
           this.route.params.first().subscribe(params => this.store.dispatch(new LectureActions.FetchLecture(params['lectureId'])));
         }
 
       });
 
+    // Init slides (listen for slides of the lecture present in the store)
     this.slidesSubscr = this.store.select(s => s.lecture.slides).subscribe(slides => this.slides = slides);
 
+  }
+
+  initSlides() {
+    // Listen for status of "take screenshot" action
     this.screenshotStatusSubscr = this.store.select(s => s.lecture.snapshotStatus).subscribe(s => this.screenshotStatus = s);
 
-    this.currentScreenshotSubscr = this.store
+    // Listen for the current screenshot to show
+    this.currentSlideSubscr = this.store
       .select(s => s.lecture.currentSlideIndex)
       .withLatestFrom(this.store.select(s => s.lecture.slides))
       .subscribe(([index, slides]) => {
-        this.currentScreenshotIndex = index;
-        this.currentScreenshot = index < 0 ? null : slides[index];
+        // Update current slide
+        this.currentSlideIndex = index;
+        this.currentSlide = index < 0 ? null : slides[index];
+
+        if (index !== -1) {
+          // Fetch annotations // TODO if not already done
+          this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide._id}));
+        }
 
         this.cd.detectChanges();
       });
 
   }
 
+  initAnnotations() {
+    this.socketSubscr = this.socketService.onReceive().subscribe(msg => {
+      if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
+
+        // Annotations from server
+        const anns: Annotation[] = msg.data;
+        const res = this.convertAnnotations(anns);
+
+
+        const slideIds = Object.keys(res);
+        if (slideIds.length === 1) {
+          this.store.dispatch(new SetAnnotationsPerSlide({slideId: slideIds[0], annotations: res[slideIds[0]]}));
+        } else {
+          this.store.dispatch(new SetAnnotations(res));
+        }
+      } else if (
+        msg.event === WsFromServerEvents.ANNOTATION_ADD_FAIL ||
+        msg.event === WsFromServerEvents.ANNOTATION_EDIT_FAIL ||
+        msg.event === WsFromServerEvents.ANNOTATION_DELETE_FAIL) {
+        this.snackBar.open('An error occurred while saving the annotation', 'Ok');
+      }
+    });
+
+  }
+
+  private convertAnnotations(anns: Annotation[]): {[slideId: string]: {[uuid: string]: Annotation}} {
+    const res = {};
+
+    anns.filter(ann => this.lecture.uuid === ann.lectureId).forEach(ann => {
+      if (!res[ann.slideId]) {
+        res[ann.slideId] = {};
+      }
+      res[ann.slideId][ann.uuid] = ann;
+    });
+
+    return res;
+  }
+
   onScreenshot() {
+    // Request to take a new screenshot using the pin
     this.store.dispatch(new LectureActions.GetScreenshot({lectureId: this.lecture.uuid, pin: this.pin}));
-
-    // console.log('Req');
-    // this.lectureService.getScreenshot(this.lecture.uuid, this.pin).subscribe(s => {
-
-    //   // this.store.dispatch(new LectureActions.AddSnapshot(s));
-
-    //   this.tmpS = s;
-    //   this.cd.detectChanges();
-    //   console.log('Screenshot!', this.tmpS);
-    // }, err => {
-    //   console.log('Err', err);
-    // });
   }
 
   onTabSelect(tab: string) {
@@ -129,11 +192,14 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
     if (this.screenshotStatusSubscr) {
       this.screenshotStatusSubscr.unsubscribe();
     }
-    if (this.currentScreenshotSubscr) {
-      this.currentScreenshotSubscr.unsubscribe();
+    if (this.currentSlideSubscr) {
+      this.currentSlideSubscr.unsubscribe();
     }
     if (this.slidesSubscr) {
       this.slidesSubscr.unsubscribe();
+    }
+    if (this.socketSubscr) {
+      this.socketSubscr.unsubscribe();
     }
   }
 
