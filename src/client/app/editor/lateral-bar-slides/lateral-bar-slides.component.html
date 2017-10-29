@@ -1,14 +1,14 @@
 <div>
 
-  <md-card *ngFor="let slide of slides$ | async; let i = index" (click)="onSelect(i)">
+  <mat-card *ngFor="let slide of slides$ | async; let i = index" (click)="onSelect(i)">
 
-    <md-card-content>
+    <mat-card-content>
       <img [src]="'data:image/png;base64,' + slide.img" l3FxFullHeight l3FxFullWidth>
-    </md-card-content>
+    </mat-card-content>
 
-    <md-card-footer>
+    <mat-card-footer>
       <p>{{slide.name}}</p>
-    </md-card-footer>
-  </md-card>
+    </mat-card-footer>
+  </mat-card>
 
 </div>

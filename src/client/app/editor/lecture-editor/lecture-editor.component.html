@@ -16,17 +16,17 @@
 
     <!-- LEFT TOOLBAR -->
     <div class="left-toolbar" fxLayout="column" fxLayoutAlign="start center">
-      <button md-icon-button (click)="onTabSelect('slides')">
-        <md-icon svgIcon="note-multiple-outline"></md-icon>
+      <button mat-icon-button (click)="onTabSelect('slides')">
+        <mat-icon svgIcon="note-multiple-outline"></mat-icon>
       </button>
-      <button md-icon-button (click)="onTabSelect('annotations')">
-        <md-icon svgIcon="format-list-bulleted"></md-icon>
+      <button mat-icon-button (click)="onTabSelect('annotations')">
+        <mat-icon svgIcon="format-list-bulleted"></mat-icon>
       </button>
-      <button md-icon-button (click)="onTabSelect('download')">
-        <md-icon svgIcon="cloud-download"></md-icon>
+      <button mat-icon-button (click)="onTabSelect('download')">
+        <mat-icon svgIcon="cloud-download"></mat-icon>
       </button>
-      <button md-icon-button (click)="onTabSelect('video')">
-        <md-icon svgIcon="video"></md-icon>
+      <button mat-icon-button (click)="onTabSelect('video')">
+        <mat-icon svgIcon="video"></mat-icon>
       </button>
     </div>
 
@@ -69,17 +69,17 @@
     <!-- SLIDE ACTIONS -->
     <div class="slide-actions">
 
-      <button md-mini-fab (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
-        <md-icon svgIcon="chevron-left"></md-icon>
+      <button mat-mini-fab (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
+        <mat-icon svgIcon="chevron-left"></mat-icon>
       </button>
 
-      <button md-fab (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
-        <md-icon svgIcon="camera-enhance" *ngIf="screenshotStatus !== 'pending'"></md-icon>
-        <md-spinner class="screenshot-spinner" *ngIf="screenshotStatus === 'pending'"></md-spinner>
+      <button mat-fab (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
+        <mat-icon svgIcon="camera-enhance" *ngIf="screenshotStatus !== 'pending'"></mat-icon>
+        <mat-spinner *ngIf="screenshotStatus === 'pending'"></mat-spinner>
       </button>
 
-      <button md-mini-fab (click)="onSlideNext()" [disabled]="currentSlideIndex === (slides?.length - 1)">
-        <md-icon svgIcon="chevron-right"></md-icon>
+      <button mat-mini-fab (click)="onSlideNext()" [disabled]="currentSlideIndex === (slides?.length - 1)">
+        <mat-icon svgIcon="chevron-right"></mat-icon>
       </button>
 
     </div>

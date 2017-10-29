@@ -1,19 +1,19 @@
 <div fxLayoutAlign="center center">
-  <md-list fxFlex.lt-md="auto" fxFlex.md="80%" fxFlex.gt-md="40%">
+  <mat-list fxFlex.lt-md="auto" fxFlex.md="80%" fxFlex.gt-md="40%">
 
-    <h3 md-subheader>Live Lectures</h3>
+    <h3 mat-subheader>Live Lectures</h3>
 
-    <md-expansion-panel *ngFor="let lecture of liveLectures$ | async" class="lecture-card">
+    <mat-expansion-panel *ngFor="let lecture of liveLectures$ | async" class="lecture-card">
 
-      <md-expansion-panel-header>
-        <md-panel-title>
-          <md-icon svgIcon="rec" color="warn"></md-icon>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon svgIcon="rec" color="warn"></mat-icon>
           <span class="mat-body-2">{{lecture.name}}</span>
-        </md-panel-title>
-        <md-panel-description>
+        </mat-panel-title>
+        <mat-panel-description>
           <span *ngIf="lecture.course">{{lecture.course}}</span>
-        </md-panel-description>
-      </md-expansion-panel-header>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
       <div fxLayout="column">
         <span class="mat-caption">Id: {{lecture.uuid}}</span>
@@ -21,31 +21,31 @@
         <div fxLayout="column" fxLayoutAlign="center center">
           <div fxLayoutAlign="center center">
             <b class="mat-body-2">PIN</b>
-            <md-form-field fxFlexOffset="12px">
-              <input mdInput [(ngModel)]="pin">
-            </md-form-field>
-            <button md-icon-button (click)="goToLiveLecture(lecture)">
-              <md-icon svgIcon="chevron-right"></md-icon>
+            <mat-form-field fxFlexOffset="12px">
+              <input matInput [(ngModel)]="pin">
+            </mat-form-field>
+            <button mat-icon-button (click)="goToLiveLecture(lecture)">
+              <mat-icon svgIcon="chevron-right"></mat-icon>
             </button>
           </div>
-          <md-error *ngIf="invalidPin">Invalid PIN!</md-error>
+          <mat-error *ngIf="invalidPin">Invalid PIN!</mat-error>
         </div>
 
       </div>
-    </md-expansion-panel>
+    </mat-expansion-panel>
 
-    <md-divider></md-divider>
+    <mat-divider></mat-divider>
 
-    <h3 md-subheader>Your lectures</h3>
-    <md-card *ngFor="let lecture of lectures$ | async" class="lecture-card" (click)="goToLecture(lecture)">
-      <md-card-header fxLayout>
-        <md-icon svgIcon="book-open"></md-icon>
+    <h3 mat-subheader>Your lectures</h3>
+    <mat-card *ngFor="let lecture of lectures$ | async" class="lecture-card" (click)="goToLecture(lecture)">
+      <mat-card-header fxLayout>
+        <mat-icon svgIcon="book-open"></mat-icon>
         <span class="mat-body-2" fxFlexOffset="12px">{{lecture.name}}</span>
-      </md-card-header>
-      <md-card-content fxLayout="column" class="lecture-item-content">
+      </mat-card-header>
+      <mat-card-content fxLayout="column" class="lecture-item-content">
         <span class="mat-caption">Id: {{lecture.uuid}}</span>
         <span class="mat-caption">Course: {{lecture.course}}</span>
-      </md-card-content>
-    </md-card>
-  </md-list>
+      </mat-card-content>
+    </mat-card>
+  </mat-list>
 </div>

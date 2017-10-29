@@ -1,3 +1,4 @@
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {of} from 'rxjs/observable/of';
 import {AppState} from '../app-state';
 import {LectureService} from '../../service/lecture.service';
@@ -82,15 +83,25 @@ export class LectureEffects {
     .do(payload => {
 
       this.lectureService.getScreenshot(payload.lectureId, payload.pin).subscribe(s => {
-        console.log(s);
         this.store.dispatch(new LectureActions.GetScreenshotComplete(s));
       }, err => {
-        console.log('Err', err);
+        if (err && err.code === 'no-new-screenshot') {// No new screenshots available
+          this.snackBar.open('This is the latest screenshot available!', null, {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        }
         this.store.dispatch(new LectureActions.SetScreenshotStatus('done'));
       });
 
     });
 
 
-  constructor(private actions$: Actions, private lectureService: LectureService, private store: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private lectureService: LectureService,
+    private store: Store<AppState>,
+    private snackBar: MatSnackBar
+  ) {}
 }

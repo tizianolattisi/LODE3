@@ -29,3 +29,12 @@ $l3-app-theme: mat-light-theme($l3-app-primary, $l3-app-accent);
 // that you are using.
 @include angular-material-theme($l3-app-theme);
 
+mat-spinner {
+  width: 24px !important;
+  height: 24px !important;
+
+  svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}

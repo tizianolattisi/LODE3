@@ -18,7 +18,7 @@ import * as LectureActions from '../../store/lecture/lecture.actions';
 
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
-import {MdSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'l3-lecture-editor',
@@ -50,7 +50,7 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private socketService: SocketService,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     @Inject(TOOLS) private tools: Tool[]
   ) {}
 

@@ -1,77 +1,77 @@
 <div fxLayout fxLayoutAlign="center center" fxFlexFill>
 
-  <md-card fxFlex.lt-md="auto" fxFlex.md="60%" fxFlex.gt-md="40%" class="card">
-    <md-card-title>Register</md-card-title>
+  <mat-card fxFlex.lt-md="auto" fxFlex.md="60%" fxFlex.gt-md="40%" class="card">
+    <mat-card-title>Register</mat-card-title>
 
     <ng-container *ngIf="signupSuccess$ | async; else signupFormTmpl">
-      <md-card-content fxLayout="column" class="success-box">
+      <mat-card-content fxLayout="column" class="success-box">
         <p class="mat-body-1">You has been registered successfully! Now you will receive an email.</p>
         <p class="mat-body-1">Click on the link in the email to activate your account!</p>
-      </md-card-content>
+      </mat-card-content>
     </ng-container>
 
     <ng-template #signupFormTmpl>
-      <md-card-content fxLayout="column">
+      <mat-card-content fxLayout="column">
         <form [formGroup]="form" (ngSubmit)="doSignUp(form.value)" fxLayout="column">
           <div *ngIf="errorSignup$ | async">
             <l3-error-message [error]="errorSignup$ | async" [messages]="errMsgs"></l3-error-message>
           </div>
 
           <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill fxFlexOffeset="24px">
-            <md-form-field class="input-field">
-              <md-icon mdPrefix svgIcon="account" class="prefix-icon"></md-icon>
-              <input type="email" mdInput placeholder="Email" formControlName="email">
+            <mat-form-field class="input-field">
+              <mat-icon matPrefix svgIcon="account" class="prefix-icon"></mat-icon>
+              <input type="email" matInput placeholder="Email" formControlName="email">
 
-              <md-error *ngIf="form.get('email').getError('required')">
+              <mat-error *ngIf="form.get('email').getError('required')">
                 Email is required
-              </md-error>
-              <md-error *ngIf="form.get('email').getError('email')">
+              </mat-error>
+              <mat-error *ngIf="form.get('email').getError('email')">
                 Email must belong to domain "@unitn.it"
-              </md-error>
-            </md-form-field>
+              </mat-error>
+            </mat-form-field>
 
-            <md-form-field class="input-field">
-              <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
-              <input type="password" mdInput placeholder="Password" formControlName="password">
-              <md-error *ngIf="form.get('password').getError('required')">
+            <mat-form-field class="input-field">
+              <mat-icon matPrefix svgIcon="lock" class="prefix-icon"></mat-icon>
+              <input type="password" matInput placeholder="Password" formControlName="password">
+              <mat-error *ngIf="form.get('password').getError('required')">
                 Password is required
-              </md-error>
-              <md-error *ngIf="form.get('password').getError('minlength')">
+              </mat-error>
+              <mat-error *ngIf="form.get('password').getError('minlength')">
                 Password must have at least 6 characters
-              </md-error>
-              <md-error *ngIf="form.get('password').getError('password')">
+              </mat-error>
+              <mat-error *ngIf="form.get('password').getError('password')">
                 Password must contain at least a digit
-              </md-error>
-              <md-error *ngIf="form.get('password').getError('passwordmismatch')">
+              </mat-error>
+              <mat-error *ngIf="form.get('password').getError('passwordmismatch')">
                 Passwords does not match
-              </md-error>
-            </md-form-field>
+              </mat-error>
+            </mat-form-field>
 
-            <md-form-field class="input-field">
-              <md-icon mdPrefix svgIcon="lock" class="prefix-icon"></md-icon>
-              <input type="password" mdInput placeholder="Retype Password" formControlName="password_retype">
-              <md-error *ngIf="form.get('password_retype').getError('required')">
+            <mat-form-field class="input-field">
+              <mat-icon matPrefix svgIcon="lock" class="prefix-icon"></mat-icon>
+              <input type="password" matInput placeholder="Retype Password" formControlName="password_retype">
+              <mat-error *ngIf="form.get('password_retype').getError('required')">
                 Password is required. Retype it.
-              </md-error>
-              <md-error *ngIf="form.get('password_retype').getError('minlength')">
+              </mat-error>
+              <mat-error *ngIf="form.get('password_retype').getError('minlength')">
                 Password must have at least 6 characters
-              </md-error>
-              <md-error *ngIf="form.get('password_retype').getError('passwordmismatch')">
+              </mat-error>
+              <mat-error *ngIf="form.get('password_retype').getError('passwordmismatch')">
                 Passwords does not match
-              </md-error>
+              </mat-error>
 
-            </md-form-field>
+            </mat-form-field>
 
-            <button type="submit" md-raised-button color="accent" [disabled]="!form.valid" fxFlexAlign="end">
+            <button type="submit" mat-raised-button color="accent" [disabled]="!form.valid" fxFlexAlign="end">
                   <span>Register</span>
-                  <md-icon svgIcon="chevron-right"></md-icon>
+                  <mat-icon svgIcon="chevron-right"></mat-icon>
             </button>
-            <md-spinner *ngIf="loadingSignup$ | async"></md-spinner>
+            <mat-spinner *ngIf="loadingSignup$ | async"></mat-spinner>
           </div>
         </form>
-      </md-card-content>
+      </mat-card-content>
     </ng-template>
 
-  </md-card>
+  </mat-card>
 
 </div>

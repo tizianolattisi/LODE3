@@ -84,12 +84,13 @@ export class LiveLecture {
     // Stop lecture if server stops
 
     // //do something when app is closing
-    // process.on('exit', () => this.stopLecture());
+    process.on('exit', () => this.stopLecture());
     // //catches ctrl+c event
-    // process.on('SIGINT', () => this.stopLecture());
+    process.on('SIGINT', () => this.exitHandler());
     // // catches "kill pid" (for example: nodemon restart)
-    // process.on('SIGUSR1', () => this.stopLecture());
-    // process.on('SIGUSR2', () => this.stopLecture());
+    process.on('SIGUSR1', () => this.exitHandler());
+    process.on('SIGUSR2', () => this.exitHandler());
+    process.on('uncaughtException', this.exitHandler.bind(this));
   }
 
   newScreenshotAvailable() {
@@ -199,4 +200,8 @@ export class LiveLecture {
     }
   }
 
+  private exitHandler() {
+    this.stopLecture();
+    process.exit();
+  }
 }

@@ -3,8 +3,9 @@ import {HttpRequest, HttpHandler, HttpInterceptor} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
-import 'rxjs/add//operator/distinctUntilChanged';
 import {AppState} from '../store/app-state';
+
+import 'rxjs/add/operator/distinctUntilChanged';
 
 
 @Injectable()

@@ -9,9 +9,11 @@ import {LectureEffects} from './lecture/lecture.effects';
 import {VideoEffects} from './video/video.effects';
 import {AnnotationEffects} from './annotation/annotation.effects';
 import {EditorEffects} from './editor/editor.effects';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
+    MatSnackBarModule,
     NgrxStoreModule.forRoot(rootReducer),
     EffectsModule.forRoot([
       UserEffects,

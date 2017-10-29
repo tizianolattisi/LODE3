@@ -2,12 +2,12 @@
 
 
   <div>
-    <button md-icon-button [ngClass]="{'selected': (selectedToolType === 'default' || !selectedToolType) }" (click)="onToolSelect('default')">
-      <md-icon svgIcon="cursor-default-outline"></md-icon>
+    <button mat-icon-button [ngClass]="{'selected': (selectedToolType === 'default' || !selectedToolType) }" (click)="onToolSelect('default')">
+      <mat-icon svgIcon="cursor-default-outline"></mat-icon>
     </button>
 
-    <button md-icon-button *ngFor="let tool of tools$ | async" [ngClass]="{'selected': tool.type === selectedToolType}" (click)="onToolSelect(tool.type)">
-      <md-icon [svgIcon]="tool.icon"></md-icon>
+    <button mat-icon-button *ngFor="let tool of tools$ | async" [ngClass]="{'selected': tool.type === selectedToolType}" (click)="onToolSelect(tool.type)">
+      <mat-icon [svgIcon]="tool.icon"></mat-icon>
     </button>
   </div>
 
@@ -15,21 +15,21 @@
 
   <div fxLayout fxLayoutAlign="center center">
 
-    <md-icon svgIcon="format-line-weight"></md-icon>
-    <md-form-field class="stroke-input">
-      <input type="number" min="0" mdInput [ngModel]="stroke$ | async" (ngModelChange)="onStrokeChange($event)">
-    </md-form-field>
+    <mat-icon svgIcon="format-line-weight"></mat-icon>
+    <mat-form-field class="stroke-input">
+      <input type="number" min="0" matInput [ngModel]="stroke$ | async" (ngModelChange)="onStrokeChange($event)">
+    </mat-form-field>
   </div>
 
   <hr class="divider">
 
   <div>
-    <button md-icon-button (click)="onSelectAll()">
-      <md-icon svgIcon="select"></md-icon>
+    <button mat-icon-button (click)="onSelectAll()">
+      <mat-icon svgIcon="select"></mat-icon>
     </button>
 
-    <button md-icon-button (click)="onDelete()">
-      <md-icon svgIcon="delete"></md-icon>
+    <button mat-icon-button (click)="onDelete()">
+      <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </div>
 
