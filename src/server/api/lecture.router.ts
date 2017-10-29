@@ -135,8 +135,10 @@ router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
             // TODO check if user has already the screenshot (maybe using Mongo index)
             if (userLecture.screenshots.indexOf(screenshot.fileName) === -1) {
               userLecture.screenshots.push(screenshot.fileName);
+            } else {
+              return res.status(400).send(new ErrorResponse('no-new-screenshot', 'Current screenshot is already in user\'s screenshot list'));
             }
-          } else {
+          } else { // First screenshot for this lecture
             user.lectures.push({uuid: lectureId, screenshots: [screenshot.fileName]});
           }
 

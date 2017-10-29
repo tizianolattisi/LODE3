@@ -108,7 +108,10 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
 
   initSlides() {
     // Listen for status of "take screenshot" action
-    this.screenshotStatusSubscr = this.store.select(s => s.lecture.snapshotStatus).subscribe(s => this.screenshotStatus = s);
+    this.screenshotStatusSubscr = this.store.select(s => s.lecture.snapshotStatus).subscribe(s => {
+      this.screenshotStatus = s;
+      this.cd.detectChanges();
+    });
 
     // Listen for the current screenshot to show
     this.currentSlideSubscr = this.store

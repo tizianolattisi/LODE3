@@ -83,13 +83,13 @@ export class LiveLecture {
 
     // Stop lecture if server stops
 
-    //do something when app is closing
-    process.on('exit', () => this.stopLecture());
-    //catches ctrl+c event
-    process.on('SIGINT', () => this.stopLecture());
-    // catches "kill pid" (for example: nodemon restart)
-    process.on('SIGUSR1', () => this.stopLecture());
-    process.on('SIGUSR2', () => this.stopLecture());
+    // //do something when app is closing
+    // process.on('exit', () => this.stopLecture());
+    // //catches ctrl+c event
+    // process.on('SIGINT', () => this.stopLecture());
+    // // catches "kill pid" (for example: nodemon restart)
+    // process.on('SIGUSR1', () => this.stopLecture());
+    // process.on('SIGUSR2', () => this.stopLecture());
   }
 
   newScreenshotAvailable() {
