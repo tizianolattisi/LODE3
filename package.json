@@ -61,6 +61,7 @@
     "socket.io": "^1.7.4",
     "socket.io-client": "^2.0.3",
     "socketio-jwt": "^4.5.0",
+    "svg.js": "^2.6.3",
     "uuid": "^3.1.0",
     "xml2js": "^0.4.19",
     "zone.js": "^0.8.17"

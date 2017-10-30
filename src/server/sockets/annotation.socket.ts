@@ -30,12 +30,20 @@ const socketListener = (socket: Socket) => {
   socket.on(WsFromClientEvents.ANNOTATION_GET, (data: AnnotationSearch) => {
     try {
       if (data && data.lectureId) {
-        Annotation.find({
-          uuid: data.uuid || undefined,
+
+        const search = {
+          userId: new Types.ObjectId(userId),
           lectureId: data.lectureId,
-          slideId: data.slideId || undefined,
-          userId: new Types.ObjectId(userId)
-        }, (err, annotations: IAnnotation[]) => {
+          slideId: data.slideId || undefined
+        };
+        if (data.slideId) {
+          search['slideId'] = data.slideId;
+        }
+        if (data.uuid) {
+          search['uuid'] = data.uuid;
+        }
+
+        Annotation.find(search, (err, annotations: IAnnotation[]) => {
           if (!err && annotations) {
             socket.emit(WsFromServerEvents.ANNOTATION_GET, annotations.map(a => a.toJSON()));
           }

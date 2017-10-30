@@ -1,11 +1,21 @@
+import {
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {FetchAnnotations, SetAnnotations, SetAnnotationsPerSlide} from '../../store/annotation/annotation.actions';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Annotation} from '../../service/model/annotation';
+import {Annotation, DataType} from '../../service/model/annotation';
 import {WsFromServerEvents} from '../../service/model/ws-msg';
 import {SocketService} from '../../service/socket.service';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
-import {SetTools} from '../../store/editor/editor.actions';
+import {SetAnnotationContainer, SetTools} from '../../store/editor/editor.actions';
 import {Tool} from '../../service/tools/tool';
 import {TOOLS} from '../../service/tools/tool-opaque-token';
 import {ScreenshotStatus} from '../../store/lecture/lecture.state';
@@ -13,12 +23,15 @@ import {Lecture} from '../../service/model/lecture';
 import {Screenshot} from '../../service/model/screenshot';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../store/app-state';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 import * as LectureActions from '../../store/lecture/lecture.actions';
+import * as SVG from 'svg.js';
 
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'l3-lecture-editor',
@@ -26,7 +39,13 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   styleUrls: ['./lecture-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LectureEditorComponent implements OnInit, OnDestroy {
+export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @ViewChild('annotationContainer')
+  annotationContainer: ElementRef;
+
+  @ViewChild('imageContainer')
+  imageContainer: ElementRef;
 
   currentTab: string;
 
@@ -51,7 +70,7 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private socketService: SocketService,
     private snackBar: MatSnackBar,
-    @Inject(TOOLS) private tools: Tool[]
+    @Inject(TOOLS) private tools: Tool<DataType>[]
   ) {}
 
   ngOnInit() {
@@ -70,6 +89,11 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
 
   }
 
+  public ngAfterViewInit(): void {
+
+    // Register annotation container in store -> it will be available inside tools
+    this.store.dispatch(new SetAnnotationContainer(SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc));
+  }
 
   initLecture() {
 
@@ -122,6 +146,11 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
         this.currentSlideIndex = index;
         this.currentSlide = index < 0 ? null : slides[index];
 
+        if (this.currentSlide && this.currentSlide.img) {
+          // Update annotation container size
+          this.updateAnnotationContainer();
+        }
+
         if (index !== -1) {
           // Fetch annotations // TODO if not already done
           this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide._id}));
@@ -157,6 +186,34 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
 
   }
 
+  private updateAnnotationContainer() {
+    if (this.annotationContainer && this.imageContainer) {
+      // Set dimensions // TODO set it correctly
+      this.annotationContainer.nativeElement.setAttribute('width', this.imageContainer.nativeElement.width);
+      this.annotationContainer.nativeElement.setAttribute('height', '100%');
+      this.annotationContainer.nativeElement.setAttribute(
+        'viewBox', `0 0 ${this.imageContainer.nativeElement.width} ${this.imageContainer.nativeElement.height}`
+      );
+
+      // Clear container
+     // (SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc).clear();
+
+      // Load current annotations
+      this.store.select(s => s.annotation.annotations)
+        .take(1)
+        .map(anns => anns[this.currentSlide._id])
+        .filter(anns => !!anns)
+        .subscribe(anns => {
+          Object.keys(anns).map(uuid => anns[uuid]).forEach(a => {
+            const tool = this.getTool(a.type);
+            if (tool) {
+              tool.drawAnnotation(a);
+            }
+          })
+        })
+    }
+  }
+
   private convertAnnotations(anns: Annotation[]): {[slideId: string]: {[uuid: string]: Annotation}} {
     const res = {};
 
@@ -188,6 +245,15 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
     this.store.dispatch(new LectureActions.NextSlide());
   }
 
+
+  private getTool(type: string): Tool<DataType> {
+    if (!this.tools) {
+      return null;
+    }
+    const index = this.tools.map(t => t.TYPE).indexOf(type);
+    return index !== -1 ? this.tools[index] : null;
+  }
+
   ngOnDestroy() {
     if (this.lectureSubscr) {
       this.lectureSubscr.unsubscribe();
@@ -205,5 +271,6 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
       this.socketSubscr.unsubscribe();
     }
   }
+
 
 }

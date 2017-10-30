@@ -4,6 +4,8 @@ import {ActionTypes, All} from './editor.actions';
 
 const initialState: EditorState = {
 
+  annotationContainer: null,
+
   tools: [],
   selectedTool: 'default',
 
@@ -14,6 +16,13 @@ const initialState: EditorState = {
 export function editorReducer(state: EditorState = initialState, action: All): EditorState {
 
   switch (action.type) {
+
+    case ActionTypes.SET_ANNOTATION_CONTAINER:
+    console.log('Set, ', action.payload);
+      return {
+        ...state,
+        annotationContainer: action.payload
+      };
 
     case ActionTypes.SET_TOOLS:
       return {

@@ -37,15 +37,19 @@
     <mat-divider></mat-divider>
 
     <h3 mat-subheader>Your lectures</h3>
-    <mat-card *ngFor="let lecture of lectures$ | async" class="lecture-card" (click)="goToLecture(lecture)">
-      <mat-card-header fxLayout>
-        <mat-icon svgIcon="book-open"></mat-icon>
-        <span class="mat-body-2" fxFlexOffset="12px">{{lecture.name}}</span>
-      </mat-card-header>
-      <mat-card-content fxLayout="column" class="lecture-item-content">
-        <span class="mat-caption">Id: {{lecture.uuid}}</span>
-        <span class="mat-caption">Course: {{lecture.course}}</span>
-      </mat-card-content>
-    </mat-card>
+    <ng-container *ngFor="let lecture of lectures$ | async">
+      <ng-container *ngIf="!lecture.live">
+        <mat-card class="lecture-card" (click)="goToLecture(lecture)">
+          <mat-card-header fxLayout>
+            <mat-icon svgIcon="book-open"></mat-icon>
+            <span class="mat-body-2" fxFlexOffset="12px">{{lecture.name}}</span>
+          </mat-card-header>
+          <mat-card-content fxLayout="column" class="lecture-item-content">
+            <span class="mat-caption">Id: {{lecture.uuid}}</span>
+            <span class="mat-caption">Course: {{lecture.course}}</span>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </ng-container>
   </mat-list>
 </div>

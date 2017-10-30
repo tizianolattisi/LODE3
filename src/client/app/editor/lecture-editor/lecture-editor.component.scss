@@ -33,7 +33,26 @@
 }
 
 .slide-container {
+  position: relative;
   width: 90%;
   height: 90%;
   text-align: center;
 }
+
+.image-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 10;
+}
+
+.annotation-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 11;
+  border: 1px solid black;
+}
+
