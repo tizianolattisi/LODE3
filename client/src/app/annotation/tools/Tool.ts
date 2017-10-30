@@ -1,4 +1,4 @@
-import {BaseAnnotation} from "../model/BaseAnnotation";
+import {AnnotationScales, BaseAnnotation} from "../model/BaseAnnotation";
 import {AnnotationManager} from "../AnnotationManager";
 import {IEvent, Object as IObject} from "fabric";
 import {AnnotationData} from "../model/AnnotationData";
@@ -48,4 +48,5 @@ export interface NewAnnotation {
     pageNumber: number,
     annotationData: AnnotationData,
     canvasAnnotation: IObject,
+    scales? : AnnotationScales
 }
