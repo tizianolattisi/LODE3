@@ -24,7 +24,7 @@ const socketListener = (socket: Socket) => {
 
   // Check token belong to am authorized user
   if (user.type !== 'professor') {
-    console.log(chalk.red('> User cannot use this socket (token is valid but user has no permission to use this socket)'));
+    console.log(chalk.default.red('> User cannot use this socket (token is valid but user has no permission to use this socket)'));
     socket.disconnect();
     return;
   }
@@ -38,13 +38,13 @@ const socketListener = (socket: Socket) => {
     // TODO Check if lecture name is passed, otherwise generate it
 
     // register the lecture in the live lectures
-    console.log(chalk.bold.blue(`> Socket: Register lecture "${lectureId}"`))
+    console.log(chalk.default.bold.blue(`> Socket: Register lecture "${lectureId}"`))
     LiveLectureService.registerLecture(lectureId, socket, data);
   });
 
   socket.on(LectureSocketEvents.Client.START_LECTURE, data => {
     if (lectureId) {
-      console.log(chalk.green(`> Socket: Start lecture "${lectureId}"`))
+      console.log(chalk.default.green(`> Socket: Start lecture "${lectureId}"`))
       LiveLectureService.startLecture(lectureId);
     }
     // else {
@@ -54,27 +54,27 @@ const socketListener = (socket: Socket) => {
 
   socket.on(LectureSocketEvents.Client.NEW_SCREENSHOT_AVAILABLE, data => {
     if (lectureId) {
-      console.log(chalk.blue(`> Socket: New screenshot available for lecture ${lectureId}`));
+      console.log(chalk.default.blue(`> Socket: New screenshot available for lecture ${lectureId}`));
       LiveLectureService.newScreenshotAvailable(lectureId);
     }
   });
 
   socket.on(LectureSocketEvents.Client.SEND_SCREENSHOT, data => {
     if (lectureId) {
-      console.log(chalk.bold.blue(`> Socket: Save screenshot data for lecture ${lectureId}`));
+      console.log(chalk.default.bold.blue(`> Socket: Save screenshot data for lecture ${lectureId}`));
       LiveLectureService.saveScreenshot(lectureId, data);
     }
   });
 
   socket.on(LectureSocketEvents.Client.STOP_LECTURE, data => {
     if (lectureId) {
-      console.log(chalk.red(`> Socket: Stop lecture "${lectureId}"`))
+      console.log(chalk.default.red(`> Socket: Stop lecture "${lectureId}"`))
       LiveLectureService.stopLecture(lectureId);
     }
   });
 
   socket.on('disconnect', err => {
-    console.log(chalk.bold.red(`Socket: Lecture ${lectureId} Disconnected.` + err));
+    console.log(chalk.default.bold.red(`Socket: Lecture ${lectureId} Disconnected.` + err));
     LiveLectureService.lectureDisconnected(lectureId);
   });
 

@@ -44,18 +44,18 @@ export const generateAndSendConfirmCode = (hostname: string, user: IUser): Promi
         html: emailContentString
       };
 
-      console.log(chalk.blue(`Sending a confirmation email...`));
+      console.log(chalk.default.blue(`Sending a confirmation email...`));
 
       sgMail.send(mail)
         .then(res => {
-          console.log(chalk.green(`Confirmation email sent (status: ${res[0].statusCode}, body: ${res[0].body})`));
+          console.log(chalk.default.green(`Confirmation email sent (status: ${res[0].statusCode}, body: ${res[0].body})`));
           return resolve(true);
         }, mErr => {
           let mailErr = null;
           if (mErr && mErr.response && mErr.response.body) {
             mailErr = mErr.response.body.errors;
           }
-          console.log(chalk.bold.red(`> Error while sending 'Accoun confirmation' email`), mailErr);
+          console.log(chalk.default.bold.red(`> Error while sending 'Accoun confirmation' email`), mailErr);
           return reject(mErr);
         });
 
@@ -96,18 +96,18 @@ export const generateAndSendPasswordResetCode = (hostname: string, email: string
         html: emailContentString
       };
 
-      console.log(chalk.blue(`Sending a reset password account email...`));
+      console.log(chalk.default.blue(`Sending a reset password account email...`));
 
       sgMail.send(mail)
         .then(res => {
-          console.log(chalk.green(`Reset password email sent (status: ${res[0].statusCode}, body: ${res[0].body})`));
+          console.log(chalk.default.green(`Reset password email sent (status: ${res[0].statusCode}, body: ${res[0].body})`));
           return resolve(true);
         }, mErr => {
           let mailErr = null;
           if (mErr && mErr.response && mErr.response.body) {
             mailErr = mErr.response.body.errors;
           }
-          console.log(chalk.bold.red(`> Error while sending 'Reset Accoun Password' email`), mailErr);
+          console.log(chalk.default.bold.red(`> Error while sending 'Reset Accoun Password' email`), mailErr);
           return reject(mErr);
         });
 

@@ -44,7 +44,7 @@ export class LiveLecture {
 
     this.nextScreenshot$ = new BehaviorSubject(null);
     this.nextScreenshotObs$ = this.nextScreenshot$.asObservable();
-    console.log(chalk.green(`> New live lecture registered to server (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
+    console.log(chalk.default.green(`> New live lecture registered to server (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
   }
 
   getPin() {
@@ -52,7 +52,7 @@ export class LiveLecture {
   }
 
   startLecture() {
-    console.log(chalk.blue(`> Starting lecture ${this.lectureId}...`));
+    console.log(chalk.default.blue(`> Starting lecture ${this.lectureId}...`));
     this.started = true;
 
     // Save lecture in db
@@ -73,7 +73,7 @@ export class LiveLecture {
         }
 
         // TODO emit "lecture is started" / or let do it to livelecturesservice
-        console.log(chalk.green(`> Lecture started (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
+        console.log(chalk.default.green(`> Lecture started (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
       })
       .catch(err => {
         console.error(err);
@@ -95,11 +95,11 @@ export class LiveLecture {
 
   newScreenshotAvailable() {
     this.screenshotStatus = 'new-available';
-    console.log(chalk.blue(`> New screenshot for lecture ${this.lectureId} is available (but still not downloaded to server).`));
+    console.log(chalk.default.blue(`> New screenshot for lecture ${this.lectureId} is available (but still not downloaded to server).`));
   }
 
   saveScreenshot(image: string, timestamp: number, name?: string) {
-    console.log(chalk.blue(`> Saving a new screenshot for lecture ${this.lectureId} (screenshot timestamp: ${timestamp})...`));
+    console.log(chalk.default.blue(`> Saving a new screenshot for lecture ${this.lectureId} (screenshot timestamp: ${timestamp})...`));
 
     const screenshotFile = `${timestamp}.png`; // TODO name
     const screenshotPath = `${this.screenshotFolderUrl}/${screenshotFile}`;
@@ -127,7 +127,7 @@ export class LiveLecture {
 
                 const screenshootComplete: IScreenshotComplete = {...lectureScreenshot, img: image};
                 this.nextScreenshot$.next(screenshootComplete);
-                console.log(chalk.green(`> Screenshot with timestamp ${timestamp} saved in ${screenshotPath}`));
+                console.log(chalk.default.green(`> Screenshot with timestamp ${timestamp} saved in ${screenshotPath}`));
 
               })
               .catch(e => console.error(e)); // TODO handle error
@@ -143,7 +143,7 @@ export class LiveLecture {
 
         //     const screenshootComplete: IScreenshotComplete = {...lectureScreenshot, img: image};
         //     this.nextScreenshot$.next(screenshootComplete);
-        //     console.log(chalk.green(`> Screenshot with timestamp ${timestamp} saved in ${screenshotPath}`));
+        //     console.log(chalk.default.green(`> Screenshot with timestamp ${timestamp} saved in ${screenshotPath}`));
         //   })
         //   .catch(e => console.error(e)); // TODO handle error
       }
@@ -153,30 +153,30 @@ export class LiveLecture {
 
   stopLecture() {
     this.nextScreenshot$.complete();
-    console.log(chalk.yellow(`> Lecture ${this.lectureId} stopped.`));
+    console.log(chalk.default.yellow(`> Lecture ${this.lectureId} stopped.`));
     Lecture.update({uuid: this.lectureId}, {live: false})
-      .then(res => console.log(chalk.yellow(`Lecture ${this.lectureId} stop registered in db`))) // TODO handle
+      .then(res => console.log(chalk.default.yellow(`Lecture ${this.lectureId} stop registered in db`))) // TODO handle
       .catch(e => console.error(e)); // TODO handle error
   }
 
   lectureDisconnected() {
     this.stopLecture();
-    console.log(chalk.red(`> Lecture ${this.lectureId} disconnected.`));
+    console.log(chalk.default.red(`> Lecture ${this.lectureId} disconnected.`));
   }
 
   getNextScreenshot(): Observable<IScreenshotComplete> {
-    console.log(chalk.bold.blue(`> Screenshot request for lecture ${this.lectureId}...`));
+    console.log(chalk.default.bold.blue(`> Screenshot request for lecture ${this.lectureId}...`));
 
     switch (this.screenshotStatus) {
 
       case 'no-updates':
-        console.log(chalk.bold.white('> No fresh screenshot from raspberry -> send latest available.'));
+        console.log(chalk.default.bold.white('> No fresh screenshot from raspberry -> send latest available.'));
         // Send latest screenshot available
         return this.nextScreenshotObs$.take(1);
 
       case 'new-available':
         console.log(
-          chalk.bold.white('> New screenshot from raspberry is available but not downloaded -> fetch it and make applicant wait.')
+          chalk.default.bold.white('> New screenshot from raspberry is available but not downloaded -> fetch it and make applicant wait.')
         );
 
         // Fetch the latest screenshot and wait for it
@@ -185,7 +185,7 @@ export class LiveLecture {
         return this.nextScreenshotObs$.skip(1).take(1);
 
       case 'fetch-pending':
-        console.log(chalk.bold.white('> New screenshot from raspberry is available and server is fetching it -> make applicant wait.'));
+        console.log(chalk.default.bold.white('> New screenshot from raspberry is available and server is fetching it -> make applicant wait.'));
         // Wait for latest screenshot fetch
         return this.nextScreenshotObs$.skip(1).take(1);
     }

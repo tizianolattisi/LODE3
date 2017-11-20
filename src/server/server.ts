@@ -103,7 +103,7 @@ export default class Server {
     const server = http.createServer(this.app);
     server.listen(SERVER_PORT, () => { // Listen only for local connections
       const {address, port} = server.address();
-      console.log(chalk.bold.green(`> Http Server listening on ${address}:${port}`));
+      console.log(chalk.default.bold.green(`> Http Server listening on ${address}:${port}`));
     });
 
     // Create and start socket

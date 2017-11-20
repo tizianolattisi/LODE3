@@ -49,7 +49,7 @@ const socketListener = (socket: Socket) => {
           }
         });
       } else {
-        console.warn(chalk.bold.yellow('> Annotation socket: "get" event with wrong payload'), data);
+        console.warn(chalk.default.bold.yellow('> Annotation socket: "get" event with wrong payload'), data);
       }
     } catch (e) {
       printError(e, 'get', data);
@@ -152,7 +152,7 @@ const socketListener = (socket: Socket) => {
 }
 
 function printError(err: any, event: string, payload: any) {
-  console.error(chalk.bold.red(`> Annotation socket: An error occurred. Event "${event}". Payload:`), payload, err);
+  console.error(chalk.default.bold.red(`> Annotation socket: An error occurred. Event "${event}". Payload:`), payload, err);
 }
 
 export {socketListener as AnnotationSocketListener};

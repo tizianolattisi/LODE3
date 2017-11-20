@@ -120,7 +120,7 @@ router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
     return res.status(401).send(new ErrorResponse('wrong-pin', 'Pin for live lecture is wrong'));
   }
 
-  console.log(chalk.blue(`> User "${userId}" requests a screenshot for lecture "${lectureId}".`));
+  console.log(chalk.default.blue(`> User "${userId}" requests a screenshot for lecture "${lectureId}".`));
 
 
   LiveLectureService.getNextScreenshot(lectureId)
