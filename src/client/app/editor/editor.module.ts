@@ -12,6 +12,7 @@ import {LateralBarDownloadComponent} from './lateral-bar-download/lateral-bar-do
 import {LateralBarVideoComponent} from './lateral-bar-video/lateral-bar-video.component';
 import {ToolsBarComponent} from './tools-bar/tools-bar.component';
 import {NotesBarComponent} from './notes-bar/notes-bar.component';
+import {ToArrayPipe} from './to-array.pipe';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import {NotesBarComponent} from './notes-bar/notes-bar.component';
     LateralBarDownloadComponent,
     LateralBarVideoComponent,
     ToolsBarComponent,
-    NotesBarComponent
+    NotesBarComponent,
+    ToArrayPipe
   ]
 })
 export class EditorModule {}

@@ -1,6 +1,5 @@
 import {Routes} from '@angular/router';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
-// import {HomePageComponent} from './home-page/home-page.component';
 import {AuthGuard} from './shared/auth.guard';
 import {LectureListComponent} from './lecture-list/lecture-list.component';
 
