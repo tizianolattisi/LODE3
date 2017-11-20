@@ -102,7 +102,10 @@ export class LectureEditorComponent implements OnInit, OnDestroy {
       });
 
     // Init slides (listen for slides of the lecture present in the store)
-    this.slidesSubscr = this.store.select(s => s.lecture.slides).subscribe(slides => this.slides = slides);
+    this.slidesSubscr = this.store.select(s => s.lecture.slides).subscribe(slides => {
+      this.slides = slides;
+      this.cd.detectChanges();
+    });
 
   }
 

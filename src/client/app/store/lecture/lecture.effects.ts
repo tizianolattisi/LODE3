@@ -59,7 +59,11 @@ export class LectureEffects {
     .map(a => a.payload)
     .switchMap(lectureId =>
       this.lectureService.getUserScreenshots(lectureId)
-        .map(screenshots => new LectureActions.SetUserScreenshots(screenshots))
+        .map(screenshots => screenshots.length > 0 ?
+          [new LectureActions.SetUserScreenshots(screenshots), new LectureActions.SetCurrentSlide(0)] :
+          new LectureActions.SetUserScreenshots(screenshots)
+        )
+        .switchMap(actions => actions instanceof Array ? actions : of(actions))
         .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err)))
     );
 

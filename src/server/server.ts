@@ -89,11 +89,7 @@ export default class Server {
     // Serve Client App
     this.app.use('/', express.static(CLIENT_APP_FS_PATH));
     // Serve Lode files
-    this.app.use(SERVER_STORAGE_PATH, this.authorizationMiddleware, express.static(STORAGE_PATH),
-      (req, res) => {
-        res.sendStatus(501);
-      }
-    );
+    this.app.use(SERVER_STORAGE_PATH, this.authorizationMiddleware, express.static(STORAGE_PATH));
 
     // Any path -> serve index.html file
     this.app.get(/\/.*/, function (req, res) {

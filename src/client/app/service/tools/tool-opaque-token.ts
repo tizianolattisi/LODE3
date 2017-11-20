@@ -1,3 +1,3 @@
-import {OpaqueToken} from '@angular/core';
+import {InjectionToken} from '@angular/core';
 
-export const TOOLS = new OpaqueToken('tools');
+export const TOOLS = new InjectionToken('tools');

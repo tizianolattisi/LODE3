@@ -68,7 +68,7 @@ socket
     // TODO do when socket is authenticated -> obtains more info...
     socket.emit(LectureSocketEvents.Client.REGISTER_LECTURE, {
       pin: '1234',
-      name: 'Lesson 1' // Opzionale
+      name: 'Lesson' // Opzionale
     });
 
     setTimeout(() => {
