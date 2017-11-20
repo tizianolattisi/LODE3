@@ -39,9 +39,8 @@ export class NoteTool extends Tool<NoteData> {
 
   onDragStop = (event: any) => {};
 
-  drawAnnotation(annotation: Annotation): void {
-    const data: NoteData = annotation.data as NoteData;
-    this.drawPlaceholder(data.x, data.y);
+  drawAnnotation(annotation: Annotation<NoteData>): void {
+    this.drawPlaceholder(annotation.data.x, annotation.data.y);
   }
 
   private drawPlaceholder(x: number, y: number) {

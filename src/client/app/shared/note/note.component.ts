@@ -1,5 +1,5 @@
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {Annotation} from '../../service/model/annotation';
+import {Annotation, NoteData} from '../../service/model/annotation';
 
 @Component({
   selector: 'l3-note',
@@ -10,6 +10,6 @@ import {Annotation} from '../../service/model/annotation';
 export class NoteComponent {
 
   @Input()
-  note: Annotation;
+  note: Annotation<NoteData>;
 
 }

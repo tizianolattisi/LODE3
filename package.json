@@ -4,6 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
+    "forever:start": "cross-env NODE_ENV=production forever start -a -o out.log -e err.log dist/server/index.js",
+    "forever:stop": "forever stopall",
     "build:prod": "cross-env NODE_ENV=production npm run client:build:prod && npm run server:build:prod",
     "client:serve": "ng serve --proxy-config proxy.conf.js",
     "client:build": "ng build",

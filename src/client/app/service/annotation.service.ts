@@ -1,4 +1,4 @@
-import {Annotation} from './model/annotation';
+import {Annotation, DataType} from './model/annotation';
 import {WsFromClientEvents} from './model/ws-msg';
 import {Injectable} from '@angular/core';
 import {SocketService} from './socket.service';
@@ -15,11 +15,11 @@ export class AnnotationService {
     this.socketService.send(WsFromClientEvents.ANNOTATION_GET, search);
   }
 
-  addAnnotation(annotation: Annotation) {
+  addAnnotation(annotation: Annotation<DataType>) {
     this.socketService.send(WsFromClientEvents.ANNOTATION_ADD, annotation);
   }
 
-  editAnnotation(annotation: Annotation) {
+  editAnnotation(annotation: Annotation<DataType>) {
     this.socketService.send(WsFromClientEvents.ANNOTATION_EDIT, annotation);
   }
 

@@ -10,7 +10,7 @@ const initialState: EditorState = {
   selectedTool: 'default',
 
   color: '#212121',
-  stroke: 12
+  stroke: 2
 }
 
 export function editorReducer(state: EditorState = initialState, action: All): EditorState {

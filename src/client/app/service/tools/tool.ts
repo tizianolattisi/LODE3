@@ -35,7 +35,7 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
   public abstract onToolSelected(): void;
   public abstract onToolDeselected(): void;
 
-  public abstract drawAnnotation(annotation: Annotation): void;
+  public abstract drawAnnotation(annotation: Annotation<T>): void;
 
   // editAnnotation: (object: IObject, annotation: Annotation) => Annotation;
 

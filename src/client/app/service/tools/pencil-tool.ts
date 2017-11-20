@@ -40,12 +40,14 @@ export class PencilTool extends Tool<PencilData> {
   onDragMove = (event: any) => {
     if (this.currentPath) {
       const d: string = this.currentPath.attr('d');
-      if (d.indexOf('C') !== -1) {
-        (this.currentPath as any).plot(`${this.currentPath.attr('d')} ${event.offsetX} ${event.offsetY}`)
-      } else {
-        (this.currentPath as any).plot(`${this.currentPath.attr('d')} C${event.offsetX} ${event.offsetY}`)
-      }
+      // if (d.indexOf('C') !== -1) {
+      //   (this.currentPath as any).plot(`${d} ${event.offsetX} ${event.offsetY}`)
+      // } else {
+      //   (this.currentPath as any).plot(`${d} C${event.offsetX} ${event.offsetY}`)
+      // }
+      (this.currentPath as any).plot(`${d} L${event.offsetX} ${event.offsetY}`)
     }
+
   }
 
   onDragStop = (event: any) => {
@@ -58,10 +60,9 @@ export class PencilTool extends Tool<PencilData> {
     this.currentPath = null;
   }
 
-  drawAnnotation(annotation: Annotation): void {
-    const data: PencilData = annotation.data as PencilData;
-    const path = this.getAnnotationContainer().path(data.path);
-    path.stroke({color: data.color, width: data.width});
+  drawAnnotation(annotation: Annotation<PencilData>): void {
+    const path = this.getAnnotationContainer().path(annotation.data.path);
+    path.stroke({color: annotation.data.color, width: annotation.data.width});
     path.fill({color: 'none'});
   }
 

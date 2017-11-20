@@ -1,5 +1,5 @@
 import {Input, Component, ChangeDetectionStrategy} from '@angular/core';
-import {Annotation} from '../../service/model/annotation';
+import {Annotation, DataType} from '../../service/model/annotation';
 
 @Component({
   selector: 'l3-notes-bar',
@@ -9,9 +9,9 @@ import {Annotation} from '../../service/model/annotation';
 })
 export class NotesBarComponent {
 
-  private _notes: Annotation[] = [];
+  private _notes: Annotation<DataType>[] = [];
 
-  @Input() set annotations(notes: Annotation[]) {
+  @Input() set annotations(notes: Annotation<DataType>[]) {
     this._notes = notes ? notes.filter(note => note.type === 'note') : [];
   }
 

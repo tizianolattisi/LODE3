@@ -59,7 +59,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   currentSlide: Screenshot;
   currentSlideIndex: number;
   screenshotStatus: ScreenshotStatus;
-  currentAnnotations: Annotation[];
+  currentAnnotations: Annotation<DataType>[];
 
   private lectureSubscr: Subscription;
   private slidesSubscr: Subscription;
@@ -173,7 +173,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
 
         // Annotations from server
-        const anns: Annotation[] = msg.data;
+        const anns: Annotation<DataType>[] = msg.data;
         const res = this.convertAnnotations(anns);
 
 
@@ -234,7 +234,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 300);
   }
 
-  private convertAnnotations(anns: Annotation[]): {[slideId: string]: {[uuid: string]: Annotation}} {
+  private convertAnnotations(anns: Annotation<DataType>[]): {[slideId: string]: {[uuid: string]: Annotation<DataType>}} {
     const res = {};
 
     anns.filter(ann => this.lecture.uuid === ann.lectureId).forEach(ann => {

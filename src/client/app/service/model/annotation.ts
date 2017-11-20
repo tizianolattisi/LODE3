@@ -1,6 +1,6 @@
 export type DataType = NoteData | PencilData;
 
-export interface Annotation {
+export interface Annotation<T extends DataType> {
   uuid: string;
   lectureId: string;
   slideId: string;
@@ -8,7 +8,7 @@ export interface Annotation {
   userId?: any;
   timestamp: number;
 
-  data?: DataType;
+  data?: T;
 }
 
 export interface NoteData {

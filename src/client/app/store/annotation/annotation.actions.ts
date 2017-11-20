@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {Annotation} from '../../service/model/annotation';
+import {Annotation, DataType} from '../../service/model/annotation';
 import {AnnotationSearch} from '../../service/model/annotation-search';
 
 export enum ActionTypes {
@@ -25,13 +25,13 @@ export class FetchAnnotations implements Action {
 export class SetAnnotations implements Action {
   readonly type = ActionTypes.SET_ANNOTATIONS;
 
-  constructor(public payload: {[slideId: string]: {[uuid: string]: Annotation}}) {}
+  constructor(public payload: {[slideId: string]: {[uuid: string]: Annotation<DataType>}}) {}
 }
 
 export class SetAnnotationsPerSlide implements Action {
   readonly type = ActionTypes.SET_ANNOTATIONS_PER_SLIDE;
 
-  constructor(public payload: {slideId: string; annotations: {[uuid: string]: Annotation}}) {}
+  constructor(public payload: {slideId: string; annotations: {[uuid: string]: Annotation<DataType>}}) {}
 }
 
 export class ResetSelection implements Action {
@@ -53,13 +53,13 @@ export class SetSelected implements Action {
 export class AddAnnotation implements Action {
   readonly type = ActionTypes.ADD_ANNOTATION;
 
-  constructor(public payload: Annotation) {}
+  constructor(public payload: Annotation<DataType>) {}
 }
 
 export class EditAnnotation implements Action {
   readonly type = ActionTypes.EDIT_ANNOTATION;
 
-  constructor(public payload: Annotation) {}
+  constructor(public payload: Annotation<DataType>) {}
 }
 
 export class DeleteAnnotation implements Action {

@@ -15,7 +15,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class LateralBarAnnotationsComponent implements OnInit, OnDestroy {
 
-  annotations: {[slideId: string]: {[annId: string]: Annotation}};
+  annotations: {[slideId: string]: {[annId: string]: Annotation<DataType>}};
 
   private tools: {[type: string]: Tool<DataType>} = {};
 
@@ -40,7 +40,7 @@ export class LateralBarAnnotationsComponent implements OnInit, OnDestroy {
   //   this.store.dispatch(new SelectAnnotation(index));
   // }
 
-  onDelete(annotation: Annotation) {
+  onDelete(annotation: Annotation<DataType>) {
     this.store.dispatch(new DeleteAnnotation({
       lectureId: annotation.lectureId,
       slideId: annotation.slideId,

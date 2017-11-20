@@ -6,4 +6,7 @@
 # To check logs: ./node_modules/forever/bin/forever logs
 
 echo '>>> Start server'
-./node_modules/forever/bin/forever start dist/server/index.js
+npm run forever:start
+
+echo ''
+echo '>>> Use "npm run forever:stop" to stop the server'
