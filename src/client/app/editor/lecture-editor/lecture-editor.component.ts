@@ -26,12 +26,15 @@ import {AppState} from '../../store/app-state';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 import * as LectureActions from '../../store/lecture/lecture.actions';
-import * as SVG from 'svg.js';
 
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
+import {Doc} from 'svg.js';
+
+import * as SVG from 'svg.js';
+// declare const SVG: any;
 
 @Component({
   selector: 'l3-lecture-editor',
@@ -56,6 +59,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   currentSlide: Screenshot;
   currentSlideIndex: number;
   screenshotStatus: ScreenshotStatus;
+  currentAnnotations: Annotation[];
 
   private lectureSubscr: Subscription;
   private slidesSubscr: Subscription;
@@ -92,7 +96,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   public ngAfterViewInit(): void {
 
     // Register annotation container in store -> it will be available inside tools
-    this.store.dispatch(new SetAnnotationContainer(SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc));
+    this.store.dispatch(new SetAnnotationContainer(SVG.adopt(this.annotationContainer.nativeElement) as Doc));
   }
 
   initLecture() {
@@ -154,7 +158,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
           this.updateAnnotationContainer();
         }
 
-        if (index !== -1) {
+        if (index !== -1 && this.currentSlide) {
           // Fetch annotations // TODO if not already done
           this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide._id}));
         }
@@ -187,34 +191,47 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
 
+
+    // Load current annotations
+    this.store.select(s => s.annotation.annotations)
+      .filter(() => !!this.currentSlide)
+      .map(anns => anns[this.currentSlide._id])
+      // .filter(anns => !!anns)
+      .subscribe(anns => {
+
+        // Clear container
+        if (this.annotationContainer.nativeElement) {
+          // (SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc).clear();
+          this.annotationContainer.nativeElement.innerHTML = ''; // TODO do better
+        }
+
+        this.currentAnnotations = Object.keys(anns || {}).map(uuid => anns[uuid]);
+        this.currentAnnotations.forEach(a => {
+          const tool = this.getTool(a.type);
+          if (tool) {
+            tool.drawAnnotation(a);
+          }
+        });
+
+        this.cd.detectChanges();
+      });
+
   }
 
   private updateAnnotationContainer() {
-    if (this.annotationContainer && this.imageContainer) {
-      // Set dimensions // TODO set it correctly
-      this.annotationContainer.nativeElement.setAttribute('width', this.imageContainer.nativeElement.width);
-      this.annotationContainer.nativeElement.setAttribute('height', '100%');
-      this.annotationContainer.nativeElement.setAttribute(
-        'viewBox', `0 0 ${this.imageContainer.nativeElement.width} ${this.imageContainer.nativeElement.height}`
-      );
+    // Set dimensions // TODO set it correctly
 
-      // Clear container
-      // (SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc).clear();
+    setTimeout(() => {
+      if (this.annotationContainer && this.imageContainer) {
+        this.annotationContainer.nativeElement.setAttribute('width', this.imageContainer.nativeElement.width);
+        this.annotationContainer.nativeElement.setAttribute('height', '100%');
+        this.annotationContainer.nativeElement.setAttribute(
+          'viewBox', `0 0 ${this.imageContainer.nativeElement.width} ${this.imageContainer.nativeElement.height}`
+          // 'viewBox', `0 0 1920 1080`
+        );
+      }
 
-      // Load current annotations
-      this.store.select(s => s.annotation.annotations)
-        .take(1)
-        .map(anns => anns[this.currentSlide._id])
-        .filter(anns => !!anns)
-        .subscribe(anns => {
-          Object.keys(anns).map(uuid => anns[uuid]).forEach(a => {
-            const tool = this.getTool(a.type);
-            if (tool) {
-              tool.drawAnnotation(a);
-            }
-          })
-        })
-    }
+    }, 300);
   }
 
   private convertAnnotations(anns: Annotation[]): {[slideId: string]: {[uuid: string]: Annotation}} {

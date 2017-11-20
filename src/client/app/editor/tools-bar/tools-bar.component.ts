@@ -34,7 +34,7 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
   }
 
   onStrokeChange(value: any) {
-    value = value ? parseInt(value) : 12;
+    value = value ? parseInt(value, 10) : 2;
     this.store.dispatch(new SetStroke(value));
   }
 

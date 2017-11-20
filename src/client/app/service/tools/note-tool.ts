@@ -21,20 +21,16 @@ export class NoteTool extends Tool<NoteData> {
     super(store);
   }
 
-  onToolSelected(): void {
-    console.log('Selected!');
-  }
+  onToolSelected(): void {}
 
-  onToolDeselected(): void {
-    console.log('DeSelected!');
-  }
+  onToolDeselected(): void {}
 
   onClick = (event: MouseEvent) => {
     const x = event.offsetX - (PL_RADIUS / 2);
     const y = event.offsetY - (PL_RADIUS / 2);
 
     this.drawPlaceholder(x, y);
-    this.addAnnotation({x, y, text: ''});
+    this.addAnnotation({x, y, text: '', title: 'Note'});
   };
 
   onDragStart = (event: any) => {};

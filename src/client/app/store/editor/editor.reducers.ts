@@ -18,7 +18,6 @@ export function editorReducer(state: EditorState = initialState, action: All): E
   switch (action.type) {
 
     case ActionTypes.SET_ANNOTATION_CONTAINER:
-    console.log('Set, ', action.payload);
       return {
         ...state,
         annotationContainer: action.payload

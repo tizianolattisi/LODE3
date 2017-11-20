@@ -59,11 +59,7 @@ export class LectureEffects {
     .map(a => a.payload)
     .switchMap(lectureId =>
       this.lectureService.getUserScreenshots(lectureId)
-        .map(screenshots => screenshots.length > 0 ?
-          [new LectureActions.SetUserScreenshots(screenshots), new LectureActions.SetCurrentSlide(0)] :
-          new LectureActions.SetUserScreenshots(screenshots)
-        )
-        .switchMap(actions => actions instanceof Array ? actions : of(actions))
+        .map(screenshots => new LectureActions.SetUserScreenshots(screenshots))
         .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err)))
     );
 
@@ -77,7 +73,11 @@ export class LectureEffects {
 
       // Foreach screenshot download it and save base64
       Observable.forkJoin<Screenshot>(ss.map(screenshot => this.lectureService.getScreenshotImage(lecture.uuid, screenshot)))
-        .map(updatedSS => new LectureActions.SetUserScreenshotsImg(updatedSS))
+        .map(updatedSS => updatedSS.length > 0 ?
+          [new LectureActions.SetUserScreenshotsImg(updatedSS), new LectureActions.SetCurrentSlide(0)] :
+          new LectureActions.SetUserScreenshotsImg(updatedSS)
+        )
+        .switchMap(actions => actions instanceof Array ? actions : of(actions))
         .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err))) // TODO different action
     );
 

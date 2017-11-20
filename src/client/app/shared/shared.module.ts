@@ -14,9 +14,6 @@ import {AuthGuard} from './auth.guard';
   declarations: [
     NoteComponent
   ],
-  providers: [
-    MatIconRegistry
-  ],
   exports: [
     NoteComponent
   ]
@@ -26,6 +23,7 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
+        MatIconRegistry,
         IconService,
         AuthGuard
       ]

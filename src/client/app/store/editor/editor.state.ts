@@ -1,10 +1,10 @@
 import {ToolDescription} from '../../service/model/tool-description';
+import {Doc} from 'svg.js';
 
-import * as SVG from 'svg.js';
 
 export interface EditorState {
 
-  annotationContainer: SVG.Doc;
+  annotationContainer: Doc;
 
   tools: ToolDescription[];
   selectedTool: string;

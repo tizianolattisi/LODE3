@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {Input, Component, ChangeDetectionStrategy} from '@angular/core';
+import {Annotation} from '../../service/model/annotation';
 
 @Component({
   selector: 'l3-notes-bar',
@@ -6,11 +7,16 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./notes-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotesBarComponent implements OnInit {
+export class NotesBarComponent {
 
-  constructor() { }
+  private _notes: Annotation[] = [];
 
-  ngOnInit() {
+  @Input() set annotations(notes: Annotation[]) {
+    this._notes = notes ? notes.filter(note => note.type === 'note') : [];
+  }
+
+  get annotations() {
+    return this._notes;
   }
 
 }

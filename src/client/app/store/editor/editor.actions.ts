@@ -1,7 +1,7 @@
 import {Action} from '@ngrx/store';
 import {ToolDescription} from '../../service/model/tool-description';
+import {Doc} from 'svg.js';
 
-import * as SVG from 'svg.js';
 
 export enum ActionTypes {
 
@@ -17,7 +17,7 @@ export enum ActionTypes {
 export class SetAnnotationContainer implements Action {
   readonly type = ActionTypes.SET_ANNOTATION_CONTAINER;
 
-  constructor(public payload: SVG.Doc) {}
+  constructor(public payload: Doc) {}
 }
 
 export class SetTools implements Action {

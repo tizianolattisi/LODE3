@@ -125,6 +125,7 @@ const socketListener = (socket: Socket) => {
   socket.on(WsFromClientEvents.ANNOTATION_DELETE, (data: AnnotationId) => {
     try {
       if (data && data.uuid && data.lectureId) {
+        console.log('del!', data, new Types.ObjectId(userId), userId);
         Annotation.findOneAndRemove({
           uuid: data.uuid,
           lectureId: data.lectureId,
@@ -142,6 +143,7 @@ const socketListener = (socket: Socket) => {
               }
             });
           }
+          console.log('done!');
         });
       }
     } catch (e) {

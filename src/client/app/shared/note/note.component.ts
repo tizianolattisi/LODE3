@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Annotation} from '../../service/model/annotation';
 
 @Component({
   selector: 'l3-note',
@@ -6,11 +7,9 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./note.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NoteComponent implements OnInit {
+export class NoteComponent {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  @Input()
+  note: Annotation;
 
 }

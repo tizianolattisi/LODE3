@@ -185,7 +185,9 @@ export class LiveLecture {
         return this.nextScreenshotObs$.skip(1).take(1);
 
       case 'fetch-pending':
-        console.log(chalk.default.bold.white('> New screenshot from raspberry is available and server is fetching it -> make applicant wait.'));
+        console.log(
+          chalk.default.bold.white('> New screenshot from raspberry is available and server is fetching it -> make applicant wait.')
+        );
         // Wait for latest screenshot fetch
         return this.nextScreenshotObs$.skip(1).take(1);
     }
@@ -194,7 +196,7 @@ export class LiveLecture {
   toLectureModel(): ILecture {
     return {
       uuid: this.lectureId,
-      course: 'Course Name', // TODO set proper course name
+      course: '', // TODO set proper course name
       name: this.name,
       live: true
     }

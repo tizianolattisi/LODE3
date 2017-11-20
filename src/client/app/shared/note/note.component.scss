@@ -1,8 +1,17 @@
 @import '~@angular/material/theming';
-
-$note-bg: mat-color(mat-palette($mat-yellow));
-
+$note-bg: mat-color(mat-palette($mat-yellow, A700));
+$btn-size: 32px;
 .note {
-  background: $note-bg;
-  padding: 0.5rem;
+    background: $note-bg;
+    padding: 12px;
+    margin: 16px;
+}
+
+button {
+    width: $btn-size;
+    height: $btn-size;
+    mat-icon {
+        width: $btn-size - 6px;
+        height: $btn-size - 6px;
+    }
 }

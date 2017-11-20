@@ -28,8 +28,11 @@
 
 .slide-actions {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px;
+  background: white;
+  border-radius: 6px;
 }
 
 .slide-container {
@@ -37,6 +40,13 @@
   width: 90%;
   height: 90%;
   text-align: center;
+}
+
+.slide-container-inner {
+  // background: blue;
+  display: inline-block;
+  padding: 6px;
+  border-radius: 6px;
 }
 
 .image-container {
@@ -56,3 +66,7 @@
   border: 1px solid black;
 }
 
+.note-bar {
+  width: 15%;
+  overflow-y: auto;
+}

@@ -55,9 +55,10 @@
     <div fxFlex="auto" fxLayout fxLayoutAlign="center center">
 
       <div class="slide-container">
-        <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" *ngIf="currentSlide?.img" l3FxFullHeight
-          #imageContainer>
-        <svg class="annotation-container" #annotationContainer></svg>
+        <div class="slide-container-inner">
+          <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight #imageContainer>
+          <svg class="annotation-container" l3FxFullHeight #annotationContainer></svg>
+        </div>
       </div>
 
     </div>
@@ -65,7 +66,7 @@
 
     <!-- RIGHT TOOLBAR -->
     <div class="note-bar" *ngIf="!currentTab">
-      <l3-notes-bar></l3-notes-bar>
+      <l3-notes-bar [annotations]="currentAnnotations"></l3-notes-bar>
     </div>
 
     <!-- SLIDE ACTIONS -->

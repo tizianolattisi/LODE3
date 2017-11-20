@@ -1,6 +1,6 @@
 <div>
 
-  <ng-container *ngFor="let slides of annotations$ | async | toArray; let i = index">
+  <ng-container *ngFor="let slides of annotations | toArray; let i = index">
 
     <p class="page-title mat-title">Page {{i + 1}}</p>
 
@@ -12,13 +12,19 @@
             <mat-icon [svgIcon]="getToolIcon(annotation.type)"></mat-icon>
           </div>
           <div fxFlex="auto">
-            <p><b>{{getToolName(annotation.type)}}</b></p>
+            <p>
+              <b>{{getToolName(annotation.type)}}</b>
+            </p>
             <p>Date: {{annotation.timestamp * 1000 | date:'dd MMMM y, H:mm'}}</p>
           </div>
         </div>
       </mat-card-content>
 
       <mat-card-footer>
+        <button mat-icon-button (click)="onDelete(annotation)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+
       </mat-card-footer>
     </mat-card>
 

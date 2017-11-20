@@ -1,7 +1,7 @@
 import {AnnotationService} from '../../service/annotation.service';
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
-import {ActionTypes, AddAnnotation, FetchAnnotations} from './annotation.actions';
+import {ActionTypes, AddAnnotation, FetchAnnotations, DeleteAnnotation, EditAnnotation} from './annotation.actions';
 
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
@@ -24,14 +24,14 @@ export class AnnotationEffects {
     .do(payload => this.annotationService.addAnnotation(payload));
 
   @Effect({dispatch: false})
-  editAnnotation$ = this.actions$.ofType<AddAnnotation>(ActionTypes.EDIT_ANNOTATION)
+  editAnnotation$ = this.actions$.ofType<EditAnnotation>(ActionTypes.EDIT_ANNOTATION)
     .map(a => a.payload)
     .do(payload => this.annotationService.editAnnotation(payload));
 
   @Effect({dispatch: false})
-  deleteAnnotation$ = this.actions$.ofType<AddAnnotation>(ActionTypes.DELETE_ANNOTATION)
+  deleteAnnotation$ = this.actions$.ofType<DeleteAnnotation>(ActionTypes.DELETE_ANNOTATION)
     .map(a => a.payload)
-    .do(payload => this.annotationService.deleteAnnotation(payload));
+    .do(payload => this.annotationService.deleteAnnotation({lectureId: payload.lectureId, uuid: payload.annotationId}));
 
   constructor(private actions$: Actions, private annotationService: AnnotationService) {}
 }

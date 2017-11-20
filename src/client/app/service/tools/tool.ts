@@ -3,11 +3,14 @@ import {Annotation, DataType} from '../model/annotation';
 import {ToolDescription} from '../model/tool-description';
 import {AppState} from '../../store/app-state';
 import {AddAnnotation} from '../../store/annotation/annotation.actions';
+import {Doc} from 'svg.js';
+import {Observable} from 'rxjs/Observable';
 
-import * as SVG from 'svg.js';
 
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/first';
+
 
 export abstract class Tool<T extends DataType> { // T is the type of data produced by the tool
 
@@ -15,7 +18,7 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
   readonly abstract NAME: string;
   readonly abstract ICON: string;
 
-  private annotationContainer: SVG.Doc;
+  private annotationContainer: Doc;
 
   // handlers
   public abstract onClick: (event: MouseEvent) => void;
@@ -45,7 +48,7 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
     }
   }
 
-  getAnnotationContainer(): SVG.Doc {
+  getAnnotationContainer(): Doc {
     return this.annotationContainer;
   }
 
@@ -68,6 +71,14 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
         }));
       });
 
+  }
+
+  getCurrentStroke(): Observable<number> {
+    return this.store.select(s => s.editor.stroke).first();
+  }
+
+  getCurrentColor(): Observable<string> {
+    return this.store.select(s => s.editor.color).first();
   }
 
   private generateUUID(): string {

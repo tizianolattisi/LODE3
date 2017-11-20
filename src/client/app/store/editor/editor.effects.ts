@@ -8,8 +8,6 @@ import {Inject, Injectable} from '@angular/core';
 
 import {ActionTypes, SelectTool} from './editor.actions';
 
-// import * as SVG from 'svg.js';
-
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/switchMap';
