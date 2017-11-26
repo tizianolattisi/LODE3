@@ -1,4 +1,4 @@
-<mat-card class="note">
+<mat-card class="note" [style.background]="note?.data?.color || '#FFCA28'">
   <mat-card-header>
     <mat-card-title>
       <h3>{{note?.data?.title}}</h3>

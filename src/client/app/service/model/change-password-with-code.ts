@@ -1,4 +1,4 @@
 export interface ChangePasswordWithCodeData {
   code: string;
-  newPassword: string;
+  password: string;
 }

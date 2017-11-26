@@ -57,6 +57,7 @@
     "mkdirp": "^0.5.1",
     "mongoose": "^4.13.4",
     "morgan": "^1.9.0",
+    "ngx-color-picker": "^5.0.4",
     "nopt": "^4.0.1",
     "rsvp": "^4.7.0",
     "rxjs": "^5.5.2",

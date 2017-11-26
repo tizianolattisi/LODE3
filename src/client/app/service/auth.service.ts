@@ -68,8 +68,8 @@ export class AuthService {
       .catch(toApiErrorResponse);
   }
 
-  changePasswordWithCode(code: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.USER_PATH}/password-change-with-code`, {code, newPassword})
+  changePasswordWithCode(code: string, password: string): Observable<any> {
+    return this.http.post(`${this.USER_PATH}/password-change-with-code`, {code, password})
       .catch(toApiErrorResponse);
   }
 

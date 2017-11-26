@@ -16,6 +16,7 @@ export interface NoteData {
   y: number;
   text: string;
   title: string;
+  color: string;
 }
 
 export interface PencilData {

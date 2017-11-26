@@ -15,6 +15,9 @@
 
   <div fxLayout fxLayoutAlign="center center">
 
+    <div class="color-picker" cpPosition="left" cpAlphaChannel="disabled" [colorPicker]="color$ | async" (colorPickerChange)="onColorChange($event)"
+      [style.background]="color$ | async"></div>
+
     <mat-icon svgIcon="format-line-weight"></mat-icon>
     <mat-form-field class="stroke-input">
       <input type="number" min="0" matInput [ngModel]="stroke$ | async" (ngModelChange)="onStrokeChange($event)">

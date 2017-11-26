@@ -1,25 +1,31 @@
+@import '../../../style/variables';
 :host {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .card {
-  margin: 1rem;
+    margin: 1rem;
 }
 
 .prefix-icon {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .input-field {
-  box-sizing: border-box;
-  width: 100%;
-  margin: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 1rem;
 }
 
 .link-btn {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  text-overflow: ellipsis;
-  white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.success-info-box {
+    color: $color-success;
+    margin-top: 24px;
 }

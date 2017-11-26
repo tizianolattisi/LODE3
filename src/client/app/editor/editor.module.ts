@@ -14,6 +14,7 @@ import {ToolsBarComponent} from './tools-bar/tools-bar.component';
 import {NotesBarComponent} from './notes-bar/notes-bar.component';
 import {ToArrayPipe} from './to-array.pipe';
 import {SharedModule} from '../shared/shared.module';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import {SharedModule} from '../shared/shared.module';
     RouterModule.forChild(editorRoutes),
     ServiceModule,
     SharedModule,
+    ColorPickerModule,
     MaterialModule
   ],
   declarations: [

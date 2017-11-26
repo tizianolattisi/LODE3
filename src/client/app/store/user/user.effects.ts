@@ -2,6 +2,7 @@ import {of} from 'rxjs/observable/of';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, toPayload} from '@ngrx/effects';
 import {AuthService} from '../../service/auth.service';
+import {ChangePasswordWithCode} from './user.actions';
 
 import * as UserActions from './user.actions';
 
@@ -76,9 +77,9 @@ export class UserEffects {
     );
 
   @Effect()
-  doChangePasswordWithCode$ = this.actions$.ofType(UserActions.DO_CHANGE_PASSWORD_WITH_CODE)
-    .map(toPayload)
-    .switchMap(payload => this.authService.changePasswordWithCode(payload.code, payload.newPassword)
+  doChangePasswordWithCode$ = this.actions$.ofType<ChangePasswordWithCode>(UserActions.DO_CHANGE_PASSWORD_WITH_CODE)
+    .map(a => a.payload)
+    .switchMap(payload => this.authService.changePasswordWithCode(payload.code, payload.password)
       .map(res => new UserActions.ChangePasswordWithCodeSuccess())
       .catch(err => of(new UserActions.ChangePasswordWithCodeError(err)))
     );

@@ -61,6 +61,7 @@ export class PencilTool extends Tool<PencilData> {
   }
 
   drawAnnotation(annotation: Annotation<PencilData>): void {
+    console.log('drawing panecil');
     const path = this.getAnnotationContainer().path(annotation.data.path);
     path.stroke({color: annotation.data.color, width: annotation.data.width});
     path.fill({color: 'none'});

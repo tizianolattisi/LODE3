@@ -23,7 +23,7 @@ export class ResetPasswordComponent implements OnInit {
   errorReset$: Observable<ErrorResponse>;
 
   errMsgs = {
-    400: 'Some fields are wrong or user already exists. Please check them.',
+    400: 'Some fields are wrong or user does not exists. Please recheck fields.',
     500: 'Something goes wrong... please retry.',
   };
 
@@ -61,7 +61,7 @@ export class ResetPasswordComponent implements OnInit {
     } else {
       this.store.dispatch(new UserActions.ChangePasswordWithCode({
         code: this.code,
-        newPassword: credentials.password
+        password: credentials.password
       }));
     }
   }
