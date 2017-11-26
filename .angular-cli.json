@@ -19,7 +19,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "l3",
       "styles": [
-        "style/styles.scss"
+        "style/styles.scss",
+        "../../node_modules/quill/dist/quill.snow.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

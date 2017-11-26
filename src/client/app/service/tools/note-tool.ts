@@ -4,6 +4,8 @@ import {Store} from '@ngrx/store';
 import {Tool} from './tool';
 import {Annotation, NoteData} from '../model/annotation';
 import {SetColor} from '../../store/editor/editor.actions';
+import {OpenNote} from '../../store/annotation/annotation.actions';
+import {G} from 'svg.js';
 
 export const PL_RADIUS = 40;
 
@@ -34,8 +36,12 @@ export class NoteTool extends Tool<NoteData> {
       const x = event.offsetX - (PL_RADIUS / 2);
       const y = event.offsetY - (PL_RADIUS / 2);
 
-      this.drawPlaceholder(x, y, color);
-      this.addAnnotation({x, y, text: '', title: 'Note', color});
+      const placeholder = this.drawPlaceholder(x, y, color);
+
+      this.addAnnotation({x, y, text: '', title: 'Note', color}).subscribe(ann => {
+        // When annotation is created, add click handler
+        this.addHandlers(placeholder, ann.slideId, ann.uuid);
+      });
     });
   };
 
@@ -46,16 +52,24 @@ export class NoteTool extends Tool<NoteData> {
   onDragStop = (event: any) => {};
 
   drawAnnotation(annotation: Annotation<NoteData>): void {
-    this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
+    const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
+    this.addHandlers(placeholder, annotation.slideId, annotation.uuid);
   }
 
-  private drawPlaceholder(x: number, y: number, color: string) {
+  private drawPlaceholder(x: number, y: number, color: string): G {
     const group = this.getAnnotationContainer().group();
     group.translate(x, y);
     group.circle(PL_RADIUS).addClass('note-placeholder').fill({color}).stroke({color: lightenDarkenColor(color, 20)});
     group.path(PL_ICON_PATH).fill('#FFF').translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+
+    return group;
   }
 
+  private addHandlers(placeholder: G, slideId: string, annotationId: string) {
+    placeholder.click(() => {
+      this.store.dispatch(new OpenNote({slideId, annotationId}));
+    });
+  }
 }
 
 

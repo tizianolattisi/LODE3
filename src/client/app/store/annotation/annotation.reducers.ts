@@ -5,7 +5,8 @@ import {ActionTypes, All} from './annotation.actions';
 const initialState: AnnotationState = {
   annotations: {},
   selectedAnnotations: [],
-  fetchedSlides: []
+  fetchedSlides: [],
+  openNotes: []
 }
 
 export function annotationReducer(state: AnnotationState = initialState, action: All): AnnotationState {
@@ -98,21 +99,50 @@ export function annotationReducer(state: AnnotationState = initialState, action:
 
     case ActionTypes.DELETE_ANNOTATION:
       const annsDel = {...state.annotations};
+      let openNotesDel = state.openNotes;
 
       if (annsDel[action.payload.slideId]) {
+        const delAnn = annsDel[action.payload.slideId][action.payload.annotationId];
+
+        if (delAnn && delAnn.type === 'note') { // Annotation is a note -> remove from open notes
+          openNotesDel = removeOpenNote(openNotesDel, action.payload.slideId, action.payload.annotationId);
+        }
+
         // Delete annotation
         delete annsDel[action.payload.slideId][action.payload.annotationId];
       }
 
       return {
         ...state,
-        annotations: annsDel
+        annotations: annsDel,
+        openNotes: openNotesDel
       };
 
     case ActionTypes.CLEAR_ANNOTATIONS_WORKSPACE:
       return initialState;
 
+    case ActionTypes.OPEN_NOTE:
+      const openNotes1 = removeOpenNote(state.openNotes, action.payload.slideId, action.payload.annotationId);
+      openNotes1.push(action.payload);
+      return {
+        ...state,
+        openNotes: openNotes1
+      };
+
+    case ActionTypes.CLOSE_NOTE:
+      const openNotes2 = removeOpenNote(state.openNotes, action.payload.slideId, action.payload.annotationId);
+
+      return {
+        ...state,
+        openNotes: openNotes2
+      };
+
     default:
       return state;
   }
+}
+
+
+function removeOpenNote(openNotes: any[], slideId: string, annotationId: string): any[] {
+  return openNotes.filter(n => (n.slideId !== slideId || n.annotationId !== annotationId));
 }

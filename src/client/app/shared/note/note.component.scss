@@ -1,5 +1,4 @@
 @import '~@angular/material/theming';
-$note-bg: mat-color(mat-palette($mat-yellow, A700));
 $btn-size: 32px;
 .note {
     padding: 12px;
@@ -13,4 +12,8 @@ button {
         width: $btn-size - 6px;
         height: $btn-size - 6px;
     }
+}
+
+.note-readonly {
+    max-height: 120px !important;
 }

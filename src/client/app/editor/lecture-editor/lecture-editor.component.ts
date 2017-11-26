@@ -34,6 +34,7 @@ import 'rxjs/add/operator/filter';
 import {Doc} from 'svg.js';
 
 import * as SVG from 'svg.js';
+import {Observable} from 'rxjs/Observable';
 // declare const SVG: any;
 
 @Component({
@@ -60,6 +61,9 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   currentSlideIndex: number;
   screenshotStatus: ScreenshotStatus;
   currentAnnotations: Annotation<DataType>[];
+  openNotes$: Observable<{
+    slideId: string; annotationId: string;
+  }[]>;
 
   private lectureSubscr: Subscription;
   private slidesSubscr: Subscription;
@@ -169,6 +173,9 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   initAnnotations() {
+
+    this.openNotes$ = this.store.select(s => s.annotation.openNotes);
+
     this.socketSubscr = this.socketService.onReceive().subscribe(msg => {
       if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
 

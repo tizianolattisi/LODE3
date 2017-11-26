@@ -1,21 +1,32 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NoteComponent} from './note/note.component';
+import {NoteWindowComponent} from './note-window/note-window.component';
 import {MatIconRegistry} from '@angular/material/icon';
 import {IconService} from './icon.service';
 import {MaterialModule} from '../material/material.module';
 import {AuthGuard} from './auth.guard';
+import {QuillModule} from 'ngx-quill';
+import {FormsModule} from '@angular/forms';
+import {DraggableDirective} from './draggable.directive';
+import {ResizableDirective} from './resizable.directive';
 
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule
+    FormsModule,
+    MaterialModule,
+    QuillModule
   ],
   declarations: [
-    NoteComponent
+    NoteComponent,
+    NoteWindowComponent,
+    DraggableDirective,
+    ResizableDirective,
   ],
   exports: [
-    NoteComponent
+    NoteComponent,
+    NoteWindowComponent
   ]
 })
 export class SharedModule {

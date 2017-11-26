@@ -52,25 +52,31 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
     return this.annotationContainer;
   }
 
-  addAnnotation(data: T) {
-    this.store.select(s => s.lecture.currentLecture) // Get current lecture -> to get lecture id
-      .take(1)
-      .withLatestFrom(
-      this.store.select(s => s.lecture.slides), // Get slides -> to get slide id
-      this.store.select(s => s.lecture.currentSlideIndex) // Get current slide index -> to get slide id
-      )
-      .subscribe(([lecture, slides, index]) => {
-        // Send action add annotation
-        this.store.dispatch(new AddAnnotation({
-          uuid: this.generateUUID(),
-          lectureId: lecture.uuid,
-          slideId: slides[index]._id,
-          type: this.TYPE,
-          timestamp: Math.round(Date.now() / 1000),
-          data: data
-        }));
-      });
+  addAnnotation(data: T): Observable<Annotation<T>> {
+    return Observable.create((subscriber => {
+      this.store.select(s => s.lecture.currentLecture) // Get current lecture -> to get lecture id
+        .take(1)
+        .withLatestFrom(
+        this.store.select(s => s.lecture.slides), // Get slides -> to get slide id
+        this.store.select(s => s.lecture.currentSlideIndex) // Get current slide index -> to get slide id
+        )
+        .subscribe(([lecture, slides, index]) => {
+          const ann: Annotation<T> = {
+            uuid: this.generateUUID(),
+            lectureId: lecture.uuid,
+            slideId: slides[index]._id,
+            type: this.TYPE,
+            timestamp: Math.round(Date.now() / 1000),
+            data: data
+          };
+          // Send action add annotation
+          this.store.dispatch(new AddAnnotation(ann));
 
+          // return annotation
+          subscriber.next(ann);
+          subscriber.complete();
+        });
+    }));
   }
 
   getCurrentStroke(): Observable<number> {

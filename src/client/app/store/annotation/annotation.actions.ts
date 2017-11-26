@@ -12,7 +12,10 @@ export enum ActionTypes {
   ADD_ANNOTATION = '[Annotation] ADD_ANNOTATION',
   EDIT_ANNOTATION = '[Annotation] EDIT_ANNOTATION',
   DELETE_ANNOTATION = '[Annotation] DELETE_ANNOTATION',
-  CLEAR_ANNOTATIONS_WORKSPACE = '[Annotation] CLEAR_ANNOTATIONS_WORKSPACE'
+  CLEAR_ANNOTATIONS_WORKSPACE = '[Annotation] CLEAR_ANNOTATIONS_WORKSPACE',
+
+  OPEN_NOTE = '[Annotation] OPEN_NOTE',
+  CLOSE_NOTE = '[Annotation] CLOSE_NOTE',
 };
 
 
@@ -72,6 +75,19 @@ export class ClearAnnotationWorkspace implements Action {
   readonly type = ActionTypes.CLEAR_ANNOTATIONS_WORKSPACE;
 }
 
+export class OpenNote implements Action {
+  readonly type = ActionTypes.OPEN_NOTE;
+
+  constructor(public payload: {slideId: string, annotationId: string}) {}
+}
+
+export class CloseNote implements Action {
+  readonly type = ActionTypes.CLOSE_NOTE;
+
+  constructor(public payload: {slideId: string, annotationId: string}) {}
+}
+
+
 export type All
   = FetchAnnotations
   | SetAnnotations
@@ -82,4 +98,6 @@ export type All
   | AddAnnotation
   | EditAnnotation
   | DeleteAnnotation
+  | OpenNote
+  | CloseNote
   | ClearAnnotationWorkspace;

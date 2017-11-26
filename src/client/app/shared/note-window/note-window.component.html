@@ -1,0 +1,55 @@
+<div #window>
+  <mat-card [style.border-color]="note?.data?.color || '#FFCA28'">
+
+    <mat-card-header l3Draggable [draggableElement]="window">
+
+      <div fxLayout="row" fxLayoutAlign="center center" l3FxFullWidth>
+        <input class="title-box" [ngModel]="note?.data?.title" (ngModelChange)="onTitleChange($event)" />
+
+        <span style="flex:1"></span>
+        <button mat-icon-button (click)="onExpand()">
+          <mat-icon svgIcon="expand"></mat-icon>
+        </button>
+
+        <button mat-icon-button (click)="onClose()">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </div>
+
+    </mat-card-header>
+
+    <mat-card-content>
+      <div l3FxFullHeight>
+        <quill-editor [ngModel]="note?.data?.text" (onContentChanged)="onNoteChange($event)">
+          <div quill-editor-toolbar>
+            <select title="Font" class="ql-font">
+            </select>
+            <select title="Size" class="ql-size">
+            </select>
+            <button class="ql-bold">Bold</button>
+            <button class="ql-italic">Italic</button>
+            <button class="ql-underline">Underline</button>
+            <button class="ql-strike">Strikethrough</button>
+            <span class="ql-format-separator"></span>
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+            <span class="ql-format-separator"></span>
+            <button class="ql-blockquote"></button>
+            <button class="ql-code-block"></button>
+            <span class="ql-format-separator"></span>
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+            <select class="ql-align"></select>
+
+            <button class="ql-list" value="bullet"></button>
+            <button class="ql-link"></button>
+            <button class="ql-formula"></button>
+          </div>
+        </quill-editor>
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+
+  <!-- <div class="resize-handler" l3Resizable [resizableElement]="window"></div> -->
+</div>

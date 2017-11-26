@@ -5,16 +5,18 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content fxLayout="row">
-    <div fxFlex="90%">
-      <span>{{note?.data?.text}}</span>
+    <div fxFlex="90%" class="note-readonly">
+      <quill-editor [ngModel]="note?.data?.text" readOnly="true" placeholder="">
+        <div quill-editor-toolbar></div>
+      </quill-editor>
     </div>
     <div fxFlex="10%" fxLayout="column">
 
-      <button mat-icon-button>
+      <button mat-icon-button (click)="onDelete()">
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
 
-      <button mat-icon-button>
+      <button mat-icon-button (click)="onOpen()">
         <mat-icon svgIcon="open"></mat-icon>
       </button>
 

@@ -88,3 +88,8 @@
     </div>
   </div>
 </div>
+
+
+<ng-container *ngFor="let noteInfo of openNotes$ | async">
+  <l3-note-window [noteInfo]="noteInfo"> </l3-note-window>
+</ng-container>
