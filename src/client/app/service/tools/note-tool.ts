@@ -41,6 +41,7 @@ export class NoteTool extends Tool<NoteData> {
       this.addAnnotation({x, y, text: '', title: 'Note', color}).subscribe(ann => {
         // When annotation is created, add click handler
         this.addHandlers(placeholder, ann.slideId, ann.uuid);
+        placeholder.id(ann.uuid);
       });
     });
   };
@@ -54,6 +55,7 @@ export class NoteTool extends Tool<NoteData> {
   drawAnnotation(annotation: Annotation<NoteData>): void {
     const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
     this.addHandlers(placeholder, annotation.slideId, annotation.uuid);
+    placeholder.id(annotation.uuid);
   }
 
   private drawPlaceholder(x: number, y: number, color: string): G {

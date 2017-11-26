@@ -1,6 +1,5 @@
 <div fxLayout fxLayoutAlign="stretch center">
 
-
   <div>
     <button mat-icon-button [ngClass]="{'selected': (selectedToolType === 'default' || !selectedToolType) }" (click)="onToolSelect('default')">
       <mat-icon svgIcon="cursor-default-outline"></mat-icon>
@@ -27,8 +26,8 @@
   <hr class="divider">
 
   <div>
-    <button mat-icon-button (click)="onSelectAll()">
-      <mat-icon svgIcon="select"></mat-icon>
+    <button mat-icon-button (click)="onDeselectAll()">
+      <mat-icon svgIcon="deselect"></mat-icon>
     </button>
 
     <button mat-icon-button (click)="onDelete()">

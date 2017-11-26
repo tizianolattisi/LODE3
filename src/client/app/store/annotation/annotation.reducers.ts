@@ -53,9 +53,18 @@ export function annotationReducer(state: AnnotationState = initialState, action:
       };
 
     case ActionTypes.TOGGLE_SELECTED_ANNOTATION:
+      const selection = [...state.selectedAnnotations];
+
+      const annIndex = selection.indexOf(action.payload);
+      if (annIndex === -1) {
+        selection.push(action.payload);
+      } else {
+        selection.splice(annIndex, 1);
+      }
+
       return {
         ...state,
-        selectedAnnotations: state.selectedAnnotations.filter(uuid => uuid !== action.payload)
+        selectedAnnotations: selection
       };
 
     case ActionTypes.SET_SELECTED:

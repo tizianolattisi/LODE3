@@ -1,16 +1,20 @@
 mat-card {
-  box-sizing: border-box;
-  margin: 12px;
+    box-sizing: border-box;
+    margin: 12px;
 }
 
 mat-card-footer {
-  text-align: center;
+    text-align: center;
 }
 
 .page-title {
-  margin: 12px;
+    margin: 12px;
 }
 
 .ann-type-icon {
-  margin-right: 16px;
+    margin-right: 16px;
+}
+
+.selected {
+    background: #B3E5FC;
 }

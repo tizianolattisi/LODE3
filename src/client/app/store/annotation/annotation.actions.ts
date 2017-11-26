@@ -9,6 +9,7 @@ export enum ActionTypes {
   RESET_SELECTION = '[Annotation] RESET_SELECTION',
   TOGGLE_SELECTED_ANNOTATION = '[Annotation] TOGGLE_SELECTED_ANNOTATION',
   SET_SELECTED = '[Annotation] SET_SELECTED',
+  DELETE_SELECTION = '[Annotation] DELETE_SELECTION',
   ADD_ANNOTATION = '[Annotation] ADD_ANNOTATION',
   EDIT_ANNOTATION = '[Annotation] EDIT_ANNOTATION',
   DELETE_ANNOTATION = '[Annotation] DELETE_ANNOTATION',
@@ -51,6 +52,10 @@ export class SetSelected implements Action {
   readonly type = ActionTypes.SET_SELECTED;
 
   constructor(public payload: string) {}
+}
+
+export class DeleteSelection implements Action {
+  readonly type = ActionTypes.DELETE_SELECTION;
 }
 
 export class AddAnnotation implements Action {

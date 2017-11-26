@@ -4,7 +4,7 @@ import {Annotation, DataType} from '../../service/model/annotation';
 import {AppState} from '../../store/app-state';
 import {Store} from '@ngrx/store';
 import {ChangeDetectionStrategy, Component, Inject, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
-import {DeleteAnnotation} from '../../store/annotation/annotation.actions';
+import {DeleteAnnotation, ToggleSelection} from '../../store/annotation/annotation.actions';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
@@ -16,10 +16,12 @@ import {Subscription} from 'rxjs/Subscription';
 export class LateralBarAnnotationsComponent implements OnInit, OnDestroy {
 
   annotations: {[slideId: string]: {[annId: string]: Annotation<DataType>}};
+  selection: string[] = [];
 
   private tools: {[type: string]: Tool<DataType>} = {};
 
   private annsSubscr: Subscription;
+  private selectionSubscr: Subscription;
 
   constructor(private store: Store<AppState>, @Inject(TOOLS) tools: Tool<DataType>[], private cd: ChangeDetectorRef) {
     tools.forEach(t => {
@@ -34,11 +36,15 @@ export class LateralBarAnnotationsComponent implements OnInit, OnDestroy {
       this.annotations = anns;
       this.cd.detectChanges();
     });
+    this.selectionSubscr = this.store.select(s => s.annotation.selectedAnnotations).subscribe(selection => {
+      this.selection = selection;
+      this.cd.detectChanges();
+    });
   }
 
-  // onSelect(index: number) {
-  //   this.store.dispatch(new SelectAnnotation(index));
-  // }
+  onSelect(ann: Annotation<DataType>) {
+    this.store.dispatch(new ToggleSelection(ann.uuid));
+  }
 
   onDelete(annotation: Annotation<DataType>) {
     this.store.dispatch(new DeleteAnnotation({
@@ -58,6 +64,7 @@ export class LateralBarAnnotationsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.annsSubscr.unsubscribe();
+    this.selectionSubscr.unsubscribe();
   }
 
 }

@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {AppState} from '../../store/app-state';
 import {SelectTool, SetStroke, SetColor} from '../../store/editor/editor.actions';
 import {ToolDescription} from '../../service/model/tool-description';
+import {ResetSelection, DeleteSelection} from '../../store/annotation/annotation.actions';
 
 @Component({
   selector: 'l3-tools-bar',
@@ -44,12 +45,12 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
     this.store.dispatch(new SetColor(value));
   }
 
-  onSelectAll() {
-
+  onDeselectAll() {
+    this.store.dispatch(new ResetSelection());
   }
 
   onDelete() {
-
+    this.store.dispatch(new DeleteSelection());
   }
 
   public ngOnDestroy(): void {

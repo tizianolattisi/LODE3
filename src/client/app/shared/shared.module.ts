@@ -26,7 +26,8 @@ import {ResizableDirective} from './resizable.directive';
   ],
   exports: [
     NoteComponent,
-    NoteWindowComponent
+    NoteWindowComponent,
+    DraggableDirective
   ]
 })
 export class SharedModule {

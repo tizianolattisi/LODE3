@@ -25,6 +25,8 @@ export class DraggableDirective {
       this.draggableElement.style.left = (this.draggableElement.style.left) ?
         (this.draggableElement.style.left) : (this.draggableElement.getBoundingClientRect().left + 'px');
 
+      this.draggableElement.style.bottom = null;
+      this.draggableElement.style.right = null;
       this.allowDrag = true;
     }
   }

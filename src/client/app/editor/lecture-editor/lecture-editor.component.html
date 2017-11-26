@@ -1,15 +1,38 @@
 <div fxLayout="column" l3FxFullHeight class="mat-typography">
 
   <!-- TOP TOOLBAR -->
-  <div class="toolbar" l3FxFullWidth fxLayout="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="start center">
-    <div>
-      <span>{{currentSlideIndex + 1}}</span>
-      <span>/</span>
-      <span>{{slides?.length}}</span>
+  <div class="toolbar" l3FxFullWidth fxLayout="row" fxLayoutAlign.gt-sm="space-between center" fxLayoutAlign.lt-sm="start center">
+
+    <!-- LEFT BAR  - NAVIGATION BAR -->
+    <div fxLayout="row" fxLayoutAlign="center center">
+
+      <button mat-icon-button (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
+        <mat-icon svgIcon="camera-enhance" *ngIf="screenshotStatus !== 'pending'"></mat-icon>
+        <mat-spinner *ngIf="screenshotStatus === 'pending'"></mat-spinner>
+      </button>
+
+
+      <button mat-icon-button (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
+        <mat-icon svgIcon="chevron-left"></mat-icon>
+      </button>
+
+      <div class="slide-counter">
+        <span>{{currentSlideIndex + 1}}</span>
+        <span>/</span>
+        <span>{{slides?.length}}</span>
+      </div>
+
+      <button mat-icon-button (click)="onSlideNext()" [disabled]="currentSlideIndex === (slides?.length - 1)">
+        <mat-icon svgIcon="chevron-right"></mat-icon>
+      </button>
+
     </div>
+
+    <!-- RIGHT BAR -->
     <div>
       <l3-tools-bar></l3-tools-bar>
     </div>
+
   </div>
 
   <div fxLayout fxLayoutAlign="center stretch" l3FxFullHeight>
@@ -70,7 +93,7 @@
     </div>
 
     <!-- SLIDE ACTIONS -->
-    <div class="slide-actions">
+    <div class="slide-actions" #slideActions l3Draggable [draggableElement]="slideActions" style="bottom: 12px; right: 12px">
 
       <button mat-mini-fab (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
         <mat-icon svgIcon="chevron-left"></mat-icon>

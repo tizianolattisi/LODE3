@@ -9,7 +9,12 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {FetchAnnotations, SetAnnotations, SetAnnotationsPerSlide} from '../../store/annotation/annotation.actions';
+import {
+  FetchAnnotations,
+  SetAnnotations,
+  SetAnnotationsPerSlide,
+  ClearAnnotationWorkspace
+} from '../../store/annotation/annotation.actions';
 import {Annotation, DataType} from '../../service/model/annotation';
 import {WsFromServerEvents} from '../../service/model/ws-msg';
 import {SocketService} from '../../service/socket.service';
@@ -24,6 +29,7 @@ import {Screenshot} from '../../service/model/screenshot';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../store/app-state';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Doc} from 'svg.js';
 
 import * as LectureActions from '../../store/lecture/lecture.actions';
 
@@ -31,11 +37,10 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
-import {Doc} from 'svg.js';
 
 import * as SVG from 'svg.js';
 import {Observable} from 'rxjs/Observable';
-// declare const SVG: any;
+
 
 @Component({
   selector: 'l3-lecture-editor',
@@ -70,6 +75,10 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   private screenshotStatusSubscr: Subscription;
   private currentSlideSubscr: Subscription;
   private socketSubscr: Subscription;
+  private annotationSubscr: Subscription;
+  private annotationSelectionSubscr: Subscription;
+
+  private svgAnnotationContainer: Doc;
 
   constructor(
     private store: Store<AppState>,
@@ -100,7 +109,8 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   public ngAfterViewInit(): void {
 
     // Register annotation container in store -> it will be available inside tools
-    this.store.dispatch(new SetAnnotationContainer(SVG.adopt(this.annotationContainer.nativeElement) as Doc));
+    this.svgAnnotationContainer = SVG.adopt(this.annotationContainer.nativeElement) as Doc;
+    this.store.dispatch(new SetAnnotationContainer(this.svgAnnotationContainer));
   }
 
   initLecture() {
@@ -200,7 +210,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
     // Load current annotations
-    this.store.select(s => s.annotation.annotations)
+    this.annotationSubscr = this.store.select(s => s.annotation.annotations)
       .filter(() => !!this.currentSlide)
       .map(anns => anns[this.currentSlide._id])
       // .filter(anns => !!anns)
@@ -221,6 +231,29 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         });
 
         this.cd.detectChanges();
+      });
+
+
+    // Select annotation on canvas when selected annotation set changes
+    this.annotationSelectionSubscr = this.store.select(s => s.annotation.selectedAnnotations)
+      .filter(() => !!this.svgAnnotationContainer)
+      .subscribe(selection => {
+        // Remove previous selections // TODO does not work properly
+        this.svgAnnotationContainer.select('.bbox').each((i, element) => {
+          if (element[0].node.parentElement) {
+            element[0].node.parentElement.removeChild(element[0].node);
+          }
+        });
+
+        // Add new selections
+        selection
+          .map(uuid => SVG.get(uuid))
+          .filter(item => (item && item.type !== 'g'))
+          .forEach(item => {
+            const bbox = item.bbox();
+            this.svgAnnotationContainer.rect(bbox.width, bbox.height).addClass('bbox').move(bbox.x, bbox.y);
+          });
+
       });
 
   }
@@ -297,6 +330,14 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.socketSubscr) {
       this.socketSubscr.unsubscribe();
     }
+    if (this.annotationSubscr) {
+      this.annotationSubscr.unsubscribe();
+    }
+    if (this.annotationSelectionSubscr) {
+      this.annotationSelectionSubscr.unsubscribe();
+    }
+
+    this.store.dispatch(new ClearAnnotationWorkspace());
   }
 
 }

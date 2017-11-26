@@ -4,7 +4,7 @@
 
     <p class="page-title mat-title">Page {{i + 1}}</p>
 
-    <mat-card *ngFor="let annotation of slides | toArray; let i = index">
+    <mat-card *ngFor="let annotation of slides | toArray; let i = index" (click)="onSelect(annotation)" [ngClass]="{'selected': selection.indexOf(annotation.uuid) !== -1}">
 
       <mat-card-content>
         <div fxLayout="row" fxLayoutAlign="center center">
