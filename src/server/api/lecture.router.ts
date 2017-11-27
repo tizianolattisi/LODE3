@@ -8,7 +8,7 @@ import {Annotation, IAnnotation} from '../models/db/Annnotation';
 import {PdfCreator} from '../services/pdf-creator';
 
 import * as fs from 'fs';
-import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from 'server/commons/config';
+import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from '../commons/config';
 
 const PATH = '/lecture';
 
