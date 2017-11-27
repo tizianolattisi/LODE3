@@ -30,7 +30,9 @@ export class PencilTool extends Tool<PencilData> {
 
   onDragStart = (event: any) => {
 
-    this.currentPath = this.getAnnotationContainer().path(`M${event.offsetX} ${event.offsetY}`) as Path;
+    this.currentPath = this.getAnnotationContainer().path(
+      `M${this.normalizePointX(event.offsetX)} ${this.normalizePointY(event.offsetY)}`
+    ) as Path;
     this.currentPath.fill({color: 'none'});
 
     this.getCurrentStroke().combineLatest(this.getCurrentColor()).subscribe(([width, color]) => {
@@ -46,7 +48,7 @@ export class PencilTool extends Tool<PencilData> {
       // } else {
       //   (this.currentPath as any).plot(`${d} C${event.offsetX} ${event.offsetY}`)
       // }
-      (this.currentPath as any).plot(`${d} L${event.offsetX} ${event.offsetY}`)
+      (this.currentPath as any).plot(`${d} L${this.normalizePointX(event.offsetX)} ${this.normalizePointY(event.offsetY)}`)
     }
 
   }

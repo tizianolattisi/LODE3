@@ -7,7 +7,7 @@ import {SetColor} from '../../store/editor/editor.actions';
 import {OpenNote} from '../../store/annotation/annotation.actions';
 import {G} from 'svg.js';
 
-export const PL_RADIUS = 40;
+export const PL_RADIUS = 80;
 
 export const PL_ICON_PATH = `M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M6,9H18V11H6M14,14H6V12H14M18,8H6V6H18`;
 
@@ -33,8 +33,8 @@ export class NoteTool extends Tool<NoteData> {
   onClick = (event: MouseEvent) => {
 
     this.getCurrentColor().subscribe(color => {
-      const x = event.offsetX - (PL_RADIUS / 2);
-      const y = event.offsetY - (PL_RADIUS / 2);
+      const x = this.normalizePointX(event.offsetX) - (PL_RADIUS / 2);
+      const y = this.normalizePointY(event.offsetY) - (PL_RADIUS / 2);
 
       const placeholder = this.drawPlaceholder(x, y, color);
 
@@ -61,8 +61,8 @@ export class NoteTool extends Tool<NoteData> {
   private drawPlaceholder(x: number, y: number, color: string): G {
     const group = this.getAnnotationContainer().group();
     group.translate(x, y);
-    group.circle(PL_RADIUS).addClass('note-placeholder').fill({color}).stroke({color: lightenDarkenColor(color, 20)});
-    group.path(PL_ICON_PATH).fill('#FFF').translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+    group.circle(PL_RADIUS).addClass('note-placeholder').fill({color}).stroke({color: lightenDarkenColor(color, 20), width: 5});
+    group.path(PL_ICON_PATH).fill('#FFF').transform({scaleX: 2, scaleY: 2}).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
 
     return group;
   }

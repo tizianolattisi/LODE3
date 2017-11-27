@@ -214,3 +214,9 @@ typings/
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/node,maven,angular,webstorm,intellij+iml,visualstudiocode
+
+
+# Logs
+
+err.log
+out.log

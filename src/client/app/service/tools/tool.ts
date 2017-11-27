@@ -5,6 +5,7 @@ import {AppState} from '../../store/app-state';
 import {AddAnnotation} from '../../store/annotation/annotation.actions';
 import {Doc} from 'svg.js';
 import {Observable} from 'rxjs/Observable';
+import {CANVAS_SIZE, getCanvasHeight} from '../../shared/canvas-size';
 
 
 import 'rxjs/add/operator/take';
@@ -98,5 +99,13 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
     });
   };
 
+  normalizePointX(point: number): number {
+    return (point * CANVAS_SIZE.W) / this.annotationContainer.width();
+  }
+
+  normalizePointY(point: number): number {
+    return (point * getCanvasHeight(this.annotationContainer.width(), this.annotationContainer.height())) /
+      this.annotationContainer.height();
+  }
 
 }

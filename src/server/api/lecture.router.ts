@@ -1,9 +1,14 @@
 import * as chalk from 'chalk';
 import {Router} from 'express';
-import {Lecture} from '../models/db/Lecture';
+import {Lecture, Screenshot} from '../models/db/Lecture';
 import {ErrorResponse} from '../models/api/ErrorResponse';
 import {LiveLectureService} from '../services/live.lecture.service';
 import {User} from '../models/db/User';
+import {Annotation, IAnnotation} from '../models/db/Annnotation';
+import {PdfCreator} from '../services/pdf-creator';
+
+import * as fs from 'fs';
+import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from 'server/commons/config';
 
 const PATH = '/lecture';
 
@@ -195,6 +200,42 @@ router.post(PATH + '/:lectureId/verifypin', (req, res, next) => {
  * Create a pdf with all the slides and the annotations of a student for a lecture.
  */
 router.get(PATH + '/:lectureId/pdf', (req, res, next) => {
+
+  const userId = req.user.id;
+  const lectureId = req.params['lectureId'];
+
+
+  Lecture.findOne({uuid: this.lectureId})
+    .then(lecture => {
+
+      Annotation.find({userId, lectureId})
+        .then((annotations: IAnnotation[]) => {
+
+
+          const creator = new PdfCreator();
+
+          const screenshotFolderUrl = `${STORAGE_PATH}/${lecture.uuid}/${STORAGE_SLIDES_FOLDER}`;
+
+          (lecture.screenshots as Screenshot[]).forEach((screenshot: Screenshot, index) => {
+            const screenshotPath = `${screenshotFolderUrl}/${screenshot.fileName}`;
+
+            const file = fs.readFileSync(screenshotPath);
+
+            creator.addSlide(file, annotations.filter(a => a.slideId === screenshot._id));
+
+
+          });
+
+
+          creator.complete();
+          // TODO return
+        })
+        .catch(e => next(e));
+
+    })
+    .catch(e => next(e));
+
+
 
   // TODO implement
   return res.sendStatus(501);

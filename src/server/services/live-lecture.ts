@@ -44,7 +44,9 @@ export class LiveLecture {
 
     this.nextScreenshot$ = new BehaviorSubject(null);
     this.nextScreenshotObs$ = this.nextScreenshot$.asObservable();
-    console.log(chalk.default.green(`> New live lecture registered to server (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`));
+    console.log(
+      chalk.default.green(`> New live lecture registered to server (id: ${this.lectureId}, pin: ${this.pin}, started: ${this.started})`)
+    );
   }
 
   getPin() {

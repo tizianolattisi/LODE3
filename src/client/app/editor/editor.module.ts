@@ -15,6 +15,7 @@ import {NotesBarComponent} from './notes-bar/notes-bar.component';
 import {ToArrayPipe} from './to-array.pipe';
 import {SharedModule} from '../shared/shared.module';
 import {ColorPickerModule} from 'ngx-color-picker';
+import {SameSizeDirective} from './same-size.directive';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import {ColorPickerModule} from 'ngx-color-picker';
     LateralBarVideoComponent,
     ToolsBarComponent,
     NotesBarComponent,
-    ToArrayPipe
+    ToArrayPipe,
+    SameSizeDirective
   ]
 })
 export class EditorModule {}

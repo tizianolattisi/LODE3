@@ -79,8 +79,10 @@
 
       <div class="slide-container">
         <div class="slide-container-inner">
-          <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight #imageContainer>
-          <svg class="annotation-container" l3FxFullHeight #annotationContainer></svg>
+          <!-- <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight #imageContainer> -->
+          <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight #imageContainer l3SameSize
+          resizeElemId="annotationContainer">
+          <svg class="annotation-container" id="annotationContainer" l3FxFullHeight #annotationContainer></svg>
         </div>
       </div>
 

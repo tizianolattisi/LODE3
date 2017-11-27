@@ -30,16 +30,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../store/app-state';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Doc} from 'svg.js';
+import {Observable} from 'rxjs/Observable';
 
 import * as LectureActions from '../../store/lecture/lecture.actions';
+import * as SVG from 'svg.js';
 
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
-
-import * as SVG from 'svg.js';
-import {Observable} from 'rxjs/Observable';
 
 
 @Component({
@@ -167,11 +166,6 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         this.currentSlideIndex = index;
         this.currentSlide = index < 0 ? null : slides[index];
 
-        if (this.currentSlide && this.currentSlide.img) {
-          // Update annotation container size
-          this.updateAnnotationContainer();
-        }
-
         if (index !== -1 && this.currentSlide) {
           // Fetch annotations // TODO if not already done
           this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide._id}));
@@ -256,22 +250,6 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
 
-  }
-
-  private updateAnnotationContainer() {
-    // Set dimensions // TODO set it correctly
-
-    setTimeout(() => {
-      if (this.annotationContainer && this.imageContainer) {
-        this.annotationContainer.nativeElement.setAttribute('width', this.imageContainer.nativeElement.width);
-        this.annotationContainer.nativeElement.setAttribute('height', '100%');
-        this.annotationContainer.nativeElement.setAttribute(
-          'viewBox', `0 0 ${this.imageContainer.nativeElement.width} ${this.imageContainer.nativeElement.height}`
-          // 'viewBox', `0 0 1920 1080`
-        );
-      }
-
-    }, 300);
   }
 
   private convertAnnotations(anns: Annotation<DataType>[]): {[slideId: string]: {[uuid: string]: Annotation<DataType>}} {

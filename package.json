@@ -50,6 +50,7 @@
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
     "express-validation": "^1.0.2",
+    "hummus": "^1.0.83",
     "install": "^0.10.2",
     "joi": "^13.0.2",
     "jsonwebtoken": "^8.1.0",
