@@ -1,12 +1,11 @@
 import {base64ArrayBuffer} from './array-to-base64';
 import {Lecture} from './model/lecture';
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {toApiErrorResponse} from './to-error-response';
 import {Observable} from 'rxjs/Rx';
 import {ErrorResponse} from './model/error-response';
 import {of} from 'rxjs/observable/of';
-import {HttpHeaders} from '@angular/common/http';
 import {Screenshot} from './model/screenshot';
 
 @Injectable()
@@ -31,9 +30,16 @@ export class LectureService {
       .catch((err: ErrorResponse) => of(false));
   }
 
-  getScreenshot(lectureId: string, pin: string): Observable<Screenshot> {
+  getScreenshot(lectureId: string, pin: string, blank?: boolean): Observable<Screenshot> {
     const headers = new HttpHeaders({'pin': pin});
-    return this.http.get<string>(`/api/lecture/${lectureId}/screenshot`, {headers})
+
+    let params = new HttpParams();
+
+    if (blank) {
+      params = params.append('blank', 'true');
+    }
+
+    return this.http.get<string>(`/api/lecture/${lectureId}/screenshot`, {headers, params})
       .catch(toApiErrorResponse);
   }
 
@@ -43,10 +49,14 @@ export class LectureService {
   }
 
   getScreenshotImage(lectureId: string, screenshot: Screenshot): Observable<Screenshot> {
-    return this.http.get(`/storage/${lectureId}/slides/${screenshot.fileName}`, {responseType: 'arraybuffer'})
-      .map(arrayBuffer => base64ArrayBuffer(arrayBuffer)) // Convert binary img to bas64
-      .map(img => ({...screenshot, img})) // Return screenshot with data + img
-      .catch(toApiErrorResponse);
+    if (screenshot.fileName === 'blank') {
+      return of({...screenshot});
+    } else {
+      return this.http.get(`/storage/${lectureId}/slides/${screenshot.fileName}`, {responseType: 'arraybuffer'})
+        .map(arrayBuffer => base64ArrayBuffer(arrayBuffer)) // Convert binary img to bas64
+        .map(img => ({...screenshot, img})) // Return screenshot with data + img
+        .catch(toApiErrorResponse);
+    }
   }
 
 }

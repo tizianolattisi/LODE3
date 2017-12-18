@@ -6,11 +6,14 @@
     <!-- LEFT BAR  - NAVIGATION BAR -->
     <div fxLayout="row" fxLayoutAlign="center center">
 
+      <button mat-icon-button (click)="onBlankPage()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
+        <mat-icon svgIcon="blank-page"></mat-icon>
+      </button>
+
       <button mat-icon-button (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
         <mat-icon svgIcon="camera-enhance" *ngIf="screenshotStatus !== 'pending'"></mat-icon>
         <mat-spinner *ngIf="screenshotStatus === 'pending'"></mat-spinner>
       </button>
-
 
       <button mat-icon-button (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
         <mat-icon svgIcon="chevron-left"></mat-icon>
@@ -80,8 +83,8 @@
       <div class="slide-container">
         <div class="slide-container-inner">
           <!-- <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight #imageContainer> -->
-          <img class="image-container" [src]="'data:image/png;base64,' + currentSlide?.img" l3FxFullHeight #imageContainer l3SameSize
-          resizeElemId="annotationContainer">
+          <img class="image-container" [src]="currentSlide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + currentSlide?.img)"
+            l3FxFullHeight #imageContainer l3SameSize resizeElemId="annotationContainer">
           <svg class="annotation-container" id="annotationContainer" l3FxFullHeight #annotationContainer></svg>
         </div>
       </div>
@@ -99,6 +102,10 @@
 
       <button mat-mini-fab (click)="onSlidePrev()" [disabled]="currentSlideIndex === 0">
         <mat-icon svgIcon="chevron-left"></mat-icon>
+      </button>
+
+      <button mat-fab (click)="onBlankPage()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">
+        <mat-icon svgIcon="blank-page"></mat-icon>
       </button>
 
       <button mat-fab (click)="onScreenshot()" [disabled]="!lecture?.live || screenshotStatus === 'pending'">

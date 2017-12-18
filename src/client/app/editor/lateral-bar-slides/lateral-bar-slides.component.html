@@ -3,7 +3,7 @@
   <mat-card *ngFor="let slide of slides$ | async; let i = index" (click)="onSelect(i)">
 
     <mat-card-content>
-      <img [src]="'data:image/png;base64,' + slide.img" l3FxFullHeight l3FxFullWidth>
+      <img [src]="slide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + slide?.img)" l3FxFullHeight l3FxFullWidth>
     </mat-card-content>
 
     <mat-card-footer>

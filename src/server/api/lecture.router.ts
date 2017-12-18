@@ -1,6 +1,6 @@
 import * as chalk from 'chalk';
 import {Router} from 'express';
-import {Lecture, Screenshot} from '../models/db/Lecture';
+import {Lecture, Screenshot, IScreenshotComplete, IScreenshot} from '../models/db/Lecture';
 import {ErrorResponse} from '../models/api/ErrorResponse';
 import {LiveLectureService} from '../services/live.lecture.service';
 import {User} from '../models/db/User';
@@ -9,6 +9,7 @@ import {PdfCreator} from '../services/pdf-creator';
 
 import * as fs from 'fs';
 import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from '../commons/config';
+import {ObjectId} from 'bson';
 
 const PATH = '/lecture';
 
@@ -94,7 +95,25 @@ router.get(PATH + '/:lectureId/myscreenshots', (req, res, next) => {
             return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
           }
 
-          const ss = lecture.screenshots.filter(s => userScreenshots.indexOf(s.fileName) !== -1);
+          // const ss = lecture.screenshots.filter(s => userScreenshots.indexOf(s.fileName) !== -1);
+
+          const lIds = lecture.screenshots.map(s => s._id).map(id => id.toHexString());
+
+          const ss: IScreenshot[] = userScreenshots.map(screenShotId => {
+
+            const index = lIds.indexOf(screenShotId);
+
+            return (index !== -1) ?
+              lecture.screenshots[index] : // Return the screenshot
+              ({                           // Return blank screenshot
+                _id: screenShotId,
+                fileName: 'blank',
+                img: 'blank',
+                name: '',
+                timestamp: Date.now()
+              } as IScreenshot);
+
+          }).filter(s => !!s);
 
           res.json(ss);
         })
@@ -113,6 +132,8 @@ router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
   const lectureId = req.params['lectureId'];
   const pin = req.header('pin');
 
+  const blank = req.query['blank'];
+
   // Request has no pin
   if (!pin) {
     return res.status(400).send(new ErrorResponse('missing-pin', 'Pin for live lecture is missing'));
@@ -128,49 +149,86 @@ router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
   console.log(chalk.default.blue(`> User "${userId}" requests a screenshot for lecture "${lectureId}".`));
 
 
-  LiveLectureService.getNextScreenshot(lectureId)
-    .subscribe(screenshot => {
+  if (blank) {
+    // User asked a new blank page where take annotations
 
-      // Save screenshot into user's lectures list
-      User.findById(userId)
-        .then(user => {
-          const userLecture = user.lectures.filter(l => l.uuid === lectureId)[0];
+    // Save blank page into user's lectures list
+    User.findById(userId)
+      .then(user => {
+        const userLecture = user.lectures.filter(l => l.uuid === lectureId)[0];
 
-          if (userLecture) {
-            // TODO check if user has already the screenshot (maybe using Mongo index)
-            if (userLecture.screenshots.indexOf(screenshot.fileName) === -1) {
-              userLecture.screenshots.push(screenshot.fileName);
-            } else {
-              return res.status(400).send(
-                new ErrorResponse('no-new-screenshot', 'Current screenshot is already in user\'s screenshot list')
-              );
+        const blankId = new ObjectId().toHexString();
+        if (userLecture) {
+          userLecture.screenshots.push(blankId);
+        } else { // First screenshot for this lecture
+          user.lectures.push({uuid: lectureId, screenshots: [blankId]});
+        }
+
+        user.save()
+          .then(() => {
+            res.json({
+              _id: blankId,
+              fileName: 'blank',
+              img: 'blank',
+              name: '',
+              timestamp: new Date().getTime() // TODO should be saved in db
+            } as IScreenshotComplete);
+          })
+          .catch(err => next(err));
+
+      })
+      .catch(err => next(err));
+
+
+  } else {
+
+    // User request a real screenshot from the lecture
+
+    LiveLectureService.getNextScreenshot(lectureId)
+      .subscribe(screenshot => {
+
+        // Save screenshot into user's lectures list
+        User.findById(userId)
+          .then(user => {
+            const userLecture = user.lectures.filter(l => l.uuid === lectureId)[0];
+
+            if (userLecture) {
+              // TODO check if user has already the screenshot (maybe using Mongo index)
+              if (userLecture.screenshots.indexOf(screenshot._id) === -1) {
+                userLecture.screenshots.push(screenshot._id);
+              } else {
+                return res.status(400).send(
+                  new ErrorResponse('no-new-screenshot', 'Current screenshot is already in user\'s screenshot list')
+                );
+              }
+            } else { // First screenshot for this lecture
+              user.lectures.push({uuid: lectureId, screenshots: [screenshot._id]});
             }
-          } else { // First screenshot for this lecture
-            user.lectures.push({uuid: lectureId, screenshots: [screenshot.fileName]});
-          }
 
-          user.save()
-            .then(() => {
-              res.json(screenshot);
-            })
-            .catch(err => next(err));
+            user.save()
+              .then(() => {
+                res.json(screenshot);
+              })
+              .catch(err => next(err));
 
-        })
-        .catch(err => next(err));
+          })
+          .catch(err => next(err));
 
-      // User.update(
-      //   {_id: userId, 'lectures._id': lectureId},
-      //   {'$push': {'lectures.$.screenshots': screenshot.fileName}}
-      // )
-      //   .then(() => {
-      //     return res.json(screenshot);
-      //   })
-      //   .catch(err => next(err));
+        // User.update(
+        //   {_id: userId, 'lectures._id': lectureId},
+        //   {'$push': {'lectures.$.screenshots': screenshot._id}}
+        // )
+        //   .then(() => {
+        //     return res.json(screenshot);
+        //   })
+        //   .catch(err => next(err));
 
 
-    }, err => {
-      return next(err);
-    });
+      }, err => {
+        return next(err);
+      });
+  }
+
 });
 
 /**

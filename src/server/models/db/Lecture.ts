@@ -17,6 +17,7 @@ export interface Lecture extends ILecture, mongoose.Document {
 }
 
 export interface IScreenshot {
+  _id: any;
   fileName: string;
   name?: string;
   timestamp: number;

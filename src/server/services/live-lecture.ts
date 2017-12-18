@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/take';
+import {ObjectId} from 'bson';
 
 
 export type ScreenshotStatus = 'no-updates' | 'new-available' | 'fetch-pending';
@@ -111,6 +112,7 @@ export class LiveLecture {
         console.error(err); // TODO handle error
       } else {
         const lectureScreenshot: IScreenshot = {
+          _id: new ObjectId().toHexString(),
           fileName: screenshotFile,
           name: name ? name : '',
           timestamp: timestamp

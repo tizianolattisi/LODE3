@@ -17,6 +17,7 @@ import {
   SetCurrentLecture,
   SetUserScreenshots,
   UpdateLectureList,
+  GetBlankPage,
 } from './lecture.actions';
 
 import * as LectureActions from './lecture.actions';
@@ -68,9 +69,6 @@ export class LectureEffects {
     .map(a => a.payload)
     .withLatestFrom(this.store.select(s => s.lecture.currentLecture))
     .switchMap(([ss, lecture]) =>
-
-      // TODO lecture can be null
-
       // Foreach screenshot download it and save base64
       Observable.forkJoin<Screenshot>(ss.map(screenshot => this.lectureService.getScreenshotImage(lecture.uuid, screenshot)))
         .map(updatedSS => updatedSS.length > 0 ?
@@ -96,6 +94,20 @@ export class LectureEffects {
             verticalPosition: 'bottom'
           });
         }
+        this.store.dispatch(new LectureActions.SetScreenshotStatus('done'));
+      });
+
+    });
+
+  @Effect({dispatch: false})
+  getBlankPage$ = this.actions$.ofType<GetBlankPage>(ActionTypes.GET_BLANK_PAGE)
+    .map(a => a.payload)
+    .do(payload => {
+
+      this.lectureService.getScreenshot(payload.lectureId, payload.pin, true).subscribe(s => {
+        this.store.dispatch(new LectureActions.GetScreenshotComplete(s));
+      }, err => {
+        console.error('Error while getting blank page', err);
         this.store.dispatch(new LectureActions.SetScreenshotStatus('done'));
       });
 

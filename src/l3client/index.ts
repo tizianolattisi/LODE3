@@ -91,7 +91,7 @@ setInterval(() => {
   // Inform server about current slide changed
   socket.emit(LectureSocketEvents.Client.NEW_SCREENSHOT_AVAILABLE);
   console.log('> Screenshot changed: ' + currentSlide);
-}, 10000);
+}, 5000);
 
 // 6) Quando il server richiede uno screenshot -> invia al server lo screenshot e il suo timestamp /////////////////////
 

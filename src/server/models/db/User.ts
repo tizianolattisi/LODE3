@@ -86,8 +86,8 @@ UserSchema.set('toJSON', {getters: false, virtuals: false});
   return ret;
 };
 
-UserSchema.index({email: 1}, {unique: true});
-UserSchema.index({'lectures.id': 1}, {unique: true});
+// UserSchema.index({email: 1}, {unique: true});
+// UserSchema.index({'lectures.id': 1}, {unique: true});
 // TODO "Foreign keys" for lectures and screenshots
 
 export const User = mongoose.model<IUser>('User', UserSchema);

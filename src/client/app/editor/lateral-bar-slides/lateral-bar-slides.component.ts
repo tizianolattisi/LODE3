@@ -4,6 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import {AppState} from '../../store/app-state';
 import {SetCurrentSlide} from '../../store/lecture/lecture.actions';
 import {Screenshot} from '../../service/model/screenshot';
+import {map} from 'rxjs/operators/map';
+import {distinctUntilChanged} from 'rxjs/operators';
 
 @Component({
   selector: 'l3-lateral-bar-slides',
@@ -18,7 +20,7 @@ export class LateralBarSlidesComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.slides$ = this.store.select(s => s.lecture.slides);
+    this.slides$ = this.store.select(s => s.lecture).pipe(map(l => l.slides), distinctUntilChanged());
   }
 
   onSelect(slideIndex: number) {

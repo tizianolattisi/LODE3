@@ -65,7 +65,7 @@ export class NoteWindowComponent implements OnChanges {
     this.clearTimeout();
     this.saveTimer = setTimeout(() => {
       this.saveNote(this.note.data.title, value.html);
-    }, 5000);
+    }, 3000);
   }
 
   private clearTimeout() {

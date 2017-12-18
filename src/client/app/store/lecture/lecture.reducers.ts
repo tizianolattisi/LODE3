@@ -56,7 +56,13 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
       return {
         ...state,
         currentLecture: action.payload,
-        currentLectureFetchError: null
+        currentLectureFetchError: null,
+
+        // Reset current lecture data
+        slides: [],
+        slidesError: null,
+        currentSlideIndex: -1,
+        snapshotStatus: 'done'
       };
 
     case ActionTypes.SET_CURRENT_PIN:

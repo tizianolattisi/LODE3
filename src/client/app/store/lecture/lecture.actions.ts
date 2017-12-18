@@ -28,6 +28,7 @@ export const enum ActionTypes {
   PREV_SLIDE = '[Lecture] PREV_SLIDE',
   NEXT_SLIDE = '[Lecture] NEXT_SLIDE',
   GET_SCREENSHOT = '[Lecture] GET_SCREENSHOT',
+  GET_BLANK_PAGE = '[Lecture] GET_BLANK_PAGE',
   SET_SCREENSHOT_STATUS = '[Lecture] SET_SCREENSHOT_STATUS'
 
 };
@@ -150,6 +151,12 @@ export class GetScreenshot implements Action {
   constructor(public payload: {lectureId: string; pin: string}) {}
 }
 
+export class GetBlankPage implements Action {
+  readonly type = ActionTypes.GET_BLANK_PAGE;
+
+  constructor(public payload: {lectureId: string; pin: string}) {}
+}
+
 export class SetScreenshotStatus implements Action {
   readonly type = ActionTypes.SET_SCREENSHOT_STATUS;
 
@@ -177,4 +184,5 @@ export type All
   | PrevSlide
   | NextSlide
   | GetScreenshot
+  | GetBlankPage
   | SetScreenshotStatus;

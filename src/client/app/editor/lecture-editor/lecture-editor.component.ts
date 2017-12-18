@@ -140,6 +140,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
           this.route.params.first().subscribe(params => this.store.dispatch(new LectureActions.FetchLecture(params['lectureId'])));
         }
 
+        this.cd.detectChanges();
       });
 
     // Init slides (listen for slides of the lecture present in the store)
@@ -165,6 +166,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         // Update current slide
         this.currentSlideIndex = index;
         this.currentSlide = index < 0 ? null : slides[index];
+        this.clearAnnotationContainer();
 
         if (index !== -1 && this.currentSlide) {
           // Fetch annotations // TODO if not already done
@@ -200,6 +202,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         msg.event === WsFromServerEvents.ANNOTATION_DELETE_FAIL) {
         this.snackBar.open('An error occurred while saving the annotation', 'Ok');
       }
+      this.cd.detectChanges();
     });
 
 
@@ -210,11 +213,8 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       // .filter(anns => !!anns)
       .subscribe(anns => {
 
-        // Clear container
-        if (this.annotationContainer.nativeElement) {
-          // (SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc).clear();
-          this.annotationContainer.nativeElement.innerHTML = ''; // TODO do better
-        }
+        this.clearAnnotationContainer();
+
 
         this.currentAnnotations = Object.keys(anns || {}).map(uuid => anns[uuid]);
         this.currentAnnotations.forEach(a => {
@@ -223,7 +223,6 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             tool.drawAnnotation(a);
           }
         });
-
         this.cd.detectChanges();
       });
 
@@ -248,6 +247,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             this.svgAnnotationContainer.rect(bbox.width, bbox.height).addClass('bbox').move(bbox.x, bbox.y);
           });
 
+        this.cd.detectChanges();
       });
 
   }
@@ -270,6 +270,11 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     this.store.dispatch(new LectureActions.GetScreenshot({lectureId: this.lecture.uuid, pin: this.pin}));
   }
 
+  onBlankPage() {
+    // Request to add a new blank page to the collection using the pin
+    this.store.dispatch(new LectureActions.GetBlankPage({lectureId: this.lecture.uuid, pin: this.pin}));
+  }
+
   onTabSelect(tab: string) {
     this.currentTab = (this.currentTab === tab) ? null : tab;
     this.cd.detectChanges();
@@ -290,6 +295,14 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     const index = this.tools.map(t => t.TYPE).indexOf(type);
     return index !== -1 ? this.tools[index] : null;
+  }
+
+  private clearAnnotationContainer() {
+    // Clear container
+    if (this.annotationContainer.nativeElement) {
+      // (SVG.adopt(this.annotationContainer.nativeElement) as SVG.Doc).clear();
+      this.annotationContainer.nativeElement.innerHTML = '';
+    }
   }
 
   ngOnDestroy() {

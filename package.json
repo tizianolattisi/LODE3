@@ -8,6 +8,7 @@
     "forever:stop": "forever stopall",
     "build:prod": "cross-env NODE_ENV=production npm run client:build:prod && npm run server:build:prod",
     "client:serve": "ng serve --proxy-config proxy.conf.js",
+    "client:serve:prod": "ng serve --proxy-config proxy.conf.js --prod",
     "client:build": "ng build",
     "client:build:prod": "cross-env NODE_ENV=production ng build --prod",
     "client:test": "ng test",
