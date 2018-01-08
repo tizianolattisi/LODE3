@@ -17,7 +17,11 @@ const initialState: LectureState = {
   slides: [],
   slidesError: null,
   currentSlideIndex: -1,
-  snapshotStatus: 'done'
+  snapshotStatus: 'done',
+
+  dowloadPdfPending: false,
+  dowloadPdfSuccess: false,
+  dowloadPdfError: null,
 }
 
 export function lectureReducer(state: LectureState = initialState, action: Action): LectureState {
@@ -138,6 +142,28 @@ export function lectureReducer(state: LectureState = initialState, action: Actio
       return {
         ...state,
         snapshotStatus: action.payload
+      };
+
+    case ActionTypes.DOWNLOAD_PDF:
+      return {
+        ...state,
+        dowloadPdfPending: true,
+        dowloadPdfSuccess: false,
+        dowloadPdfError: null
+      };
+
+    case ActionTypes.DOWNLOAD_PDF_SUCCESS:
+      return {
+        ...state,
+        dowloadPdfPending: false,
+        dowloadPdfSuccess: true
+      };
+
+    case ActionTypes.DOWNLOAD_PDF_ERROR:
+      return {
+        ...state,
+        dowloadPdfPending: false,
+        dowloadPdfError: action.payload
       };
 
     default:

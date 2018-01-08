@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
@@ -23,13 +23,16 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
 
   private selectedToolTypeSubscr: Subscription;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.tools$ = this.store.select(s => s.editor.tools);
     this.stroke$ = this.store.select(s => s.editor.stroke);
     this.color$ = this.store.select(s => s.editor.color);
-    this.selectedToolTypeSubscr = this.store.select(s => s.editor.selectedTool).subscribe(toolType => this.selectedToolType = toolType);
+    this.selectedToolTypeSubscr = this.store.select(s => s.editor.selectedTool).subscribe(toolType => {
+      this.selectedToolType = toolType;
+      this.cd.detectChanges();
+    });
   }
 
   onToolSelect(toolType: string) {

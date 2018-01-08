@@ -1,1 +1,19 @@
-<p></p>
+<div fxLayout="column" fxLayoutAlign="center center">
+
+  <span class="mat-subheading-1">Download a PDF of this lession</span>
+
+  <button *ngIf="!pending" mat-raised-button color="accent" fxFlex="auto" (click)="onDownload()">
+    <span>Download</span>
+    <mat-icon svgIcon="cloud-download"></mat-icon>
+  </button>
+
+  <div *ngIf="pending">
+    <span class="mat-subheading-1">Wait...</span>
+    <mat-spinner color="accent"></mat-spinner>
+  </div>
+
+  <span *ngIf="success$ | async" class="mat-subheading-1 success-text" fxFlexOffset="24px">Done! The PDF has been downloaded!</span>
+
+  <span *ngIf="error$ | async" class="mat-subheading-1 error-text" color="warn">An error occurred while creating the pdf</span>
+
+</div>

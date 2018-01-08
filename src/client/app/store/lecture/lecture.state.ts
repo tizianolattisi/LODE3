@@ -18,4 +18,8 @@ export interface LectureState {
   slidesError: ErrorResponse;
   currentSlideIndex: number;
   snapshotStatus: ScreenshotStatus;
+
+  dowloadPdfPending: boolean;
+  dowloadPdfSuccess: boolean;
+  dowloadPdfError: ErrorResponse;
 }

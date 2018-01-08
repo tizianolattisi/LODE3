@@ -9,6 +9,7 @@ import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import {Screenshot} from '../../service/model/screenshot';
 import {ClearAnnotationWorkspace} from '../annotation/annotation.actions';
+import {saveAs} from 'file-saver';
 import {
   ActionTypes,
   FetchLecture,
@@ -18,6 +19,9 @@ import {
   SetUserScreenshots,
   UpdateLectureList,
   GetBlankPage,
+  DownloadPdf,
+  DownloadPdfError,
+  DownloadPdfSuccess,
 } from './lecture.actions';
 
 import * as LectureActions from './lecture.actions';
@@ -110,8 +114,21 @@ export class LectureEffects {
         console.error('Error while getting blank page', err);
         this.store.dispatch(new LectureActions.SetScreenshotStatus('done'));
       });
-
     });
+
+
+  @Effect()
+  downloadPdf$ = this.actions$.ofType<DownloadPdf>(ActionTypes.DOWNLOAD_PDF)
+    .withLatestFrom(this.store.select(s => s.lecture.currentLecture))
+    .switchMap(([action, lecture]) =>
+      this.lectureService.downloadPdf(lecture.uuid)
+        .map(res => {
+          // Download pdf on device
+          saveAs(res, `${lecture.course || 'Lode'} - ${lecture.name}.pdf`);
+          return new DownloadPdfSuccess();
+        })
+        .catch(err => of(new DownloadPdfError(err)))
+    );
 
 
   constructor(

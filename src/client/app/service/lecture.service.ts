@@ -59,4 +59,8 @@ export class LectureService {
     }
   }
 
+  downloadPdf(lectureId: string): Observable<Blob> {
+    return this.http.get(`/api/lecture/${lectureId}/pdf`, {responseType: 'blob'});
+  }
+
 }

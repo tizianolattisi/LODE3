@@ -112,8 +112,8 @@ export default class Server {
     // User different namespaces for
     // 1. Socket used by annotation app
     // 2. Socket used by the Lode box
-    const annotationIO = io.of('/api/annotation');
-    const lectureIO = io.of('/api/lecture');
+    const annotationIO = io.of(`${SERVER_API_PATH}/annotation`);
+    const lectureIO = io.of(`${SERVER_API_PATH}/lecture`);
 
     // Setup auth on socket
     annotationIO.on('connection', socketIOJwt.authorize({

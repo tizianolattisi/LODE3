@@ -3,7 +3,7 @@ import {AppState} from '../../store/app-state';
 import {Store} from '@ngrx/store';
 import {Tool} from './tool';
 import {Annotation, NoteData} from '../model/annotation';
-import {SetColor} from '../../store/editor/editor.actions';
+import {SetColor, SelectTool} from '../../store/editor/editor.actions';
 import {OpenNote} from '../../store/annotation/annotation.actions';
 import {G} from 'svg.js';
 
@@ -42,6 +42,13 @@ export class NoteTool extends Tool<NoteData> {
         // When annotation is created, add click handler
         this.addHandlers(placeholder, ann.slideId, ann.uuid);
         placeholder.id(ann.uuid);
+
+        // Open note
+        this.store.dispatch(new OpenNote({slideId: ann.slideId, annotationId: ann.uuid}));
+
+        // Deselect tool
+        this.store.dispatch(new SelectTool('default'));
+
       });
     });
   };

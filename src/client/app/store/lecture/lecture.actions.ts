@@ -29,8 +29,11 @@ export const enum ActionTypes {
   NEXT_SLIDE = '[Lecture] NEXT_SLIDE',
   GET_SCREENSHOT = '[Lecture] GET_SCREENSHOT',
   GET_BLANK_PAGE = '[Lecture] GET_BLANK_PAGE',
-  SET_SCREENSHOT_STATUS = '[Lecture] SET_SCREENSHOT_STATUS'
+  SET_SCREENSHOT_STATUS = '[Lecture] SET_SCREENSHOT_STATUS',
 
+  DOWNLOAD_PDF = '[Lecture] DOWNLOAD_PDF',
+  DOWNLOAD_PDF_SUCCESS = '[Lecture] DOWNLOAD_PDF_SUCCESS',
+  DOWNLOAD_PDF_ERROR = '[Lecture] DOWNLOAD_PDF_ERROR'
 };
 
 
@@ -163,6 +166,23 @@ export class SetScreenshotStatus implements Action {
   constructor(public payload: ScreenshotStatus) {}
 }
 
+// Pdf download //////////////////////////////////////////////
+
+export class DownloadPdf implements Action {
+  readonly type = ActionTypes.DOWNLOAD_PDF;
+}
+
+export class DownloadPdfSuccess implements Action {
+  readonly type = ActionTypes.DOWNLOAD_PDF_SUCCESS;
+}
+
+export class DownloadPdfError implements Action {
+  readonly type = ActionTypes.DOWNLOAD_PDF_ERROR;
+
+  constructor(public payload: ErrorResponse) {}
+}
+
+
 
 export type All
   = UpdateLectureList
@@ -185,4 +205,7 @@ export type All
   | NextSlide
   | GetScreenshot
   | GetBlankPage
-  | SetScreenshotStatus;
+  | SetScreenshotStatus
+  | DownloadPdf
+  | DownloadPdfSuccess
+  | DownloadPdfError;

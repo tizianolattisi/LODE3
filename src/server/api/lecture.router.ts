@@ -6,8 +6,6 @@ import {LiveLectureService} from '../services/live.lecture.service';
 import {User} from '../models/db/User';
 import {Annotation, IAnnotation} from '../models/db/Annnotation';
 import {PdfCreator} from '../services/pdf-creator';
-
-import * as fs from 'fs';
 import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from '../commons/config';
 import {ObjectId} from 'bson';
 
@@ -262,77 +260,74 @@ router.get(PATH + '/:lectureId/pdf', (req, res, next) => {
   const userId = req.user.id;
   const lectureId = req.params['lectureId'];
 
+  try {
 
-  Lecture.findOne({uuid: this.lectureId})
-    .then(lecture => {
+    User.findById(userId)
+      .then(user => {
 
-      Annotation.find({userId, lectureId})
-        .then((annotations: IAnnotation[]) => {
+        const userLecture = user.lectures.filter(l => l.uuid === lectureId)[0];
+
+        if (!userLecture) {
+          return res.status(400).send(new ErrorResponse('not-found', 'User lecture not found'));
+        }
+
+        Lecture.findOne({uuid: lectureId})
+          .then(lecture => {
+
+            if (!lecture) {
+              return res.status(400).send(new ErrorResponse('not-found', 'Lecture not found'));
+            }
+
+            Annotation.find({userId, lectureId})
+              .then((annotations: IAnnotation[] = []) => {
+
+                // Merge user's lecture screenshots ids with extra info
+                const lectureScreenshotsIds = (lecture.screenshots as Screenshot[]).map(s => s._id.toString());
+
+                const screenshots = userLecture.screenshots.map(sId => {
+                  const index = lectureScreenshotsIds.indexOf(sId);
+
+                  if (index !== -1) {
+                    return lecture.screenshots[index];
+                  } else { // Blank page
+                    return {
+                      _id: new ObjectId(sId),
+                      fileName: 'blank',
+                      name: 'Blank page'
+                    } as Screenshot
+                  }
+                });
 
 
-          const creator = new PdfCreator();
+                // Create a pdf creator and start writing on pdf sreenshots and annotations
+                const creator = new PdfCreator(res, lecture.name);
 
-          const screenshotFolderUrl = `${STORAGE_PATH}/${lecture.uuid}/${STORAGE_SLIDES_FOLDER}`;
+                const screenshotFolderUrl = `${STORAGE_PATH}/${lecture.uuid}/${STORAGE_SLIDES_FOLDER}`;
 
-          (lecture.screenshots as Screenshot[]).forEach((screenshot: Screenshot, index) => {
-            const screenshotPath = `${screenshotFolderUrl}/${screenshot.fileName}`;
+                // For every screenshot -> one page
+                (screenshots as Screenshot[]).forEach((screenshot: Screenshot, index) => {
+                  const screenshotPath = screenshot.fileName === 'blank' ? null : `${screenshotFolderUrl}/${screenshot.fileName}`;
 
-            const file = fs.readFileSync(screenshotPath);
+                  // Write screenshot and annotations on pdf
+                  creator.addSlide(screenshotPath, annotations.filter(a => a.slideId === screenshot._id.toString()));
+                });
 
-            creator.addSlide(file, annotations.filter(a => a.slideId === screenshot._id));
+                creator.complete();
+
+                return;
+              })
+              .catch(e => next(e));
+
+          })
+          .catch(e => next(e));
+
+      })
+      .catch(err => next(err));
 
 
-          });
-
-
-          creator.complete();
-          // TODO return
-        })
-        .catch(e => next(e));
-
-    })
-    .catch(e => next(e));
-
-
-
-  // TODO implement
-  return res.sendStatus(501);
-  /*
-  let pdfHash = req.params.pdfId;
-  let pdfData: PdfCache = cache.get(pdfHash);
-
-  if (pdfData) {
-
-    // get annotations
-    Annotation.find({
-      pdfId: pdfData.hash,
-      uid: req.user.id
-    }).exec((err, annotations: IAnnotation[]) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (annotations.length == 0) {
-        // send pdf
-        res.set('Content-Type', 'application/pdf');
-        res.write(pdfData.data);
-        res.end();
-      } else {
-        // write annotations and send pdf
-        writeAnnotations(pdfData, annotations, (err, result) => {
-          if (err) {
-            return next(err);
-          }
-          res.set('Content-Type', 'application/pdf');
-          res.write(result);
-          res.end();
-        });
-      }
-    });
-  } else {
-    res.sendStatus(404);
+  } catch (err) {
+    next(err);
   }
-  */
 });
 
 export {router as LectureRouter, PATH as LECTURE_PATH};
