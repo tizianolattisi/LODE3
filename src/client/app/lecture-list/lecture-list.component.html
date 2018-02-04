@@ -1,0 +1,55 @@
+<div fxLayoutAlign="center center">
+  <mat-list fxFlex.lt-md="auto" fxFlex.md="80%" fxFlex.gt-md="40%">
+
+    <h3 mat-subheader>Live Lectures</h3>
+
+    <mat-expansion-panel *ngFor="let lecture of liveLectures$ | async" class="lecture-card">
+
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon svgIcon="rec" color="warn"></mat-icon>
+          <span class="mat-body-2">{{lecture.name}}</span>
+        </mat-panel-title>
+        <mat-panel-description>
+          <span *ngIf="lecture.course">{{lecture.course}}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div fxLayout="column">
+        <span class="mat-caption">Id: {{lecture.uuid}}</span>
+
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <div fxLayoutAlign="center center">
+            <b class="mat-body-2">PIN</b>
+            <mat-form-field fxFlexOffset="12px">
+              <input matInput [(ngModel)]="pin">
+            </mat-form-field>
+            <button mat-icon-button (click)="goToLiveLecture(lecture)">
+              <mat-icon svgIcon="chevron-right"></mat-icon>
+            </button>
+          </div>
+          <mat-error *ngIf="invalidPin">Invalid PIN!</mat-error>
+        </div>
+
+      </div>
+    </mat-expansion-panel>
+
+    <mat-divider></mat-divider>
+
+    <h3 mat-subheader>Your lectures</h3>
+    <ng-container *ngFor="let lecture of lectures$ | async">
+      <ng-container *ngIf="!lecture?.live">
+        <mat-card class="lecture-card" (click)="goToLecture(lecture)">
+          <mat-card-header fxLayout>
+            <mat-icon svgIcon="book-open"></mat-icon>
+            <span class="mat-body-2" fxFlexOffset="12px">{{lecture.name}}</span>
+          </mat-card-header>
+          <mat-card-content fxLayout="column" class="lecture-item-content">
+            <span class="mat-caption">Id: {{lecture.uuid}}</span>
+            <span class="mat-caption">Course: {{lecture.course}}</span>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </ng-container>
+  </mat-list>
+</div>

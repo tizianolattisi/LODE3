@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+$btn-size: 32px;
+.note {
+    padding: 12px;
+    margin: 16px;
+}
+
+.title {
+    font-size: 1.2rem;
+}
+
+button {
+    width: $btn-size;
+    height: $btn-size;
+    mat-icon {
+        width: $btn-size - 6px;
+        height: $btn-size - 6px;
+    }
+}
+
+.note-readonly {
+    max-height: 120px !important;
+}

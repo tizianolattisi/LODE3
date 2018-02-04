@@ -1,0 +1,44 @@
+<div fxLayout="column" class="app-wrapper">
+  <mat-toolbar color="primary">
+
+    <div fxLayout>
+      <!--<img src="" alt="Logo">-->
+      <span class="app-title" routerLink="/">Lode3</span>
+      <div *ngIf="currentLecture$ | async" fxFlexOffset="24px" class="lecture-title">
+        <b class="mat-body-2">{{(currentLecture$ | async).name}}</b>
+        <span class="mat-caption">{{(currentLecture$ | async).course}}</span>
+      </div>
+    </div>
+
+    <div fxFlex="auto">
+    </div>
+
+    <div fxLayout fxLayoutAlign="center center">
+      <button mat-raised-button routerLink='/lecture-list' *ngIf="email$ | async" fxFlexOffset="24px">Lectures</button>
+
+      <div fxFlexOffset="12px">
+        <ng-container *ngIf="!(email$ | async)">
+          <button mat-raised-button routerLink='/user/login'>Login</button>
+        </ng-container>
+
+        <ng-container *ngIf="email$ | async">
+
+          <div fxLayout fxLayoutAlign="center center" class="user-info">
+            <mat-icon svgIcon="account"></mat-icon>
+            <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
+          </div>
+
+          <button mat-icon-button (click)="onLogout()" fxFlexOffset="6px" class="user-info">
+            <mat-icon svgIcon="logout"></mat-icon>
+          </button>
+        </ng-container>
+      </div>
+
+    </div>
+
+  </mat-toolbar>
+
+  <main fxLayout fxLayoutAlign="center center">
+    <router-outlet></router-outlet>
+  </main>
+</div>

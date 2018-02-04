@@ -1,0 +1,29 @@
+@import '../../../style/variables';
+$color-size: 32px;
+.selected {
+    background: $color-accent;
+    color: $color-light;
+}
+
+.stroke-input {
+    width: 36px;
+    input {
+        text-align: center;
+    }
+}
+
+.divider {
+    width: 1px;
+    height: 24px;
+    margin: 12px;
+    background: #dddddd;
+    border: 0;
+}
+
+.color-picker {
+    width: $color-size;
+    height: $color-size;
+    border-radius: $color-size;
+    margin: 2px;
+    margin-right: 12px;
+}

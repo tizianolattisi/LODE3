@@ -1,0 +1,21 @@
+<div>
+
+  <mat-card>
+    <mat-card-title>Confirm Account</mat-card-title>
+
+    <mat-card-content *ngIf="success$ | async" class="success-box" fxLayout="column" fxLayoutAlign="center">
+      <p>The account has been activated! Now you can login.</p>
+      <button mat-raised-button routerLink="/user/login" color="accent">Login Page</button>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="loading$ | async">
+      <mat-spinner></mat-spinner>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="error$ | async">
+      <p>An error occurred while activating the account</p>
+    </mat-card-content>
+
+  </mat-card>
+
+</div>

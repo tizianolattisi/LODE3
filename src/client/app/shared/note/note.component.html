@@ -1,0 +1,29 @@
+<mat-card class="note" [style.background]="note?.data?.color || '#FFCA28'">
+
+  <mat-card-header>
+
+    <div fxLayout="row" fxLayoutAlign="center center" l3FxFullWidth>
+      <span class="title">{{note?.data?.title}}</span>
+
+      <span style="flex:1"></span>
+
+      <button mat-icon-button (click)="onDelete()">
+        <mat-icon svgIcon="delete"></mat-icon>
+      </button>
+
+      <button mat-icon-button (click)="onOpen()">
+        <mat-icon svgIcon="open"></mat-icon>
+      </button>
+    </div>
+
+  </mat-card-header>
+
+  <mat-card-content fxLayout="row">
+    <div fxFlex="100%" class="note-readonly">
+      <quill-editor [ngModel]="note?.data?.text" readOnly="true" placeholder="">
+        <div quill-editor-toolbar></div>
+      </quill-editor>
+    </div>
+  </mat-card-content>
+
+</mat-card>
