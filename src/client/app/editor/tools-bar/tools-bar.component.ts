@@ -20,12 +20,18 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
 
   tools$: Observable<ToolDescription[]>;
   selectedToolType: string;
+  selectedToolColor: string;
+
+  isTouchDevice: boolean;
+  colors: String[] = ['#FF0000', '#00FF00', '#0000FF'];
 
   private selectedToolTypeSubscr: Subscription;
+  private selectedToolColorSubscr: Subscription;
 
   constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.isTouchDevice = this.checkIsTouchDevice();
     this.tools$ = this.store.select(s => s.editor.tools);
     this.stroke$ = this.store.select(s => s.editor.stroke);
     this.color$ = this.store.select(s => s.editor.color);
@@ -33,10 +39,28 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
       this.selectedToolType = toolType;
       this.cd.detectChanges();
     });
+    this.selectedToolColorSubscr = this.store.select(s => s.editor.color).subscribe(toolColor => {
+      this.selectedToolColor = toolColor;
+      console.log(toolColor);
+      this.cd.detectChanges();
+    });
+  }
+
+  checkIsTouchDevice() {
+    var el = document.createElement('div');
+    el.setAttribute('ontouchstart', 'return;');
+    var check = typeof el.ontouchstart === "function";
+    return check;
   }
 
   onToolSelect(toolType: string) {
     this.store.dispatch(new SelectTool(toolType));
+  }
+
+  onColorPencilSelect(color: string) {
+    this.onColorChange(color);
+    this.onToolSelect('pencil');
+    this.onStrokeChange(16);
   }
 
   onStrokeChange(value: any) {
