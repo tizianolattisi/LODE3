@@ -6,6 +6,7 @@ import {AppState} from '../../store/app-state';
 import {SelectTool, SetStroke, SetColor} from '../../store/editor/editor.actions';
 import {ToolDescription} from '../../service/model/tool-description';
 import {ResetSelection, DeleteSelection} from '../../store/annotation/annotation.actions';
+import {checkIsTouchDevice} from '../../shared/touch-device-detect';
 
 @Component({
   selector: 'l3-tools-bar',
@@ -31,7 +32,7 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.isTouchDevice = this.checkIsTouchDevice();
+    this.isTouchDevice = checkIsTouchDevice();
     this.tools$ = this.store.select(s => s.editor.tools);
     this.stroke$ = this.store.select(s => s.editor.stroke);
     this.color$ = this.store.select(s => s.editor.color);
@@ -41,16 +42,8 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
     });
     this.selectedToolColorSubscr = this.store.select(s => s.editor.color).subscribe(toolColor => {
       this.selectedToolColor = toolColor;
-      console.log(toolColor);
       this.cd.detectChanges();
     });
-  }
-
-  checkIsTouchDevice() {
-    var el = document.createElement('div');
-    el.setAttribute('ontouchstart', 'return;');
-    var check = typeof el.ontouchstart === "function";
-    return check;
   }
 
   onToolSelect(toolType: string) {

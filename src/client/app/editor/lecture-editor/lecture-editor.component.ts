@@ -39,6 +39,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
+import {checkIsTouchDevice} from '../../shared/touch-device-detect';
 
 
 @Component({
@@ -59,6 +60,8 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private pin: string;
   lecture: Lecture;
+
+  isTouchDevice: boolean;
 
   slides: Screenshot[];
   currentSlide: Screenshot;
@@ -90,6 +93,10 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnInit() {
+
+
+    // Is a touch device?
+    this.isTouchDevice = checkIsTouchDevice();
 
     // Init tools
     this.store.dispatch(new SetTools(this.tools.map(t => t.getDescription())))
