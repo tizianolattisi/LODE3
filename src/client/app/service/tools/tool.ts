@@ -26,6 +26,9 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
   public abstract onDragStart: (event: any) => void;
   public abstract onDragMove: (event: any) => void;
   public abstract onDragStop: (event: any) => void;
+  public abstract onDragStartTouch: (event: any) => void;
+  public abstract onDragMoveTouch: (event: any) => void;
+  public abstract onDragStopTouch: (event: any) => void;
 
   constructor(protected store: Store<AppState>) {
     store.select(s => s.editor.annotationContainer).subscribe(a => {

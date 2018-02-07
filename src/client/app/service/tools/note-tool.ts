@@ -59,6 +59,12 @@ export class NoteTool extends Tool<NoteData> {
 
   onDragStop = (event: any) => {};
 
+  onDragStartTouch = (event: any) => {};
+
+  onDragMoveTouch = (event: any) => {};
+
+  onDragStopTouch = (event: any) => {};
+
   drawAnnotation(annotation: Annotation<NoteData>): void {
     const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
     this.addHandlers(placeholder, annotation.slideId, annotation.uuid);

@@ -38,9 +38,9 @@ export class EditorEffects {
         tool.onToolSelected();
         draw.click(tool.onClick);
 
-        draw.touchstart(tool.onDragStart);
-        draw.touchend(tool.onDragStop);
-        draw.touchmove(tool.onDragMove);
+        draw.touchstart(tool.onDragStartTouch);
+        draw.touchend(tool.onDragStopTouch);
+        draw.touchmove(tool.onDragMoveTouch);
 
         draw.mousedown(tool.onDragStart);
         draw.mouseup(tool.onDragStop);

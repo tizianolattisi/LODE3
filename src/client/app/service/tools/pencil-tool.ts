@@ -66,6 +66,52 @@ export class PencilTool extends Tool<PencilData> {
     this.currentPath = null;
   }
 
+  onDragStartTouch = (event: any) => {
+
+    event.preventDefault();
+
+    this.currentPath = this.getAnnotationContainer().path(
+      `M${this.normalizePointX(event.layerX)} ${this.normalizePointY(event.layerY)}`
+    ) as Path;
+    this.currentPath.fill({color: 'none'});
+
+    this.getCurrentStroke().combineLatest(this.getCurrentColor()).subscribe(([width, color]) => {
+      this.currentPath.stroke({color, width});
+    });
+  }
+
+  onDragMoveTouch = (event: any) => {
+
+    event.preventDefault();
+
+    if (this.currentPath) {
+      const d: string = this.currentPath.attr('d');
+      // if (d.indexOf('C') !== -1) {
+      //   (this.currentPath as any).plot(`${d} ${event.offsetX} ${event.offsetY}`)
+      // } else {
+      //   (this.currentPath as any).plot(`${d} C${event.offsetX} ${event.offsetY}`)
+      // }
+      (this.currentPath as any).plot(`${d} L${this.normalizePointX(event.layerX)} ${this.normalizePointY(event.layerY)}`)
+    }
+
+  }
+
+  onDragStopTouch = (event: any) => {
+
+    event.preventDefault();
+
+    this.addAnnotation({
+      path: this.currentPath.attr('d'),
+      color: this.currentPath.attr('stroke'),
+      width: +this.currentPath.attr('stroke-width')
+    }).subscribe(ann => {
+      this.addSelectionHadlers(this.currentPath, ann.uuid);
+      this.currentPath.id(ann.uuid);
+    });
+
+    this.currentPath = null;
+  }
+
   drawAnnotation(annotation: Annotation<PencilData>): void {
     const path = this.getAnnotationContainer().path(annotation.data.path);
     path.stroke({color: annotation.data.color, width: annotation.data.width});
