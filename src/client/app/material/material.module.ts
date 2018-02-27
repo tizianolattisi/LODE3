@@ -1,8 +1,8 @@
-import {HttpModule} from '@angular/http';
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {FxFullHeightDirective} from './fx-full-height.directive';
-import {FxFullWidthDirective} from './fx-full-width.directive';
+import { HttpModule } from '@angular/http';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FxFullHeightDirective } from './fx-full-height.directive';
+import { FxFullWidthDirective } from './fx-full-width.directive';
 import {
   MatButtonModule,
   MatIconModule,
@@ -12,7 +12,9 @@ import {
   MatListModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatMenuModule,
+  MatSliderModule
 } from '@angular/material';
 
 @NgModule({
@@ -27,7 +29,9 @@ import {
     MatListModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule,
+    MatSliderModule
   ],
   exports: [
     FlexLayoutModule,
@@ -41,11 +45,13 @@ import {
     MatProgressSpinnerModule,
     FxFullHeightDirective,
     FxFullWidthDirective,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule,
+    MatSliderModule
   ],
   declarations: [
     FxFullHeightDirective,
     FxFullWidthDirective
   ]
 })
-export class MaterialModule {}
+export class MaterialModule { }

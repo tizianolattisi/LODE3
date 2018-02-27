@@ -60,4 +60,10 @@ export class LectureListComponent implements OnInit {
     this.router.navigate(['editor', lecture.uuid]);
   }
 
+  viewLecture(lecture: Lecture) {
+    // Save current lecture
+    this.store.dispatch(new Lectureactions.SetCurrentLecture(lecture));
+    this.router.navigate(['video', lecture.uuid]);
+  }
+
 }

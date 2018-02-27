@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'l3-controls',
+  selector: 'controls',
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.scss']
 })
