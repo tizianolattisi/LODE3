@@ -8,6 +8,7 @@ import { NoteBoxComponent } from './note-box/note-box.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { ControlsComponent } from './controls/controls.component';
 import { MaterialModule } from '../material/material.module';
+import { NoteSliderComponent } from './note-slider/note-slider.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { MaterialModule } from '../material/material.module';
     RouterModule.forChild(videoRoutes),
     MaterialModule
   ],
-  declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent, TimelineComponent, ControlsComponent]
+  declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent, TimelineComponent, ControlsComponent, NoteSliderComponent]
 })
 export class VideoModule { }

@@ -1,26 +1,26 @@
 <div l3FxFullHeight>
-    <div layout="row">
-        <div fxLayoutAlign="center center">
-            <table style='width:80%' align='center'>
-                <tr>
-                    <td>
-                        <video-box [videoUrl]='videoUrl'></video-box>
-                    </td>
-                    <td>
-                        <video-box [videoUrl]='videoUrl'></video-box>
-                    </td>
-                    <td width="33%">
-                        <img src='https://dummyimage.com/384x216/000/fff'>
-                    </td>
-                </tr>
-            </table>
-            <br>
-        </div>
+    <div fxLayout="row" style='margin-top:2em' fxLayoutAlign="center center">
+        <table style='width:80%' align='center'>
+            <tr>
+                <td>
+                    <video-box [videoUrl]='videoUrl'></video-box>
+                </td>
+                <td>
+                    <video-box [videoUrl]='videoUrl'></video-box>
+                </td>
+                <td width="33%">
+                    <img src='https://dummyimage.com/384x216/000/fff'>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div layout="row" style='margin-top:-0.5em'>
-        <mat-toolbar color="primary">
+    <div fxLayout="row" style='margin-top:-0.4em' fxLayoutAlign="center center">
+        <mat-toolbar color="primary" style="width:86%" fxLayoutAlign="center center">
             <controls></controls>
             <timeline></timeline>
         </mat-toolbar>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" style='margin-top:-5em;'>
+        <note-slider></note-slider>
     </div>
 </div>
