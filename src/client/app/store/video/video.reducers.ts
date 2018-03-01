@@ -1,11 +1,12 @@
 import * as VideoActions from './video.actions';
-import {VideoState} from './video.state';
+import { VideoState } from './video.state';
 
 export type Action = VideoActions.All;
 
 
 const initialState: VideoState = {
-  url: '',
+  camUrl: '',
+  pcUrl: '',
   playing: false,
   time: 0,
   speed: 1
@@ -15,10 +16,16 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
 
   switch (action.type) {
 
-    case VideoActions.SET_VIDEO_URL:
+    case VideoActions.SET_CAM_VIDEO_URL:
       return {
         ...state,
-        url: action.payload
+        camUrl: action.payload
+      };
+
+    case VideoActions.SET_PC_VIDEO_URL:
+      return {
+        ...state,
+        pcUrl: action.payload
       };
 
     case VideoActions.PLAY:

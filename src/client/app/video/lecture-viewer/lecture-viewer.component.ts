@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Lecture } from '../../service/model/lecture'
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
-
+import { SetCamVideoUrl, SetPcVideoUrl, SetTime } from '../../store/video/video.actions'
 @Component({
   selector: 'l3-lecture-viewer',
   templateUrl: './lecture-viewer.component.html',
@@ -10,18 +9,15 @@ import { AppState } from '../../store/app-state';
 })
 export class LectureViewerComponent implements OnInit {
 
-  lecture: Lecture
-  videoUrl: string //test fino a quando non ho il video, in seguito sarà di tipo Video
-
   constructor(
     private store: Store<AppState>) {
   }
 
   ngOnInit() {
-    this.videoUrl = 'http://latemar.science.unitn.it/LODE/LinguaggiDiProgrammazione/12-12-CopyConstructor/content/movie.mp4'
-    // estraggo informazioni sulla lezione
-    this.store.select(s => s.lecture.currentLecture).subscribe(data => {
-      this.lecture = data
-    })
+    // aggiorno i parametri dello store
+    this.store.dispatch(new SetCamVideoUrl('http://127.0.0.1:8887/rtsp.mp4'));
+    this.store.dispatch(new SetPcVideoUrl('http://127.0.0.1:8887/pvr.mp4'));
+    this.store.dispatch(new SetTime(991))
+
   }
 }

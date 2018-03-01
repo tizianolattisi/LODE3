@@ -2,7 +2,7 @@
   <mat-icon class="black-icon" svgIcon="step-rewind"></mat-icon>
 </button>
 <button mat-icon-button>
-  <mat-icon class="black-icon" svgIcon="play-arrow"></mat-icon>
+  <mat-icon class="black-icon" svgIcon="{{(play) ? 'pause' : 'play-arrow'}}" (click)="playPause()"></mat-icon>
 </button>
 <button mat-icon-button>
   <mat-icon class="black-icon" svgIcon="step-forward"></mat-icon>

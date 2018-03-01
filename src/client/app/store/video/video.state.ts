@@ -1,5 +1,6 @@
 export interface VideoState {
-  url: string;
+  camUrl: string;
+  pcUrl: string;
   time: number;
   playing: boolean;
   speed: number;
