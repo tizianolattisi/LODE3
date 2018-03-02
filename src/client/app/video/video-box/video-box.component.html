@@ -1,1 +1,1 @@
-<video #videoElement [src]="videoUrl" style="height:30%"></video>
+<video #videoElement [src]="videoUrl" (timeupdate)="onTimeUpdate($event)" style="height:13.3em"></video>

@@ -10,6 +10,7 @@ import { ControlsComponent } from './controls/controls.component';
 import { MaterialModule } from '../material/material.module';
 import { NoteSliderComponent } from './note-slider/note-slider.component';
 import { PlayerComponent } from './player/player.component';
+import { SecondsToTimePipe } from './seconds-to-time.pipe'
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { PlayerComponent } from './player/player.component';
     RouterModule.forChild(videoRoutes),
     MaterialModule
   ],
-  declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent, TimelineComponent, ControlsComponent, NoteSliderComponent, PlayerComponent]
+  declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent,
+    TimelineComponent, ControlsComponent, NoteSliderComponent, PlayerComponent, SecondsToTimePipe]
 })
 export class VideoModule { }

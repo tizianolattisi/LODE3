@@ -1,22 +1,22 @@
 <button mat-icon-button>
-  <mat-icon class="black-icon" svgIcon="step-rewind"></mat-icon>
+  <mat-icon class="black-icon" svgIcon="step-rewind" (click)="fastRewind()"></mat-icon>
 </button>
 <button mat-icon-button>
   <mat-icon class="black-icon" svgIcon="{{(play) ? 'pause' : 'play-arrow'}}" (click)="playPause()"></mat-icon>
 </button>
 <button mat-icon-button>
-  <mat-icon class="black-icon" svgIcon="step-forward"></mat-icon>
+  <mat-icon class="black-icon" svgIcon="step-forward" (click)="fastForward()"></mat-icon>
 </button>
 <!-- Selezione volume -->
 <button mat-icon-button>
-  <mat-icon class="black-icon" md-menu-origin svgIcon="volume-high"></mat-icon>
+  <mat-icon class="black-icon" (click)="muteUnmute()" md-menu-origin svgIcon="{{(volume) ? 'volume-high' : 'volume-off'}}"></mat-icon>
 </button>
 <!-- Menu selezione velocità riproduzione -->
 <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
-  <mat-icon class="black-icon" svgIcon="settings"></mat-icon>
+  <mat-icon class="black-icon" svgIcon="video-speed"></mat-icon>
 </button>
 <mat-menu #settingsMenu="matMenu">
-  <button mat-menu-item>1.0 x</button>
-  <button mat-menu-item>1.3 x</button>
-  <button mat-menu-item>2.0 x</button>
+  <button mat-menu-item [ngClass]="{'selectedVelocity': speed == 1}" (click)="setSpeed(1)">1.0x</button>
+  <button mat-menu-item [ngClass]="{'selectedVelocity': speed == 1.3}" (click)="setSpeed(1.3)">1.3x</button>
+  <button mat-menu-item [ngClass]="{'selectedVelocity': speed == 2}" (click)="setSpeed(2)">2.0x</button>
 </mat-menu>

@@ -1,11 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="center center">
   <div flex class="time">
-    00.00
+    {{currentTime | secondsToTime}}
   </div>
-  <div flex class="progress-bar">
-    <span class="viewed-bar"></span>
+  <div flex class="progress-bar" #progressBar (click)="setTimeOnClick($event)">
+    <span class="viewed-bar" #viewedBar></span>
   </div>
   <div flex class="time">
-    -00.00
+    -{{totalTime - currentTime | secondsToTime}}
   </div>
 </div>

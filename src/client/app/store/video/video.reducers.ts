@@ -8,8 +8,11 @@ const initialState: VideoState = {
   camUrl: '',
   pcUrl: '',
   playing: false,
-  time: 0,
-  speed: 1
+  currentTime: 0,
+  updatedTime: 0,
+  totalTime: 0,
+  speed: 1,
+  volume: true
 }
 
 export function videoReducer(state: VideoState = initialState, action: Action): VideoState {
@@ -40,16 +43,22 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         playing: false
       };
 
-    case VideoActions.UPDATE_TIME:
+    case VideoActions.SET_CURRENT_TIME:
       return {
         ...state,
-        time: action.payload
+        currentTime: action.payload
       };
 
-    case VideoActions.SET_TIME:
+    case VideoActions.SET_UPDATED_TIME:
       return {
         ...state,
-        time: action.payload
+        updatedTime: action.payload
+      };
+
+    case VideoActions.SET_TOTAL_TIME:
+      return {
+        ...state,
+        totalTime: action.payload
       };
 
     case VideoActions.SET_SPEED:
@@ -58,6 +67,17 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         speed: action.payload
       };
 
+    case VideoActions.MUTE_AUDIO:
+      return {
+        ...state,
+        volume: false
+      };
+
+    case VideoActions.UNMUTE_AUDIO:
+      return {
+        ...state,
+        volume: true
+      };
     default:
       return state;
   }

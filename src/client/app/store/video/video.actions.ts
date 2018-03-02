@@ -4,9 +4,12 @@ export const SET_CAM_VIDEO_URL = '[Video] SET_CAM_VIDEO_URL';
 export const SET_PC_VIDEO_URL = '[Video] SET_PC_VIDEO_URL';
 export const PLAY = '[Video] PLAY';
 export const PAUSE = '[Video] PAUSE';
-export const UPDATE_TIME = '[Video] UPDATE_TIME';
-export const SET_TIME = '[Video] SET_TIME';
+export const SET_CURRENT_TIME = '[Video] SET_CURRENT_TIME';
+export const SET_UPDATED_TIME = '[Video] SET_UPDATED_TIME';
+export const SET_TOTAL_TIME = '[Video] SET_TOTAL_TIME';
 export const SET_SPEED = '[Video] SET_SPEED';
+export const MUTE_AUDIO = '[Video] MUTE_AUDIO';
+export const UNMUTE_AUDIO = '[Video] UNMUTE_AUDIO';
 
 export class SetCamVideoUrl implements Action {
   readonly type = SET_CAM_VIDEO_URL;
@@ -28,14 +31,20 @@ export class Pause implements Action {
   readonly type = PAUSE;
 }
 
-export class UpdateTime implements Action {
-  readonly type = UPDATE_TIME;
+export class SetCurrentTime implements Action {
+  readonly type = SET_CURRENT_TIME;
 
   constructor(public payload: number) { }
 }
 
-export class SetTime implements Action {
-  readonly type = SET_TIME;
+export class SetTotalTime implements Action {
+  readonly type = SET_TOTAL_TIME;
+
+  constructor(public payload: number) { }
+}
+
+export class SetUpdatedTime implements Action {
+  readonly type = SET_UPDATED_TIME;
 
   constructor(public payload: number) { }
 }
@@ -46,11 +55,22 @@ export class SetSpeed implements Action {
   constructor(public payload: number) { }
 }
 
+export class MuteAudio implements Action {
+  readonly type = MUTE_AUDIO;
+}
+
+export class UnmuteAudio implements Action {
+  readonly type = UNMUTE_AUDIO;
+}
+
 export type All
   = SetCamVideoUrl
   | SetPcVideoUrl
   | Play
   | Pause
-  | UpdateTime
-  | SetTime
+  | SetCurrentTime
+  | SetUpdatedTime
+  | SetTotalTime
+  | MuteAudio
+  | UnmuteAudio
   | SetSpeed;
