@@ -1,20 +1,3 @@
 <div class="images-wrapper">
-  <a href="/" class="attached-image">
-    <img src="https://dummyimage.com/384x216/000/fff" alt="" />
-  </a>
-  <a href="/" class="attached-image">
-    <img src="https://dummyimage.com/384x216/000/fff" alt="" />
-  </a>
-  <a href="/" class="attached-image">
-    <img src="https://dummyimage.com/384x216/000/fff" alt="" />
-  </a>
-  <a href="/" class="attached-image">
-    <img src="https://dummyimage.com/384x216/000/fff" alt="" />
-  </a>
-  <a href="/" class="attached-image">
-    <img src="https://dummyimage.com/384x216/000/fff" alt="" />
-  </a>
-  <a href="/" class="attached-image">
-    <img src="https://dummyimage.com/384x216/000/fff" alt="" />
-  </a>
+    <img class="attached-image" *ngFor="let slide of slides$ | async" [src]="slide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + slide?.img)">
 </div>

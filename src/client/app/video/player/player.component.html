@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="center center" layout-xs="column" fxLayoutGap="0.5em">
-  <video-box [videoUrl]='camVideoUrl | async'></video-box>
-  <video-box [videoUrl]='pcVideoUrl | async'></video-box>
+  <video-box [videoUrl]='camVideoUrl | async' (videoHtmlElement)="setCamVideo($event)"></video-box>
+  <video-box [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
   <img src='https://dummyimage.com/384x216/000/fff'>
 </div>

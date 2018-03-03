@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
-import { SetUpdatedTime } from '../../store/video/video.actions'
+import { SetCurrentTime } from '../../store/video/video.actions'
 
 @Component({
   selector: 'timeline',
@@ -14,8 +14,8 @@ export class TimelineComponent implements OnInit {
   @ViewChild('progressBar') progressBar: ElementRef;
   @ViewChild('viewedBar') viewedBar: ElementRef;
 
-  currentTime: number
   totalTime: number
+  currentTime: number
 
   constructor(
     private store: Store<AppState>) {
@@ -26,17 +26,24 @@ export class TimelineComponent implements OnInit {
       this.totalTime = data
     })
 
-    this.store.select(s => s.video.currentTime).subscribe(data => {
-      this.currentTime = data
-      this.viewedBar.nativeElement.style.width = this.percentageViewed(data)
+    this.store.select(s => s.video.camVideo).subscribe(data => {
+      if (data != null) {
+        data.ontimeupdate = (event) => {
+          this.currentTime = data.currentTime
+          this.viewedBar.nativeElement.style.width = this.percentageViewed(data.currentTime)
+        }
+      }
+
     })
   }
 
   setTimeOnClick(event: MouseEvent) {
+
     let rect = this.progressBar.nativeElement.getBoundingClientRect()
     let newTime = ((event.clientX - rect.left) * this.totalTime) / (rect.right - rect.left)
-    this.store.dispatch(new SetUpdatedTime(newTime))
+    this.store.dispatch(new SetCurrentTime(newTime))
     this.viewedBar.nativeElement.style.width = this.percentageViewed(newTime)
+
   }
 
   private percentageViewed(sec: number): string {

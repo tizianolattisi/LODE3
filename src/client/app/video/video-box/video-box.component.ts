@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
-import { SetCurrentTime } from '../../store/video/video.actions'
 
 @Component({
   selector: 'video-box',
@@ -11,9 +10,9 @@ import { SetCurrentTime } from '../../store/video/video.actions'
 export class VideoBoxComponent implements OnInit {
 
   @Input('videoUrl') videoUrl: string;
-  @ViewChild('videoElement') videoElement: ElementRef;
+  @Output() videoHtmlElement: EventEmitter<HTMLVideoElement> = new EventEmitter<HTMLVideoElement>();
 
-  currentTime: number
+  @ViewChild('videoElement') videoElement: ElementRef;
 
   constructor(
     private store: Store<AppState>
@@ -21,12 +20,10 @@ export class VideoBoxComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.videoHtmlElement.emit(this.videoElement.nativeElement);
+
     this.store.select(s => s.video.playing).subscribe(data => {
       this.playPause(data);
-    })
-
-    this.store.select(s => s.video.updatedTime).subscribe(data => {
-      this.videoElement.nativeElement.currentTime = data;
     })
 
     this.store.select(s => s.video.volume).subscribe(data => {
@@ -36,6 +33,10 @@ export class VideoBoxComponent implements OnInit {
     this.store.select(s => s.video.speed).subscribe(data => {
       this.videoElement.nativeElement.playbackRate = data
 
+    })
+
+    this.store.select(s => s.video.currentTime).subscribe(data => {
+      this.videoElement.nativeElement.currentTime = data
     })
   }
 
@@ -50,8 +51,5 @@ export class VideoBoxComponent implements OnInit {
     }
   }
 
-  onTimeUpdate(value) {
-    this.store.dispatch(new SetCurrentTime(this.videoElement.nativeElement.currentTime))
-  }
 
 }

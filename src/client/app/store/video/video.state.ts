@@ -1,9 +1,11 @@
 export interface VideoState {
   camUrl: string;
   pcUrl: string;
-  currentTime: number;
-  updatedTime: number;
+  camVideo: HTMLVideoElement;
+  pcVideo: HTMLVideoElement;
+
   totalTime: number;
+  currentTime: number;
   playing: boolean;
   speed: number;
   volume: boolean;

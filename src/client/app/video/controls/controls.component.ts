@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
-import { Play, Pause, SetUpdatedTime, MuteAudio, UnmuteAudio, SetSpeed } from '../../store/video/video.actions'
+import { Play, Pause, MuteAudio, UnmuteAudio, SetSpeed, SetCurrentTime } from '../../store/video/video.actions'
 
 @Component({
   selector: 'controls',
@@ -12,7 +12,6 @@ import { Play, Pause, SetUpdatedTime, MuteAudio, UnmuteAudio, SetSpeed } from '.
 export class ControlsComponent implements OnInit {
 
   play: boolean
-  currentTime: number
   totalTime: number
   volume: boolean
   speed: number
@@ -26,7 +25,6 @@ export class ControlsComponent implements OnInit {
 
     this.store.select(s => s.video).subscribe(data => {
       this.play = data.playing
-      this.currentTime = data.currentTime
       this.totalTime = data.totalTime
       this.volume = data.volume
       this.speed = data.speed
@@ -43,22 +41,35 @@ export class ControlsComponent implements OnInit {
   }
 
   fastRewind() {
-    let newTime = this.currentTime - 10
+    let newTime = -10
+    this.store.select(s => s.video.camVideo).subscribe(data => {
+      if (data != null) {
+        newTime += data.currentTime
+      }
+
+    })
     if (newTime < 0) {
       newTime = 0
     }
-    this.store.dispatch(new SetUpdatedTime(newTime))
+    this.store.dispatch(new SetCurrentTime(newTime))
+
   }
 
   fastForward() {
+    let newTime = 10
+    this.store.select(s => s.video.camVideo).subscribe(data => {
+      if (data != null) {
+        newTime += data.currentTime
+      }
 
-    let newTime = this.currentTime + 10
-    if (newTime > this.totalTime) {
+    })
+    if (newTime >= this.totalTime) {
       newTime = this.totalTime
       this.store.dispatch(new Pause())
     }
 
-    this.store.dispatch(new SetUpdatedTime(newTime))
+    this.store.dispatch(new SetCurrentTime(newTime))
+
   }
 
   muteUnmute() {

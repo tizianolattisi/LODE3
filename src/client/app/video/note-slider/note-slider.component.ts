@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app-state';
+import { Screenshot } from '../../service/model/screenshot';
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'note-slider',
   templateUrl: './note-slider.component.html',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NoteSliderComponent implements OnInit {
 
-  constructor() { }
+  uuid$: Observable<string>
+  slides$: Observable<Screenshot[]>
+
+  constructor(
+    private store: Store<AppState>) {
+  }
 
   ngOnInit() {
+
+    this.uuid$ = this.store.select(s => s.lecture.currentLecture.uuid)
+    this.slides$ = this.store.select(s => s.lecture.slides)
+
   }
 
 }
