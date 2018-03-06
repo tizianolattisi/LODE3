@@ -33,11 +33,14 @@ export class ControlsComponent implements OnInit {
   }
 
   playPause() {
-    if (this.play === false) {
-      this.store.dispatch(new Play())
-    } else {
-      this.store.dispatch(new Pause())
-    }
+    this.store.select(s => s.video.camVideo).subscribe(data => {
+      if (this.play === false && data.currentTime < this.totalTime) {
+        this.store.dispatch(new Play())
+      } else {
+        this.store.dispatch(new Pause())
+      }
+    })
+
   }
 
   fastRewind() {
@@ -46,12 +49,12 @@ export class ControlsComponent implements OnInit {
       if (data != null) {
         newTime += data.currentTime
       }
+      if (newTime < 0) {
+        newTime = 0
+      }
+      this.store.dispatch(new SetCurrentTime(newTime))
 
     })
-    if (newTime < 0) {
-      newTime = 0
-    }
-    this.store.dispatch(new SetCurrentTime(newTime))
 
   }
 
@@ -61,22 +64,22 @@ export class ControlsComponent implements OnInit {
       if (data != null) {
         newTime += data.currentTime
       }
+      if (newTime >= this.totalTime) {
+        newTime = this.totalTime
+        this.store.dispatch(new Pause())
+      }
+
+      this.store.dispatch(new SetCurrentTime(newTime))
 
     })
-    if (newTime >= this.totalTime) {
-      newTime = this.totalTime
-      this.store.dispatch(new Pause())
-    }
-
-    this.store.dispatch(new SetCurrentTime(newTime))
 
   }
 
   muteUnmute() {
     if (this.volume) {
-      this.store.dispatch(new MuteAudio)
+      this.store.dispatch(new MuteAudio())
     } else {
-      this.store.dispatch(new UnmuteAudio)
+      this.store.dispatch(new UnmuteAudio())
     }
   }
 

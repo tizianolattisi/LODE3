@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutGap="0.5em">
+  <div class="content">
+    <video-box [videoUrl]='camVideoUrl | async' (videoHtmlElement)="setCamVideo($event)"></video-box>
+  </div>
+  <div class="content">
+    <video-box [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
+  </div>
+  <div class="content">
+    <note-box></note-box>
+  </div>
+</div>

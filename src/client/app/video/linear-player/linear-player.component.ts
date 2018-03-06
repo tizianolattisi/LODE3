@@ -5,12 +5,12 @@ import { Observable } from 'rxjs/Observable';
 import * as VideoActions from '../../store/video/video.actions'
 
 @Component({
-  selector: 'player',
-  templateUrl: './player.component.html',
-  styleUrls: ['./player.component.scss']
+  selector: 'linear-player',
+  templateUrl: './linear-player.component.html',
+  styleUrls: ['./linear-player.component.scss']
 })
 
-export class PlayerComponent implements OnInit {
+export class LinearPlayerComponent implements OnInit {
 
   camVideoUrl: Observable<string>
   pcVideoUrl: Observable<string>

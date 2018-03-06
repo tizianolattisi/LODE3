@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutGap="5em">
+  <div fxLayout="column" fxLayoutGap="3em">
+    <div class="thumbnail" #firstThumb (click)="changeFirstThumb()">
+      <video-box #pcVideo [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
+    </div>
+    <div class="thumbnail" #secondThumb (click)="changeSecondThumb()">
+      <note-box #notes></note-box>
+    </div>
+  </div>
+  <div class="content" #mainView>
+    <video-box #camVideo [videoUrl]='camVideoUrl | async' (videoHtmlElement)="setCamVideo($event)"></video-box>
+  </div>
+</div>

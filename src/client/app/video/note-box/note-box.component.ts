@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'l3-note-box',
+  selector: 'note-box',
   templateUrl: './note-box.component.html',
   styleUrls: ['./note-box.component.scss']
 })

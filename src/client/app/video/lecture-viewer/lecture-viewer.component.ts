@@ -4,6 +4,7 @@ import { AppState } from '../../store/app-state';
 import { SetCamVideoUrl, SetPcVideoUrl, SetTotalTime } from '../../store/video/video.actions'
 import { ActivatedRoute } from '@angular/router';
 import * as LectureActions from '../../store/lecture/lecture.actions'
+import * as VideoActions from '../../store/video/video.actions'
 import { Subscription } from 'rxjs/Subscription';
 import { Lecture } from '../../service/model/lecture';
 
@@ -15,7 +16,7 @@ import { Lecture } from '../../service/model/lecture';
 export class LectureViewerComponent implements OnInit {
 
   private lectureSubscr: Subscription;
-
+  private camVideo: HTMLVideoElement;
   lecture: Lecture;
 
   constructor(
@@ -29,15 +30,12 @@ export class LectureViewerComponent implements OnInit {
 
     this.lectureSubscr = this.store.select(s => s.lecture.currentLecture)
       .subscribe(lecture => {
-
         this.lecture = lecture;
-
         if (lecture) {
           this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid))
         } else {
           this.route.params.first().subscribe(params => this.store.dispatch(new LectureActions.FetchLecture(params['lectureId'])));
         }
-
         this.cd.detectChanges()
       })
 
@@ -45,7 +43,14 @@ export class LectureViewerComponent implements OnInit {
     this.store.dispatch(new SetCamVideoUrl('http://127.0.0.1:8887/rtsp.mp4'))
     this.store.dispatch(new SetPcVideoUrl('http://127.0.0.1:8887/pvr.mp4'))
     this.store.dispatch(new SetTotalTime(991))
+    this.store.select(s => s.video.camVideo).subscribe(data => {
+      this.camVideo = data
+    })
 
 
+  }
+
+  saveVideoState() {
+    this.store.dispatch(new VideoActions.SetCurrentTime(this.camVideo.currentTime))
   }
 }

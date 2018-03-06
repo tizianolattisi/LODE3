@@ -9,8 +9,9 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { ControlsComponent } from './controls/controls.component';
 import { MaterialModule } from '../material/material.module';
 import { NoteSliderComponent } from './note-slider/note-slider.component';
-import { PlayerComponent } from './player/player.component';
-import { SecondsToTimePipe } from './seconds-to-time.pipe'
+import { LinearPlayerComponent } from './linear-player/linear-player.component';
+import { SecondsToTimePipe } from './seconds-to-time.pipe';
+import { TabularPlayerComponent } from './tabular-player/tabular-player.component'
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { SecondsToTimePipe } from './seconds-to-time.pipe'
     MaterialModule
   ],
   declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent,
-    TimelineComponent, ControlsComponent, NoteSliderComponent, PlayerComponent, SecondsToTimePipe]
+    TimelineComponent, ControlsComponent, NoteSliderComponent, LinearPlayerComponent, SecondsToTimePipe, TabularPlayerComponent]
 })
 export class VideoModule { }

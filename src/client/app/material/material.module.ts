@@ -14,7 +14,8 @@ import {
   MatProgressSpinnerModule,
   MatSnackBarModule,
   MatMenuModule,
-  MatSliderModule
+  MatSliderModule,
+  MatButtonToggleModule
 } from '@angular/material';
 
 @NgModule({
@@ -31,7 +32,8 @@ import {
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatMenuModule,
-    MatSliderModule
+    MatSliderModule,
+    MatButtonToggleModule
   ],
   exports: [
     FlexLayoutModule,
@@ -47,7 +49,8 @@ import {
     FxFullWidthDirective,
     MatSnackBarModule,
     MatMenuModule,
-    MatSliderModule
+    MatSliderModule,
+    MatButtonToggleModule
   ],
   declarations: [
     FxFullHeightDirective,
