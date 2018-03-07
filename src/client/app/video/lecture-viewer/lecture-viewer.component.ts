@@ -18,6 +18,7 @@ export class LectureViewerComponent implements OnInit {
   private lectureSubscr: Subscription;
   private camVideo: HTMLVideoElement;
   lecture: Lecture;
+  layoutSelection: string;
 
   constructor(
     private store: Store<AppState>,
@@ -45,6 +46,10 @@ export class LectureViewerComponent implements OnInit {
     this.store.dispatch(new SetTotalTime(991))
     this.store.select(s => s.video.camVideo).subscribe(data => {
       this.camVideo = data
+    })
+
+    this.store.select(s => s.video.videoLayout).subscribe(data => {
+      this.layoutSelection = data
     })
 
 

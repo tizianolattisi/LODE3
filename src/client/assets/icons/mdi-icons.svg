@@ -51,11 +51,6 @@
 			c0.461,5.388,0.711,10.834,0.711,16.338c0,31.103-7.521,60.479-20.842,86.409l-37.701-21.766l-12.947,22.427l29.318,16.927h40.088
 			c17.498-31.458,26.816-67.007,26.816-103.997C428.949,212.424,406.638,158.564,366.13,118.057z"/>
 	</svg>
-
-<svg id="linear-layout"  x="0px" y="4px" >
- <path d="M0 4 L6 4 L6 9 L0 9 Z M8 4 L14 4 L14 9 L8 9 Z   M16 4 L22 4 L22 9 L16 9 Z" />
-</svg>
-
-<svg id="tabular-layout" x="0px" y="8px" >
-  <path d="M0 0 L8 0 L8 5 L0 5 Z M0 7 L8 7 L8 12 L0 12 Z  M10 0 L28 0 L28 12  L10 12  Z" />
-</svg>
+<svg id="linear-layout"  x="0px" y="4px" > <path d="M0 4 L6 4 L6 9 L0 9 Z M8 4 L14 4 L14 9 L8 9 Z   M16 4 L22 4 L22 9 L16 9 Z" /></svg>
+<svg id="tabular-layout" x="0px" y="8px" >  <path d="M0 0 L8 0 L8 5 L0 5 Z M0 7 L8 7 L8 12 L0 12 Z  M10 0 L28 0 L28 12  L10 12  Z" /></svg>
+<svg id="marker" transform="rotate(-90)" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg>

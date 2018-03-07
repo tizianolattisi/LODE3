@@ -8,6 +8,16 @@
         <b class="mat-body-2">{{(currentLecture$ | async).name}}</b>
         <span class="mat-caption">{{(currentLecture$ | async).course}}</span>
       </div>
+      <div *ngIf="isInViewer" fxFlexOffset="24px">
+        <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="linear-layout">
+          <mat-button-toggle value="linear-layout">
+            <mat-icon class="black-icon" svgIcon="linear-layout"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="tabular-layout">
+            <mat-icon class="black-icon" svgIcon="tabular-layout"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </div>
 
     <div fxFlex="auto">

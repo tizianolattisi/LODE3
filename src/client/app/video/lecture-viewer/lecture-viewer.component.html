@@ -1,27 +1,17 @@
 <div l3FxFullHeight>
-    <div fxLayout="row" fxLayoutAlign="center center" style='margin-top:0.5em; margin-bottom: 0.5em' fxLayoutGap="0.5em">
-        <mat-button-toggle-group #layoutSelection="matButtonToggleGroup" value="linear">
-            <mat-button-toggle value="linear" (click)="saveVideoState()">
-                <mat-icon class="black-icon" svgIcon="linear-layout"></mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle value="tabular" (click)="saveVideoState()">
-                <mat-icon class="black-icon" svgIcon="tabular-layout"></mat-icon>
-            </mat-button-toggle>
-        </mat-button-toggle-group>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <div *ngIf="layoutSelection.value === 'linear'">
+    <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 1em">
+        <div *ngIf="layoutSelection === 'linear-layout'">
             <linear-player></linear-player>
         </div>
-        <div *ngIf="layoutSelection.value === 'tabular'">
+        <div *ngIf="layoutSelection === 'tabular-layout'">
             <tabular-player></tabular-player>
         </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center">
-        <mat-toolbar color="primary" style="width:86%" fxLayoutAlign="center center">
+        <div id="toolbar" color="primary" style="width:86%" fxLayoutAlign="center center">
             <controls></controls>
             <timeline></timeline>
-        </mat-toolbar>
+        </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" style='margin-top:-5em;'>
         <note-slider></note-slider>

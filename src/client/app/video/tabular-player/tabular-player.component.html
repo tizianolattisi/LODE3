@@ -1,5 +1,5 @@
-<div fxLayout="row" fxLayoutGap="5em">
-  <div fxLayout="column" fxLayoutGap="3em">
+<div fxLayout="row" fxLayoutGap="2em">
+  <div fxLayout="column" fxLayoutGap="5em">
     <div class="thumbnail" #firstThumb (click)="changeFirstThumb()">
       <video-box #pcVideo [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
     </div>

@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app-state';
+import { Screenshot } from '../../service/model/screenshot';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'note-box',
@@ -7,9 +11,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NoteBoxComponent implements OnInit {
 
-  constructor() { }
+  slides$: Observable<Screenshot[]>
+  currentSlide: Screenshot
+  constructor(
+    private store: Store<AppState>
+  ) { }
 
   ngOnInit() {
+
+    this.slides$ = this.store.select(s => s.lecture.slides)
+    this.slides$.subscribe(data => {
+      this.currentSlide = data[0]
+    })
   }
 
 }

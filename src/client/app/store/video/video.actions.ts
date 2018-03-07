@@ -12,6 +12,7 @@ export const SET_CURRENT_TIME = '[Video] SET_CURRENT_TIME';
 export const SET_SPEED = '[Video] SET_SPEED';
 export const MUTE_AUDIO = '[Video] MUTE_AUDIO';
 export const UNMUTE_AUDIO = '[Video] UNMUTE_AUDIO';
+export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT';
 
 export class SetCamVideoUrl implements Action {
   readonly type = SET_CAM_VIDEO_URL;
@@ -71,6 +72,12 @@ export class UnmuteAudio implements Action {
   readonly type = UNMUTE_AUDIO;
 }
 
+export class SetVideoLayout implements Action {
+  readonly type = SET_VIDEO_LAYOUT;
+
+  constructor(public payload: string) { }
+}
+
 export type All
   = SetCamVideoUrl
   | SetPcVideoUrl
@@ -82,4 +89,5 @@ export type All
   | MuteAudio
   | SetCurrentTime
   | UnmuteAudio
+  | SetVideoLayout
   | SetSpeed;

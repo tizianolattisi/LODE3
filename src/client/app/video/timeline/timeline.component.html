@@ -1,11 +1,17 @@
 <div fxLayout="row" fxLayoutAlign="center center">
-  <div flex class="time">
-    {{currentTime | secondsToTime}}
+  <div class="time">
+    {{ currentTime | secondsToTime}}
   </div>
-  <div flex class="progress-bar" #progressBar (click)="setTimeOnClick($event)">
-    <span class="viewed-bar" #viewedBar></span>
+  <div fxLayout="column">
+    <div class="progress-bar" #progressBar (click)="setTimeOnClick($event)">
+      <span class="viewed-bar" #viewedBar></span>
+    </div>
+    <div fxLayout="row" class="markerRow">
+      <mat-icon class="marker" *ngFor="let slide of slides$ | async" (click)="setTimeMarker(slide)" [style.margin-left]="markerPosition(slide)"
+        svgIcon="marker"></mat-icon>
+    </div>
   </div>
-  <div flex class="time">
+  <div class="time">
     -{{totalTime - currentTime | secondsToTime}}
   </div>
 </div>

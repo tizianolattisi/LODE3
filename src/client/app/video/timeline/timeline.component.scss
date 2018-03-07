@@ -1,26 +1,36 @@
 .progress-bar {
-	width:40em;
+	width:48em;
 	height:1.2em;
 	position:relative;
 	background: rgba(0,0,0,0.4);
 	box-shadow: 0 1px 0 rgba(255,255,255,0.1), inset 0 1px 1px rgba(0,0,0,1);
-	border-radius:10px;
 }
+
 .progress-bar span {
 	height:100%;
 	position:absolute;
 	top:0;
 	left:0;
 	display:block;
-	border-radius:10px;
 }
+
 .viewed-bar{
 	z-index:10;
 	width:0%;
 	background: #2673E7;
 }
+
+.markerRow{
+	position: relative;
+	width: 48em;
+	margin-left: -0.6em;
+}
+
 .time {
-	font-size: 80%;
 	margin-right: 0.8em;
 	margin-left: 0.8em;
+}
+
+.marker {
+	position: absolute;
 }

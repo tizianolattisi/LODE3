@@ -13,7 +13,8 @@ const initialState: VideoState = {
   totalTime: 0,
   currentTime: 0,
   speed: 1,
-  volume: true
+  volume: true,
+  videoLayout: 'linear-layout'
 }
 
 export function videoReducer(state: VideoState = initialState, action: Action): VideoState {
@@ -30,6 +31,12 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
       return {
         ...state,
         pcUrl: action.payload
+      };
+
+    case VideoActions.SET_VIDEO_LAYOUT:
+      return {
+        ...state,
+        videoLayout: action.payload
       };
 
     case VideoActions.PLAY:

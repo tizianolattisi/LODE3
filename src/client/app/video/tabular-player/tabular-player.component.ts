@@ -43,15 +43,15 @@ export class TabularPlayerComponent implements OnInit {
   }
 
   changeFirstThumb() {
-    this.mainView.nativeElement.removeChild(this.mainView.nativeElement.firstChild)
-    this.mainView.nativeElement.appendChild(this.notes)
-    this.firstThumb.nativeElement.appendChild(this.camVideo)
+    /*
+    Da implementare
+    */
   }
 
   changeSecondThumb() {
-    this.mainView.nativeElement.removeChild(this.mainView.nativeElement.firstChild)
-    this.firstThumb.nativeElement.appendChild(this.notes)
-    this.mainView.nativeElement.appendChild(this.camVideo)
+    /*
+     Da implementare
+     */
   }
 
 }

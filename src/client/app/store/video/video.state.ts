@@ -9,4 +9,5 @@ export interface VideoState {
   playing: boolean;
   speed: number;
   volume: boolean;
+  videoLayout: string;
 }
