@@ -27,7 +27,7 @@ export interface IUser extends UserProfile, mongoose.Document {
 const LectureSchema = new mongoose.Schema({
   uuid: {
     type: String,
-    unique: true,
+    unique: false,
     required: true
   },
   screenshots: [String]
