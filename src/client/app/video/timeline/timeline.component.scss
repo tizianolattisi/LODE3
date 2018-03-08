@@ -1,6 +1,9 @@
+$barWidth: 65vw;
+$barHeight: 4vh;
+
 .progress-bar {
-	width:48em;
-	height:1.2em;
+	width: $barWidth;
+	height: $barHeight;
 	position:relative;
 	background: rgba(0,0,0,0.4);
 	box-shadow: 0 1px 0 rgba(255,255,255,0.1), inset 0 1px 1px rgba(0,0,0,1);
@@ -22,7 +25,7 @@
 
 .markerRow{
 	position: relative;
-	width: 48em;
+	width: $barWidth;
 	margin-left: -0.6em;
 }
 
@@ -33,4 +36,23 @@
 
 .marker {
 	position: absolute;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .progress-bar{
+		width: 75vw !important;
+	}
+	.markerRow{
+		width: 75vw !important;
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+    .progress-bar{
+		width: 50vw;
+	}
+	.markerRow{
+		width: 50vw;
+	}
 }

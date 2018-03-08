@@ -1,11 +1,14 @@
-<div fxLayout="row" fxLayoutGap="0.5em">
-  <div class="content">
-    <video-box [videoUrl]='camVideoUrl | async' (videoHtmlElement)="setCamVideo($event)"></video-box>
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="0.5em" fxLayoutGap.xs="0.2em">
+  <div class="player-content">
+    <video-box [width]='33' [videoUrl]='camVideoUrl | async' (videoHtmlElement)="setCamVideo($event)"></video-box>
+
   </div>
-  <div class="content">
-    <video-box [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
+  <div class="player-content">
+    <video-box [width]='33' [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
+
   </div>
-  <div class="content">
-    <note-box></note-box>
+  <div class="player-content">
+    <note-box [width]='33'></note-box>
   </div>
+
 </div>

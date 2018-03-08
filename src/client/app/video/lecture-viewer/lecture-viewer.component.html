@@ -1,19 +1,18 @@
 <div l3FxFullHeight>
-    <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 1em">
-        <div *ngIf="layoutSelection === 'linear-layout'">
-            <linear-player></linear-player>
-        </div>
-        <div *ngIf="layoutSelection === 'tabular-layout'">
-            <tabular-player></tabular-player>
-        </div>
+
+    <div *ngIf="layoutSelection === 'linear-layout'">
+        <linear-player></linear-player>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <div id="toolbar" color="primary" style="width:86%" fxLayoutAlign="center center">
-            <controls></controls>
-            <timeline></timeline>
-        </div>
+    <div *ngIf="layoutSelection === 'tabular-layout'">
+        <tabular-player></tabular-player>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" style='margin-top:-5em;'>
+
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayout.xs="column" id="toolbar" color="primary" fxLayoutAlign="center center">
+        <controls></controls>
+        <timeline></timeline>
+    </div>
+
+    <div fxLayout="row" id="note-slider" fxLayoutAlign="center center">
         <note-slider></note-slider>
     </div>
 </div>

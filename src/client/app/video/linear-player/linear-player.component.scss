@@ -1,5 +1,18 @@
-.content{
+.player-content{
     position: relative;
-    width: 24em;
-    height: 14em;
+    width: 33vw;
+    height: 19vw;
+
+}
+
+.container {
+    width: 97vw;
+    margin-left: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .player-content  {
+        width:100vw !important;
+        height: 50vw !important;
+    }
 }

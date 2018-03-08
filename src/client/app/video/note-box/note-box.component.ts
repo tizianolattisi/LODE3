@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./note-box.component.scss']
 })
 export class NoteBoxComponent implements OnInit {
+  @Input('width') width: string;
 
   slides$: Observable<Screenshot[]>
   currentSlide: Screenshot
@@ -18,7 +19,7 @@ export class NoteBoxComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.width += 'vw'
     this.slides$ = this.store.select(s => s.lecture.slides)
     this.slides$.subscribe(data => {
       this.currentSlide = data[0]

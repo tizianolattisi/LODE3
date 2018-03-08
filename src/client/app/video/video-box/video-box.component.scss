@@ -2,6 +2,12 @@ video {
     position: absolute;
     left: 0;
     top: 0;
-    height: 100%;
-    width: 100%;
+    height: auto;
+}
+
+
+@media only screen and (max-width: 600px) {
+    video  {
+        width:100vw !important;
+    }
 }

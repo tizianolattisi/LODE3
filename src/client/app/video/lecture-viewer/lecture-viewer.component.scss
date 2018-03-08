@@ -9,6 +9,18 @@
 }
 
 #toolbar {
-    padding: 1em;
+    padding: 2.5vh;
+    width: 98vw;
     background-color: #FFE100
+}
+
+#note-slider{
+    margin-top: -5em;
+}
+
+@media only screen and (max-width: 600px) {
+    #toolbar  {
+        padding:5vh !important;
+        margin-top: 1em !important;
+    }
 }

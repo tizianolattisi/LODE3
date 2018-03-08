@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 export class VideoBoxComponent implements OnInit {
 
   @Input('videoUrl') videoUrl: string;
+  @Input('width') width: string;
   @Output() videoHtmlElement: EventEmitter<HTMLVideoElement> = new EventEmitter<HTMLVideoElement>();
 
   @ViewChild('videoElement') videoElement: ElementRef;
@@ -19,7 +20,7 @@ export class VideoBoxComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    this.width += 'vw'
     this.videoHtmlElement.emit(this.videoElement.nativeElement);
 
     this.store.select(s => s.video.playing).subscribe(data => {
