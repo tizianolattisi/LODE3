@@ -34,8 +34,8 @@ export class AppComponent implements OnInit {
     this.currentLecture$ = this.store.select(s => s.lecture.currentLecture);
 
     // Verify if user is in the viewer
-    this.store.select(s => s.video.camUrl).subscribe(data => {
-      this.isInViewer = (data !== '')
+    this.store.select(s => s.video.videoLayout).subscribe(data => {
+      this.isInViewer = (data === 'linear-layout' || data === 'tabular-layout')
     })
   }
 

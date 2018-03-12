@@ -34,10 +34,6 @@ export class TabularPlayerComponent implements OnInit {
 
   }
 
-  setCamVideo(htmlVideoElem: HTMLVideoElement) {
-    this.store.dispatch(new VideoActions.SetCamVideo(htmlVideoElem))
-  }
-
   setPcVideo(htmlVideoElem: HTMLVideoElement) {
     this.store.dispatch(new VideoActions.SetPcVideo(htmlVideoElem))
   }

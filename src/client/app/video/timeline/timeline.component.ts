@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
-import { SetCurrentTime } from '../../store/video/video.actions'
+import { SetUpdatedTime } from '../../store/video/video.actions'
 import { Screenshot } from '../../service/model/screenshot';
 import { Observable } from 'rxjs/Observable';
 
@@ -20,7 +20,7 @@ export class TimelineComponent implements OnInit {
   currentTime: number
   slides$: Observable<Screenshot[]>
   startDate: number
-
+  hasAnnotations: boolean
   constructor(
     private store: Store<AppState>) {
   }
@@ -29,8 +29,10 @@ export class TimelineComponent implements OnInit {
     this.store.select(s => s.video.totalTime).subscribe(data => {
       this.totalTime = data
     })
-
-    this.store.select(s => s.video.camVideo).subscribe(data => {
+    this.store.select(s => s.video.hasAnnotations).subscribe(data => {
+      this.hasAnnotations = data
+    })
+    this.store.select(s => s.video.pcVideo).subscribe(data => {
       if (data != null) {
         data.ontimeupdate = (event) => {
           this.currentTime = data.currentTime
@@ -41,14 +43,16 @@ export class TimelineComponent implements OnInit {
     })
 
     this.slides$ = this.store.select(s => s.lecture.slides)
-    this.startDate = 20171129045450297000 //da modificare
+    this.store.select(s => s.video.startTimestamp).subscribe(data => {
+      this.startDate = data
+    })
   }
 
   setTimeOnClick(event: MouseEvent) {
 
     let rect = this.progressBar.nativeElement.getBoundingClientRect()
     let newTime = ((event.clientX - rect.left) * this.totalTime) / (rect.right - rect.left)
-    this.store.dispatch(new SetCurrentTime(newTime))
+    this.store.dispatch(new SetUpdatedTime(newTime))
     this.viewedBar.nativeElement.style.width = this.percentageViewed(newTime)
 
   }
@@ -76,7 +80,7 @@ export class TimelineComponent implements OnInit {
     let sec = 0
     if (slide.timestamp > this.startDate)
       sec = this.secondsDifference(slide.timestamp, this.startDate)
-    this.store.dispatch(new SetCurrentTime(sec))
+    this.store.dispatch(new SetUpdatedTime(sec))
     this.viewedBar.nativeElement.style.width = this.percentageViewed(sec)
   }
 

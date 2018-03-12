@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { toApiErrorResponse } from './to-error-response';
 import { Observable } from 'rxjs/Rx';
-import { Lecture } from '../../../server/models/db/Lecture'
+
 @Injectable()
 export class VideoService {
+  public BASE_URL: string
+  constructor(
+    private http: HttpClient) { this.BASE_URL = 'http://127.0.0.1:8887' }
 
-  constructor(private http: HttpClient) { }
+  FetchVideoData(uuid: string): Observable<string> {
 
-  getMedia(lectureId: string): Observable<Lecture> {
-    return this.http.get<string>(`/api/lecture/${lectureId}`)
-      .catch(toApiErrorResponse);
+    let url = this.BASE_URL + '/' + uuid + "/data.xml"
+    return this.http.get(url, { responseType: 'text' })
+
   }
 }

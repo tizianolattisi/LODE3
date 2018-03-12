@@ -12,7 +12,7 @@
         <timeline></timeline>
     </div>
 
-    <div fxLayout="row" id="note-slider" fxLayoutAlign="center center">
+    <div *ngIf="hasAnnotations" fxLayout="row" id="note-slider" fxLayoutAlign="center center">
         <note-slider></note-slider>
     </div>
 </div>

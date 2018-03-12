@@ -32,10 +32,12 @@ $barHeight: 4vh;
 .time {
 	margin-right: 0.8em;
 	margin-left: 0.8em;
+	color: black !important;
 }
 
 .marker {
 	position: absolute;
+	cursor: pointer;
 }
 
 

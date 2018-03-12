@@ -1,14 +1,5 @@
-<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="0.5em" fxLayoutGap.xs="0.2em">
-  <div class="player-content">
-    <video-box [width]='33' [videoUrl]='camVideoUrl | async' (videoHtmlElement)="setCamVideo($event)"></video-box>
-
-  </div>
-  <div class="player-content">
-    <video-box [width]='33' [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
-
-  </div>
-  <div class="player-content">
-    <note-box [width]='33'></note-box>
-  </div>
-
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="1em" fxLayoutGap.xs="0.2em">
+  <video-box *ngIf="hasCamVideo" [width]='screenSize' [height]='screenHeight' [videoUrl]='camVideoUrl | async'></video-box>
+  <video-box [width]='screenSize' [height]='screenHeight' [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
+  <note-box *ngIf="hasAnnotations" [width]='screenSize'></note-box>
 </div>

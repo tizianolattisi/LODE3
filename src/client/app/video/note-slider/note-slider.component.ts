@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
 import { Observable } from 'rxjs/Observable';
-import { SetCurrentTime } from '../../store/video/video.actions'
+import { SetUpdatedTime } from '../../store/video/video.actions'
 @Component({
   selector: 'note-slider',
   templateUrl: './note-slider.component.html',
@@ -27,7 +27,7 @@ export class NoteSliderComponent implements OnInit {
 
   setTime(slide: Screenshot) {
 
-    this.store.dispatch(new SetCurrentTime(this.secondsDifference(slide.timestamp, this.startDate)))
+    this.store.dispatch(new SetUpdatedTime(this.secondsDifference(slide.timestamp, this.startDate)))
   }
 
   private secondsDifference(timestamp1: number, timestamp2: number): number {

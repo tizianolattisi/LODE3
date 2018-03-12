@@ -11,16 +11,19 @@ export class VideoBoxComponent implements OnInit {
 
   @Input('videoUrl') videoUrl: string;
   @Input('width') width: string;
+  @Input('height') height: string;
   @Output() videoHtmlElement: EventEmitter<HTMLVideoElement> = new EventEmitter<HTMLVideoElement>();
 
   @ViewChild('videoElement') videoElement: ElementRef;
+
+  public currentWidth: string
 
   constructor(
     private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
-    this.width += 'vw'
+
     this.videoHtmlElement.emit(this.videoElement.nativeElement);
 
     this.store.select(s => s.video.playing).subscribe(data => {
@@ -36,7 +39,7 @@ export class VideoBoxComponent implements OnInit {
 
     })
 
-    this.store.select(s => s.video.currentTime).subscribe(data => {
+    this.store.select(s => s.video.updatedTime).subscribe(data => {
       this.videoElement.nativeElement.currentTime = data
     })
   }
@@ -51,6 +54,4 @@ export class VideoBoxComponent implements OnInit {
       this.videoElement.nativeElement.pause()
     }
   }
-
-
 }

@@ -1,13 +1,15 @@
 export interface VideoState {
   camUrl: string;
   pcUrl: string;
-  camVideo: HTMLVideoElement;
   pcVideo: HTMLVideoElement;
 
   totalTime: number;
-  currentTime: number;
+  updatedTime: number;
   playing: boolean;
   speed: number;
   volume: boolean;
   videoLayout: string;
+
+  startTimestamp: number;
+  hasAnnotations: boolean;
 }
