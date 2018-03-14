@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
 import { Play, Pause, MuteAudio, UnmuteAudio, SetSpeed, SetUpdatedTime } from '../../store/video/video.actions'
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'controls',
@@ -9,48 +10,47 @@ import { Play, Pause, MuteAudio, UnmuteAudio, SetSpeed, SetUpdatedTime } from '.
   styleUrls: ['./controls.component.scss']
 })
 
-export class ControlsComponent implements OnInit {
+/*
+  Componente che implementa i controlli video (play/stop, FF, FR, volume, speed)
+*/
+export class ControlsComponent implements OnInit, OnDestroy {
 
   play: boolean
   totalTime: number
   volume: boolean
   speed: number
-  pcVideo: HTMLVideoElement
+  currentTime: number
 
+  private videoSubscr: Subscription
 
   constructor(
     private store: Store<AppState>
-
   ) { }
 
   ngOnInit() {
 
-    this.store.select(s => s.video).subscribe(data => {
-      this.pcVideo = data.pcVideo
+    this.videoSubscr = this.store.select(s => s.video).subscribe(data => {
       this.play = data.playing
       this.totalTime = data.totalTime
       this.volume = data.volume
       this.speed = data.speed
+      this.currentTime = data.currentTime
     })
 
   }
 
   playPause() {
-
-    if (this.play === false && this.pcVideo.currentTime < this.totalTime) {
+    if (this.play === false && this.currentTime < this.totalTime) {
       this.store.dispatch(new Play())
     } else {
       this.store.dispatch(new Pause())
     }
-
   }
 
   fastRewind() {
     let newTime = -10
+    newTime += this.currentTime
 
-    if (this.pcVideo != null) {
-      newTime += this.pcVideo.currentTime
-    }
     if (newTime < 0) {
       newTime = 0
     }
@@ -60,10 +60,8 @@ export class ControlsComponent implements OnInit {
 
   fastForward() {
     let newTime = 10
+    newTime += this.currentTime
 
-    if (this.pcVideo != null) {
-      newTime += this.pcVideo.currentTime
-    }
     if (newTime >= this.totalTime) {
       newTime = this.totalTime
       this.store.dispatch(new Pause())
@@ -85,5 +83,9 @@ export class ControlsComponent implements OnInit {
   setSpeed(value: number) {
     this.speed = value
     this.store.dispatch(new SetSpeed(value))
+  }
+
+  ngOnDestroy() {
+    this.videoSubscr.unsubscribe()
   }
 }

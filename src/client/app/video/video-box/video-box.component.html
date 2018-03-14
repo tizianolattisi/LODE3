@@ -1,1 +1,1 @@
-<video #videoElement [style.width]="width" [style.height]="height" [src]="videoUrl" type="video/mp4"></video>
+<video #videoElement (timeupdate)="setCurrentTime()" [src]="videoUrl" type="video/mp4"></video>

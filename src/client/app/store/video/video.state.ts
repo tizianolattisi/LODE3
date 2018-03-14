@@ -1,14 +1,22 @@
+export enum Layout {
+  NONE,
+  LINEAR3,
+  LINEAR2,
+  TABULAR3,
+  TABULAR2
+}
+
 export interface VideoState {
   camUrl: string;
   pcUrl: string;
-  pcVideo: HTMLVideoElement;
 
   totalTime: number;
+  currentTime: number;
   updatedTime: number;
   playing: boolean;
   speed: number;
   volume: boolean;
-  videoLayout: string;
+  videoLayout: Layout;
 
   startTimestamp: number;
   hasAnnotations: boolean;

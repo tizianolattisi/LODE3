@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import * as VideoActions from '../../store/video/video.actions'
+import { Subscription } from 'rxjs/Subscription';
+import { SetUpdatedTime } from '../../store/video/video.actions'
 
 @Component({
   selector: 'linear-player',
@@ -10,7 +11,10 @@ import * as VideoActions from '../../store/video/video.actions'
   styleUrls: ['./linear-player.component.scss']
 })
 
-export class LinearPlayerComponent implements OnInit {
+/*
+  Componente con gli stream posizionati orizzontalmente
+*/
+export class LinearPlayerComponent implements OnInit, OnDestroy {
 
   camVideoUrl: Observable<string>
   pcVideoUrl: Observable<string>
@@ -18,6 +22,9 @@ export class LinearPlayerComponent implements OnInit {
   hasCamVideo: boolean
   screenSize: string
   screenHeight: string
+
+  private camVideoSubsc: Subscription
+  private annotationsSubsc: Subscription
 
   constructor(
     private store: Store<AppState>
@@ -27,22 +34,25 @@ export class LinearPlayerComponent implements OnInit {
     // prendo i valori dallo store
     this.camVideoUrl = this.store.select(s => s.video.camUrl)
     this.pcVideoUrl = this.store.select(s => s.video.pcUrl)
-    this.camVideoUrl.subscribe(data => {
+    this.camVideoSubsc = this.camVideoUrl.subscribe(data => {
       this.hasCamVideo = (data !== '')
-      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : (this.hasCamVideo ? '48vw' : 'auto')
-      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : (this.hasCamVideo ? '27vw' : '32vw')
+      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : (this.hasCamVideo ? '48vw' : '72vw')
+      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : (this.hasCamVideo ? '27vw' : '43vw')
     })
-    this.store.select(s => s.video.hasAnnotations).subscribe(data => {
+    this.annotationsSubsc = this.store.select(s => s.video.hasAnnotations).subscribe(data => {
       this.hasAnnotations = data
-      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : (this.hasCamVideo ? '48vw' : 'auto')
-      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : (this.hasCamVideo ? '27vw' : '32vw')
+      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : (this.hasCamVideo ? '48vw' : '72vw')
+      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : (this.hasCamVideo ? '27vw' : '43vw')
     })
-
   }
 
+  ngOnDestroy() {
 
-  setPcVideo(htmlVideoElem: HTMLVideoElement) {
-    this.store.dispatch(new VideoActions.SetPcVideo(htmlVideoElem))
+    let signalTimeSubs = this.store.select(s => s.video.currentTime).subscribe(data => {
+      this.store.dispatch(new SetUpdatedTime(data))
+    })
+    signalTimeSubs.unsubscribe()
+    this.annotationsSubsc.unsubscribe()
+    this.camVideoSubsc.unsubscribe()
   }
-
 }

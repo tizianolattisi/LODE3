@@ -1,9 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { SetUpdatedTime } from '../../store/video/video.actions'
 import { Screenshot } from '../../service/model/screenshot';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'timeline',
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./timeline.component.scss']
 })
 
-export class TimelineComponent implements OnInit {
+export class TimelineComponent implements OnInit, OnDestroy {
 
   @ViewChild('progressBar') progressBar: ElementRef;
   @ViewChild('viewedBar') viewedBar: ElementRef;
@@ -21,29 +22,25 @@ export class TimelineComponent implements OnInit {
   slides$: Observable<Screenshot[]>
   startDate: number
   hasAnnotations: boolean
+
+  private videoSubsc: Subscription
+  private slideSubsc: Subscription
+
   constructor(
     private store: Store<AppState>) {
   }
 
   ngOnInit() {
-    this.store.select(s => s.video.totalTime).subscribe(data => {
-      this.totalTime = data
-    })
-    this.store.select(s => s.video.hasAnnotations).subscribe(data => {
-      this.hasAnnotations = data
-    })
-    this.store.select(s => s.video.pcVideo).subscribe(data => {
-      if (data != null) {
-        data.ontimeupdate = (event) => {
-          this.currentTime = data.currentTime
-          this.viewedBar.nativeElement.style.width = this.percentageViewed(data.currentTime)
-        }
-      }
-
+    this.videoSubsc = this.store.select(s => s.video).subscribe(data => {
+      this.totalTime = data.totalTime
+      this.hasAnnotations = data.hasAnnotations
+      this.currentTime = data.currentTime
+      this.startDate = data.startTimestamp
+      this.viewedBar.nativeElement.style.width = this.percentageViewed(data.currentTime)
     })
 
     this.slides$ = this.store.select(s => s.lecture.slides)
-    this.store.select(s => s.video.startTimestamp).subscribe(data => {
+    this.slideSubsc = this.store.select(s => s.video.startTimestamp).subscribe(data => {
       this.startDate = data
     })
   }
@@ -136,5 +133,10 @@ export class TimelineComponent implements OnInit {
 
     return (seconds1 - seconds2) + (timestamp1 / 1000)
 
+  }
+
+  ngOnDestroy() {
+    this.videoSubsc.unsubscribe()
+    this.slideSubsc.unsubscribe()
   }
 }

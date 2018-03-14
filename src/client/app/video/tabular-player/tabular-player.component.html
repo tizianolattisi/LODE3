@@ -1,13 +1,13 @@
-<div fxLayout="row" fxLayoutGap="2em">
+<div fxLayout="row" fxLayoutGap="2em" fxLayoutAlign="center center">
   <div fxLayout="column" fxLayoutGap="5em">
     <div class="thumbnail" #firstThumb (click)="changeFirstThumb()">
-      <video-box #pcVideo [videoUrl]='pcVideoUrl | async' (videoHtmlElement)="setPcVideo($event)"></video-box>
+      <video-box [videoUrl]='pcVideoUrl | async'></video-box>
     </div>
-    <div class="thumbnail" #secondThumb (click)="changeSecondThumb()">
-      <note-box #notes></note-box>
+    <div *ngIf="hasAnnotations" class="thumbnail" #secondThumb (click)="changeSecondThumb()">
+      <note-box></note-box>
     </div>
   </div>
   <div class="content" #mainView>
-    <video-box #camVideo [videoUrl]='camVideoUrl | async'></video-box>
+    <video-box [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
   </div>
 </div>

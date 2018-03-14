@@ -10,12 +10,27 @@
 
 #toolbar {
     padding: 2.5vh;
-    width: 98vw;
+    width: 99vw;
     background-color: #FFE100
 }
 
+#course{
+    font: 400 34px/40px Roboto,"Helvetica Neue",sans-serif;    
+    font-style: italic;
+    font-size: 25px;
+    margin-bottom: 1em;
+    margin-top: -1em;
+}
+
 #note-slider{
-    margin-top: -5em;
+    margin-top: -5em;    
+}
+
+#title {
+    font: 400 34px/40px Roboto,"Helvetica Neue",sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-top: 0.2em;
 }
 
 @media only screen and (max-width: 600px) {

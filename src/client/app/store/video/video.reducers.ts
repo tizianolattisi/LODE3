@@ -1,5 +1,5 @@
 import * as VideoActions from './video.actions';
-import { VideoState } from './video.state';
+import { VideoState, Layout } from './video.state';
 
 export type Action = VideoActions.All;
 
@@ -7,14 +7,14 @@ export type Action = VideoActions.All;
 const initialState: VideoState = {
   camUrl: '',
   pcUrl: '',
-  pcVideo: null,
 
   playing: false,
   totalTime: 0,
+  currentTime: 0,
   updatedTime: 0,
   speed: 1,
   volume: true,
-  videoLayout: '',
+  videoLayout: Layout.NONE,
   hasAnnotations: false,
   startTimestamp: 0
 }
@@ -53,12 +53,6 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         playing: false
       };
 
-    case VideoActions.SET_PC_VIDEO:
-      return {
-        ...state,
-        pcVideo: action.payload
-      };
-
     case VideoActions.SET_TOTAL_TIME:
       return {
         ...state,
@@ -69,6 +63,12 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
       return {
         ...state,
         updatedTime: action.payload
+      };
+
+    case VideoActions.SET_CURRENT_TIME:
+      return {
+        ...state,
+        currentTime: action.payload
       };
 
     case VideoActions.SET_SPEED:

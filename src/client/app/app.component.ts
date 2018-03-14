@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from './store/app-state';
 import { Observable } from 'rxjs/Observable';
 import { SetVideoLayout } from './store/video/video.actions'
-
+import { Layout } from './store/video/video.state'
 import * as UserActions from './store/user/user.actions';
 
 @Component({
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   email$: Observable<string>;
   currentLecture$: Observable<Lecture>;
   isInViewer: boolean
+  has3Stream: boolean = true
 
   constructor(private iconService: IconService, private store: Store<AppState>, private router: Router) { }
 
@@ -35,7 +36,9 @@ export class AppComponent implements OnInit {
 
     // Verify if user is in the viewer
     this.store.select(s => s.video.videoLayout).subscribe(data => {
-      this.isInViewer = (data === 'linear-layout' || data === 'tabular-layout')
+      this.isInViewer = data !== Layout.NONE
+      if (data === Layout.LINEAR2 || data === Layout.TABULAR2)
+        this.has3Stream = false
     })
   }
 
@@ -45,7 +48,7 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  changeVideoLayout(layout: string) {
-    this.store.dispatch(new SetVideoLayout(layout))
+  changeVideoLayout(current: string) {
+    this.store.dispatch(new SetVideoLayout(Layout[current]))
   }
 }

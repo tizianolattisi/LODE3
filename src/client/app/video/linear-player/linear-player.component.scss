@@ -4,8 +4,16 @@
     margin-left: 0;
 }
 
+.content{
+    position:relative
+}
+
+.margin-left{
+    margin-left: 1.5vw;
+}
+
 @media only screen and (max-width: 600px) {
-    .player-content  {
+    .content  {
         width:100vw !important;
         height: 50vw !important;
     }
