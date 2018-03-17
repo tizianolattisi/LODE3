@@ -36,13 +36,13 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
     this.pcVideoUrl = this.store.select(s => s.video.pcUrl)
     this.camVideoSubsc = this.camVideoUrl.subscribe(data => {
       this.hasCamVideo = (data !== '')
-      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : (this.hasCamVideo ? '48vw' : '72vw')
-      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : (this.hasCamVideo ? '27vw' : '43vw')
+      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : ('48vw')
+      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : ('27vw')
     })
     this.annotationsSubsc = this.store.select(s => s.video.hasAnnotations).subscribe(data => {
       this.hasAnnotations = data
-      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : (this.hasCamVideo ? '48vw' : '72vw')
-      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : (this.hasCamVideo ? '27vw' : '43vw')
+      this.screenSize = this.hasAnnotations ? (this.hasCamVideo ? '32vw' : '48vw') : ('48vw')
+      this.screenHeight = this.hasAnnotations ? (this.hasCamVideo ? '18vw' : '27vw') : ('27vw')
     })
   }
 

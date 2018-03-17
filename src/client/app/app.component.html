@@ -4,10 +4,6 @@
     <div fxLayout>
       <!--<img src="" alt="Logo">-->
       <span class="app-title" routerLink="/">Lode3</span>
-      <div *ngIf="currentLecture$ | async" fxFlexOffset="24px" class="lecture-title">
-        <b class="mat-body-2">{{(currentLecture$ | async).name}}</b>
-        <span class="mat-caption">{{(currentLecture$ | async).course}}</span>
-      </div>
       <div *ngIf="isInViewer" fxFlexOffset="24px">
         <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
           <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
@@ -20,6 +16,10 @@
       </div>
     </div>
 
+    <div *ngIf="currentLecture$ | async" fxFlexOffset="24px" class="lecture-title">
+      <b>{{(currentLecture$ | async).name}}</b>
+      <span>{{(currentLecture$ | async).course}}</span>
+    </div>
     <div fxFlex="auto">
     </div>
 

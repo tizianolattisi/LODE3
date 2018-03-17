@@ -17,6 +17,7 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
 
   @Input('videoUrl') videoUrl: string; // url del video
   @Input('isMaster') isMaster: boolean = false; // se true il currentTime della sessione è relativo a questo componente
+  @Input('allowFullscreen') allowFullscreen: boolean = true; // se true permette allo stream di essere fullscreen
 
   @ViewChild('videoElement') videoElement: ElementRef;
 
@@ -26,13 +27,15 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
   private speedSubsc: Subscription
   private updateTimeSubsc: Subscription
 
+  loadingVideo = true
+
   constructor(
     private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
-
     this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
+      console.log("in box " + data)
       this.playing = data
       this.playPause();
     })
@@ -47,7 +50,6 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
 
     // Caso time aggiornato da evento esterno
     this.updateTimeSubsc = this.store.select(s => s.video.updatedTime).subscribe(data => {
-      console.log(data)
       this.videoElement.nativeElement.currentTime = data
     })
   }
@@ -76,9 +78,21 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
     Quando viene distrutto il componente elimina tutte le subscription.
   */
   ngOnDestroy() {
+    console.log("elimino video")
     this.playingSubsc.unsubscribe()
     this.updateTimeSubsc.unsubscribe()
     this.speedSubsc.unsubscribe()
     this.volumeSubsc.unsubscribe()
+  }
+
+  /*
+    Rende il video fullsceen
+   */
+  goFullscreen() {
+    this.videoElement.nativeElement.webkitRequestFullScreen()
+  }
+
+  hideLoadingText() {
+    this.loadingVideo = false
   }
 }

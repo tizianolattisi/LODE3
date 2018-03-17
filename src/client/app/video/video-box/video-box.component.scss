@@ -3,4 +3,53 @@ video {
     left: 0;
     top: 0;
     width: 100%;
+    z-index: 1;
 }
+
+.loading-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+  align-items: center;
+}
+
+.loading-text {
+    font: 400 34px/40px Roboto,"Helvetica Neue",sans-serif;    
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.fullscreen-icon{
+    margin: auto;
+    display: block;
+    margin-top:20%;
+}
+
+@media screen and (max-width: 1026px) {
+    .overlay {
+        display: none;
+    }
+  }
+
+.overlay{
+    position: absolute;    
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    z-index:10;
+    background-color: white;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.overlay:hover{
+    opacity: 0.8;
+    visibility: visible;
+    transition: opacity .4s ease-in;
+}
+
+video::-webkit-media-controls-enclosure {
+    display:none !important;
+  }
