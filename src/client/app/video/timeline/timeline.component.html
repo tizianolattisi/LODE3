@@ -3,7 +3,7 @@
     {{ currentTime | secondsToTime}}
   </span>
   <div fxLayout="column">
-    <div class="progress-bar" #progressBar (click)="setTimeOnClick($event)">
+    <div class="progress-bar" #progressBar (mouseup)="timebarMouseUp($event)" (mousemove)="timebarMouseMove($event)" (mousedown)="timebarMouseDown($event)">
       <span class="viewed-bar" #viewedBar></span>
     </div>
     <div *ngIf="hasAnnotations" fxLayout="row" class="markerRow">

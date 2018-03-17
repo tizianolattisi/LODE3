@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
-import { SetUpdatedTime } from '../../store/video/video.actions'
+import { SetUpdatedTime, Play, Pause } from '../../store/video/video.actions'
 import { Screenshot } from '../../service/model/screenshot';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -24,7 +24,12 @@ export class TimelineComponent implements OnInit, OnDestroy {
   hasAnnotations: boolean
 
   private videoSubsc: Subscription
+  private currentTimeSubsc: Subscription
   private slideSubsc: Subscription
+  private timeDrag: boolean = false
+  private playing: boolean
+
+  private playingWhileChange: boolean
 
   constructor(
     private store: Store<AppState>) {
@@ -34,9 +39,13 @@ export class TimelineComponent implements OnInit, OnDestroy {
     this.videoSubsc = this.store.select(s => s.video).subscribe(data => {
       this.totalTime = data.totalTime
       this.hasAnnotations = data.hasAnnotations
-      this.currentTime = data.currentTime
       this.startDate = data.startTimestamp
-      this.viewedBar.nativeElement.style.width = this.percentageViewed(data.currentTime)
+      this.playing = data.playing
+    })
+
+    this.currentTimeSubsc = this.store.select(s => s.video.currentTime).subscribe(data => {
+      this.currentTime = data
+      this.viewedBar.nativeElement.style.width = this.percentageViewed(data)
     })
 
     this.slides$ = this.store.select(s => s.lecture.slides)
@@ -45,13 +54,36 @@ export class TimelineComponent implements OnInit, OnDestroy {
     })
   }
 
-  setTimeOnClick(event: MouseEvent) {
+  timebarMouseDown(event: MouseEvent) {
+    this.timeDrag = true;
+    this.playingWhileChange = this.playing
+    this.store.dispatch(new Pause())
+    this.updateBar(event);
 
+  }
+
+  timebarMouseMove(event: MouseEvent) {
+    if (this.timeDrag) {
+      this.updateBar(event);
+    }
+  }
+
+  timebarMouseUp(event: MouseEvent) {
+    if (this.timeDrag) {
+      this.timeDrag = false;
+      let newTime = this.updateBar(event);
+      this.store.dispatch(new SetUpdatedTime(newTime))
+      if (this.playingWhileChange)
+        this.store.dispatch(new Play())
+    }
+  }
+
+  private updateBar(event: MouseEvent): number {
     let rect = this.progressBar.nativeElement.getBoundingClientRect()
     let newTime = ((event.clientX - rect.left) * this.totalTime) / (rect.right - rect.left)
-    this.store.dispatch(new SetUpdatedTime(newTime))
+    this.currentTime = newTime
     this.viewedBar.nativeElement.style.width = this.percentageViewed(newTime)
-
+    return newTime
   }
 
   private percentageViewed(sec: number): string {
@@ -138,5 +170,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.videoSubsc.unsubscribe()
     this.slideSubsc.unsubscribe()
+    this.currentTimeSubsc.unsubscribe()
   }
 }
