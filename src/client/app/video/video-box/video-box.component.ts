@@ -34,11 +34,6 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
-      console.log("in box " + data)
-      this.playing = data
-      this.playPause();
-    })
 
     this.volumeSubsc = this.store.select(s => s.video.volume).subscribe(data => {
       this.videoElement.nativeElement.muted = !data
@@ -78,7 +73,6 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
     Quando viene distrutto il componente elimina tutte le subscription.
   */
   ngOnDestroy() {
-    console.log("elimino video")
     this.playingSubsc.unsubscribe()
     this.updateTimeSubsc.unsubscribe()
     this.speedSubsc.unsubscribe()
@@ -92,7 +86,12 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
     this.videoElement.nativeElement.webkitRequestFullScreen()
   }
 
-  hideLoadingText() {
+  startVideoListening() {
     this.loadingVideo = false
+
+    this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
+      this.playing = data
+      this.playPause();
+    })
   }
 }

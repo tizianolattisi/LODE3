@@ -1,13 +1,13 @@
 <div fxLayout="row" fxLayoutGap="2em" fxLayoutAlign="center center">
   <div fxLayout="column" fxLayoutGap="5em">
-    <div class="thumbnail" #firstThumb (click)="changeFirstThumb()">
-      <video-box [allowFullscreen]="false" [videoUrl]='pcVideoUrl | async'></video-box>
+    <div id="firstThumb" class="thumbnail" #firstThumb (click)="changeThumb(1)">
+      <video-box id="camVideo" [allowFullscreen]="currentMainView === 'camVideo'" [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
     </div>
-    <div *ngIf="hasAnnotations" class="thumbnail" #secondThumb (click)="changeSecondThumb()">
+    <div class="thumbnail" #secondThumb (click)="changeThumb(2)">
       <note-box></note-box>
     </div>
   </div>
   <div class="content" #mainView>
-    <video-box [allowFullscreen]="true" [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
+    <video-box id="pcVideo" [allowFullscreen]="currentMainView === 'pcVideo'" [videoUrl]='pcVideoUrl | async'></video-box>
   </div>
 </div>

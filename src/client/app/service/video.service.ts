@@ -6,7 +6,10 @@ import { Observable } from 'rxjs/Rx';
 export class VideoService {
   public BASE_URL: string
   constructor(
-    private http: HttpClient) { this.BASE_URL = 'http://127.0.0.1:8887' }
+    private http: HttpClient) {
+    this.BASE_URL = 'http://127.0.0.1:8887'
+    //this.BASE_URL = 'http://lode.disi.unitn.it/cad'
+  }
 
   FetchVideoData(uuid: string): Observable<string> {
 

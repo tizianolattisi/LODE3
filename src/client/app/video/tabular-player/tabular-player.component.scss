@@ -1,11 +1,13 @@
 .content{
     position: relative;
-    width: 60vw;
-    height: 33.75vw;
+    width: 131.5vh;
+    height: 74vh;
 }
 
 .thumbnail{
     position: relative;
-    width: 16vw;
-    height: 9vw;
+    width: 48vh;
+    height: 27vh;
+    cursor: pointer;
+    border: 2px solid black;
 }
