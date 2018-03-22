@@ -6,7 +6,7 @@ import {AppState} from '../../store/app-state';
 import {SelectTool, SetStroke, SetColor} from '../../store/editor/editor.actions';
 import {ToolDescription} from '../../service/model/tool-description';
 import {ResetSelection, DeleteSelection} from '../../store/annotation/annotation.actions';
-import {checkIsTouchDevice} from '../../shared/touch-device-detect';
+import {checkIsLiteLayout} from '../../shared/lite-layout-detect';
 
 @Component({
   selector: 'l3-tools-bar',
@@ -20,10 +20,11 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
   color$: Observable<string>;
 
   tools$: Observable<ToolDescription[]>;
+  filteredTools: ToolDescription[];
   selectedToolType: string;
   selectedToolColor: string;
 
-  isTouchDevice: boolean;
+  isLiteLayout: boolean;
   colors: String[] = ['#FF0000', '#00FF00', '#0000FF'];
 
   private selectedToolTypeSubscr: Subscription;
@@ -32,8 +33,9 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.isTouchDevice = checkIsTouchDevice();
+    this.isLiteLayout = checkIsLiteLayout();
     this.tools$ = this.store.select(s => s.editor.tools);
+    this.tools$.subscribe(data => this.filteredTools = this.filterTools(data))
     this.stroke$ = this.store.select(s => s.editor.stroke);
     this.color$ = this.store.select(s => s.editor.color);
     this.selectedToolTypeSubscr = this.store.select(s => s.editor.selectedTool).subscribe(toolType => {
@@ -44,6 +46,10 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
       this.selectedToolColor = toolColor;
       this.cd.detectChanges();
     });
+  }
+
+  filterTools(tools: ToolDescription[]) {
+    return tools.filter(t => t.type!='pencil');
   }
 
   onToolSelect(toolType: string) {

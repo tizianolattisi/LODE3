@@ -1,7 +1,7 @@
 <div fxLayout fxLayoutAlign="stretch center">
 
 
-  <div *ngIf="isTouchDevice">
+  <div *ngIf="isLiteLayout">
     <button *ngFor="let color of colors"
             mat-icon-button (click)="onColorPencilSelect(color)"
             [ngClass]="{'selected': ('pencil' === selectedToolType && color === selectedToolColor)}">
@@ -10,19 +10,19 @@
 
   </div>
 
-  <div *ngIf="!isTouchDevice">
+  <div *ngIf="isLiteLayout">
     <button mat-icon-button [ngClass]="{'selected': (selectedToolType === 'default' || !selectedToolType) }" (click)="onToolSelect('default')">
       <mat-icon svgIcon="cursor-default-outline"></mat-icon>
     </button>
 
-    <button mat-icon-button *ngFor="let tool of tools$ | async" [ngClass]="{'selected': tool.type === selectedToolType}" (click)="onToolSelect(tool.type)">
+    <button mat-icon-button *ngFor="let tool of filteredTools" [ngClass]="{'selected': tool.type === selectedToolType}" (click)="onToolSelect(tool.type)">
       <mat-icon [svgIcon]="tool.icon"></mat-icon>
     </button>
   </div>
 
-  <hr class="divider" *ngIf="!isTouchDevice">
+  <hr class="divider" *ngIf="isLiteLayout">
 
-  <div fxLayout fxLayoutAlign="center center"*ngIf="!isTouchDevice">
+  <div fxLayout fxLayoutAlign="center center"*ngIf="!isLiteLayout">
 
     <div class="color-picker" cpPosition="left" cpAlphaChannel="disabled" [colorPicker]="color$ | async" (colorPickerChange)="onColorChange($event)"
       [style.background]="color$ | async"></div>
@@ -33,9 +33,9 @@
     </mat-form-field>
   </div>
 
-  <hr class="divider" *ngIf="!isTouchDevice">
+  <hr class="divider" *ngIf="!isLiteLayout">
 
-  <div *ngIf="!isTouchDevice">
+  <div *ngIf="isLiteLayout">
     <button mat-icon-button (click)="onDeselectAll()">
       <mat-icon svgIcon="deselect"></mat-icon>
     </button>

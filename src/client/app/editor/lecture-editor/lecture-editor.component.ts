@@ -39,7 +39,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
-import {checkIsTouchDevice} from '../../shared/touch-device-detect';
+import {checkIsLiteLayout} from '../../shared/lite-layout-detect';
 
 
 @Component({
@@ -96,7 +96,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
     // Is a touch device?
-    this.isTouchDevice = checkIsTouchDevice();
+    this.isTouchDevice = checkIsLiteLayout();
 
     // Init tools
     this.store.dispatch(new SetTools(this.tools.map(t => t.getDescription())))
