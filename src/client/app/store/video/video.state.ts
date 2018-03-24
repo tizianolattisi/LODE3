@@ -1,3 +1,5 @@
+import { Annotation, DataType } from '../../service/model/annotation';
+
 export enum Layout {
   NONE,
   LINEAR3,
@@ -20,4 +22,5 @@ export interface VideoState {
 
   startTimestamp: number;
   hasAnnotations: boolean;
+  allAnnotations: Map<string, Annotation<DataType>[]>
 }

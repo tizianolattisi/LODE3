@@ -1,3 +1,11 @@
-<div class="images-wrapper">
-    <img class="attached-image" *ngFor="let slide of slides$ | async" (click)="setTime(slide)" [src]="slide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + slide?.img)">
+<div fxLayout="row">
+    <div class="wrapper-row">
+        <div class="images-wrapper" style="position:relative">
+            <div fxLayout class="wrapper-svg" #annotationContainer></div>
+            <div fxLayout class="wrapper-for">
+                <img class="attached-image" *ngFor="let slide of slides$ | async" (click)="setTime(slide)" [src]="slide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + slide?.img)">
+            </div>
+        </div>
+    </div>
 </div>
+<svg #SVGCanvas class="attached-image" viewBox="0 0 1920 1080"></svg>

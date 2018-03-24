@@ -9,6 +9,10 @@ import { VideoService } from '../../service/video.service'
 import { Parser } from 'xml2js';
 import { Layout } from '../../store/video/video.state'
 import { Subscription } from 'rxjs/Subscription';
+import { SocketService } from '../../service/socket.service';
+import { Annotation, DataType } from '../../service/model/annotation';
+import { FetchAnnotations } from '../../store/annotation/annotation.actions';
+import { WsFromServerEvents } from '../../service/model/ws-msg';
 
 @Component({
   selector: 'l3-lecture-viewer',
@@ -22,6 +26,9 @@ export class LectureViewerComponent implements OnInit {
   layoutSelection: string;
   hasAnnotations: boolean
 
+  private allAnnotations: Map<string, Annotation<DataType>[]> = new Map<string, Annotation<DataType>[]>()
+  private nSlides: number = 0
+
   private currentLectureSubs: Subscription
   private layoutSubs: Subscription
   private videoFetchSubs: Subscription
@@ -31,15 +38,27 @@ export class LectureViewerComponent implements OnInit {
     private store: Store<AppState>,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private socketService: SocketService,
     private videoService: VideoService
   ) {
   }
 
   ngOnInit() {
+
     this.videoFetchSubs = this.currentLectureSubs = this.store.select(s => s.lecture.currentLecture)
       .subscribe(lecture => {
         this.lecture = lecture;
         if (lecture) {
+          this.store.select(s => s.user.token).subscribe(token => {
+            this.socketService.open(token);
+            this.store.select(s => s.lecture.slides).subscribe(data => {
+              this.nSlides = data.length
+              for (let x of data) {
+                this.store.dispatch(new FetchAnnotations({ lectureId: this.lecture.uuid, slideId: x._id }));
+              }
+            })
+          })
+
           this.videoService.FetchVideoData(this.lecture.uuid).subscribe(data => {
             let parser = new Parser()
             parser.parseString(data, (err, result) => {
@@ -76,6 +95,20 @@ export class LectureViewerComponent implements OnInit {
     this.layoutSubs = this.store.select(s => s.video.videoLayout).subscribe(data => {
       this.layoutSelection = Layout[data]
     })
+    this.socketService.onReceive().subscribe(msg => {
+      if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
+        // Annotations from server
+        const anns: Annotation<DataType>[] = msg.data;
+        if (anns.length > 0) {
+          let slideuuid = anns[0].slideId
+          this.allAnnotations.set(slideuuid, anns)
+
+        }
+        if (this.allAnnotations.size === this.nSlides) {
+          this.store.dispatch(new VideoActions.SetCompleteAnnotations(this.allAnnotations))
+        }
+      }
+    });
   }
 
   ngDestroy() {

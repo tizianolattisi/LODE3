@@ -1,10 +1,4 @@
 <div l3FxFullHeight>
-    <!--
-    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.5em">
-        <h3 id="title">{{lecture === null? '' : lecture.name}}</h3>
-        <h2 id="course">{{lecture === null? '' : lecture.course}}</h2>
-    </div>
--->
     <div class="player">
         <linear-player *ngIf="layoutSelection === 'LINEAR3' ||layoutSelection ===  'LINEAR2' || layoutSelection === 'NONE'"></linear-player>
         <tabular-player *ngIf="layoutSelection === 'TABULAR3' || layoutSelection === 'TABULAR2'"></tabular-player>
@@ -13,7 +7,6 @@
         <controls></controls>
         <timeline></timeline>
     </div>
-
     <div *ngIf="hasAnnotations" fxLayout="row" id="note-slider" fxLayoutAlign="center center">
         <note-slider></note-slider>
     </div>

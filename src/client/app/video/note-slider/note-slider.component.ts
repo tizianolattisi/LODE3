@@ -1,21 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
 import { Observable } from 'rxjs/Observable';
 import { SetUpdatedTime } from '../../store/video/video.actions'
+import * as SVG from 'svg.js';
+import { Doc } from 'svg.js';
+import { Annotation, DataType, PencilData, NoteData } from '../../service/model/annotation';
+import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
+import { G } from 'svg.js';
+
 @Component({
   selector: 'note-slider',
   templateUrl: './note-slider.component.html',
   styleUrls: ['./note-slider.component.scss']
 })
-export class NoteSliderComponent implements OnInit {
+export class NoteSliderComponent implements OnInit, AfterViewInit {
+
+  private svgAnnotationContainer: Doc
 
   uuid$: Observable<string>
   slides$: Observable<Screenshot[]>
   startDate: number
+
+  @ViewChild('SVGCanvas') SVGCanvas: ElementRef;
+  @ViewChild('annotationContainer') annotationContainer: ElementRef;
+  private slides: Screenshot[]
+  private allAnnotations: Map<string, Annotation<DataType>[]>
+
   constructor(
-    private store: Store<AppState>) {
+    private store: Store<AppState>,
+  ) {
   }
 
   ngOnInit() {
@@ -25,8 +40,80 @@ export class NoteSliderComponent implements OnInit {
     this.startDate = 20171129045450297000
   }
 
-  setTime(slide: Screenshot) {
+  private setCompleteSlides() {
+    this.SVGCanvas.nativeElement.style.display = "block"
+    if (this.slides !== undefined && this.allAnnotations !== undefined) {
+      while (this.annotationContainer.nativeElement.firstChild) {
+        this.annotationContainer.nativeElement.removeChild(this.annotationContainer.nativeElement.firstChild);
+      }
+      for (let actualSlide of this.slides) {
+        this.svgAnnotationContainer = SVG.adopt(this.SVGCanvas.nativeElement) as Doc;
+        let slideAnnotations = this.allAnnotations.get(actualSlide._id)
+        if (slideAnnotations !== undefined) {
+          for (let actualAnnotation of slideAnnotations) {
+            if (actualAnnotation.type === 'pencil') {
+              let pencilAnnotation = actualAnnotation as Annotation<PencilData>
+              this.drawPencilAnnotation(pencilAnnotation)
+            } else if (actualAnnotation.type === 'note') {
+              let pencilAnnotation = actualAnnotation as Annotation<NoteData>
+              this.drawNoteAnnotation(pencilAnnotation)
+            }
+          }
+          let actualSVG = this.SVGCanvas.nativeElement.cloneNode(true)
+          var divContainer = document.createElement("div");
+          divContainer.style.height = "8vw"
+          divContainer.appendChild(actualSVG)
+          this.annotationContainer.nativeElement.appendChild(divContainer)
+          while (this.SVGCanvas.nativeElement.firstChild) {
+            this.SVGCanvas.nativeElement.removeChild(this.SVGCanvas.nativeElement.firstChild);
+          }
+        }
+      }
+    }
+    this.SVGCanvas.nativeElement.style.display = "none"
+  }
 
+  public ngAfterViewInit(): void {
+    this.store.select(s => s.lecture.slides).subscribe(data => {
+      this.slides = data
+      this.setCompleteSlides()
+    })
+    this.store.select(s => s.video.allAnnotations).subscribe(data => {
+      this.allAnnotations = data
+      this.setCompleteSlides()
+    })
+  }
+
+  /*
+    Metodo che disegna appunti di tipo "matita"
+  */
+  drawPencilAnnotation(annotation: Annotation<PencilData>): void {
+    const path = this.svgAnnotationContainer.path(annotation.data.path);
+    path.stroke({ color: annotation.data.color, width: annotation.data.width });
+    path.fill({ color: 'none' });
+    path.id(annotation.uuid);
+  }
+  /*
+    Metodo che disegna appunti di tipo "nota"
+  */
+  drawNoteAnnotation(annotation: Annotation<NoteData>): void {
+    const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
+    placeholder.id(annotation.uuid);
+  }
+
+  /*
+    Disegna il placeholder per appunti di tipo "nota"
+  */
+  private drawPlaceholder(x: number, y: number, color: string): G {
+    const group = this.svgAnnotationContainer.group();
+    group.translate(x, y);
+    group.circle(PL_RADIUS).addClass('note-placeholder').fill({ color }).stroke({ color: lightenDarkenColor(color, 20), width: 5 });
+    group.path(PL_ICON_PATH).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+
+    return group;
+  }
+
+  setTime(slide: Screenshot) {
     this.store.dispatch(new SetUpdatedTime(this.secondsDifference(slide.timestamp, this.startDate)))
   }
 

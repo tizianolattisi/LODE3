@@ -4,11 +4,28 @@
   box-sizing: border-box;
 }
 
+.wrapper-row {
+  left:4vw;
+}
+
+.wrapper-svg{
+  position:relative;
+  z-index: 10;
+}
+
+.wrapper-for{
+  margin-top:10px; 
+  z-index:0; 
+  position: absolute; 
+  top: 0; 
+  height:8vw
+}
 
 .images-wrapper {
+  position:relative;
   width: 90vw;
-  height: 10vw;
-  background: #e0e0d1;
+  height: 11vw;
+ background: #e0e0d1;
   margin: 100px auto;
   padding: 10px;
   overflow-y: hidden;
@@ -17,6 +34,8 @@
 }
 
 .attached-image {
+  height: 8vw;
+  width: auto;
   position: relative;
   height: 100%;
   width: auto;
@@ -45,13 +64,7 @@
   border-radius: 6px;
 }
 
-.image-container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  z-index: 10;
-}
+
 
 .annotation-container {
   position: absolute;

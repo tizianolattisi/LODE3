@@ -1,5 +1,6 @@
 import * as VideoActions from './video.actions';
 import { VideoState, Layout } from './video.state';
+import { Annotation, DataType } from '../../service/model/annotation';
 
 export type Action = VideoActions.All;
 
@@ -16,7 +17,8 @@ const initialState: VideoState = {
   volume: true,
   videoLayout: Layout.NONE,
   hasAnnotations: false,
-  startTimestamp: 0
+  startTimestamp: 0,
+  allAnnotations: new Map<string, Annotation<DataType>[]>()
 }
 
 export function videoReducer(state: VideoState = initialState, action: Action): VideoState {
@@ -99,6 +101,12 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
       return {
         ...state,
         startTimestamp: action.payload
+      };
+
+    case VideoActions.SET_COMPLETE_ANNOTATIONS:
+      return {
+        ...state,
+        allAnnotations: action.payload
       };
     default:
       return state;

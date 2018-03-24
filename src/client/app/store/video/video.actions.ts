@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Layout } from './video.state'
+import { Annotation, DataType } from '../../service/model/annotation';
 
 export const SET_CAM_VIDEO_URL = '[Video] SET_CAM_VIDEO_URL';
 export const SET_PC_VIDEO_URL = '[Video] SET_PC_VIDEO_URL';
@@ -13,9 +14,10 @@ export const SET_SPEED = '[Video] SET_SPEED';
 export const MUTE_AUDIO = '[Video] MUTE_AUDIO';
 export const UNMUTE_AUDIO = '[Video] UNMUTE_AUDIO';
 export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT';
-
 export const SET_START_TIMESTAMP = '[Video] SET_START_TIME'
+
 export const SET_HAS_ANNOTATIONS = '[Video] SET_HAS_ANNOTATIONS'
+export const SET_COMPLETE_ANNOTATIONS = '[Video] SET_COMPLETE_ANNOTATIONS'
 
 export class SetCamVideoUrl implements Action {
   readonly type = SET_CAM_VIDEO_URL;
@@ -86,6 +88,12 @@ export class SetHasAnnotations implements Action {
 
   constructor(public payload: boolean) { }
 }
+
+export class SetCompleteAnnotations implements Action {
+  readonly type = SET_COMPLETE_ANNOTATIONS;
+
+  constructor(public payload: Map<string, Annotation<DataType>[]>) { }
+}
 export type All
   = SetCamVideoUrl
   | SetPcVideoUrl
@@ -99,4 +107,5 @@ export type All
   | SetVideoLayout
   | SetSpeed
   | SetStartTimestamp
-  | SetHasAnnotations;
+  | SetHasAnnotations
+  | SetCompleteAnnotations;

@@ -1,11 +1,11 @@
 
-import {AppState} from '../../store/app-state';
-import {Store} from '@ngrx/store';
-import {Tool} from './tool';
-import {Annotation, NoteData} from '../model/annotation';
-import {SetColor, SelectTool} from '../../store/editor/editor.actions';
-import {OpenNote} from '../../store/annotation/annotation.actions';
-import {G} from 'svg.js';
+import { AppState } from '../../store/app-state';
+import { Store } from '@ngrx/store';
+import { Tool } from './tool';
+import { Annotation, NoteData } from '../model/annotation';
+import { SetColor, SelectTool } from '../../store/editor/editor.actions';
+import { OpenNote } from '../../store/annotation/annotation.actions';
+import { G } from 'svg.js';
 
 export const PL_RADIUS = 80;
 
@@ -28,7 +28,7 @@ export class NoteTool extends Tool<NoteData> {
     this.store.dispatch(new SetColor('#FFCA28'));
   }
 
-  onToolDeselected(): void {}
+  onToolDeselected(): void { }
 
   onClick = (event: MouseEvent) => {
 
@@ -38,13 +38,13 @@ export class NoteTool extends Tool<NoteData> {
 
       const placeholder = this.drawPlaceholder(x, y, color);
 
-      this.addAnnotation({x, y, text: '', title: 'Note', color}).subscribe(ann => {
+      this.addAnnotation({ x, y, text: '', title: 'Note', color }).subscribe(ann => {
         // When annotation is created, add click handler
         this.addHandlers(placeholder, ann.slideId, ann.uuid);
         placeholder.id(ann.uuid);
 
         // Open note
-        this.store.dispatch(new OpenNote({slideId: ann.slideId, annotationId: ann.uuid}));
+        this.store.dispatch(new OpenNote({ slideId: ann.slideId, annotationId: ann.uuid }));
 
         // Deselect tool
         this.store.dispatch(new SelectTool('default'));
@@ -53,17 +53,17 @@ export class NoteTool extends Tool<NoteData> {
     });
   };
 
-  onDragStart = (event: any) => {};
+  onDragStart = (event: any) => { };
 
-  onDragMove = (event: any) => {};
+  onDragMove = (event: any) => { };
 
-  onDragStop = (event: any) => {};
+  onDragStop = (event: any) => { };
 
-  onDragStartTouch = (event: any) => {};
+  onDragStartTouch = (event: any) => { };
 
-  onDragMoveTouch = (event: any) => {};
+  onDragMoveTouch = (event: any) => { };
 
-  onDragStopTouch = (event: any) => {};
+  onDragStopTouch = (event: any) => { };
 
   drawAnnotation(annotation: Annotation<NoteData>): void {
     const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
@@ -74,21 +74,21 @@ export class NoteTool extends Tool<NoteData> {
   private drawPlaceholder(x: number, y: number, color: string): G {
     const group = this.getAnnotationContainer().group();
     group.translate(x, y);
-    group.circle(PL_RADIUS).addClass('note-placeholder').fill({color}).stroke({color: lightenDarkenColor(color, 20), width: 5});
-    group.path(PL_ICON_PATH).fill('#FFF').transform({scaleX: 2, scaleY: 2}).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+    group.circle(PL_RADIUS).addClass('note-placeholder').fill({ color }).stroke({ color: lightenDarkenColor(color, 20), width: 5 });
+    group.path(PL_ICON_PATH).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
 
     return group;
   }
 
   private addHandlers(placeholder: G, slideId: string, annotationId: string) {
     placeholder.click(() => {
-      this.store.dispatch(new OpenNote({slideId, annotationId}));
+      this.store.dispatch(new OpenNote({ slideId, annotationId }));
     });
   }
 }
 
 
-function lightenDarkenColor(col: string, amt: number): string {
+export function lightenDarkenColor(col: string, amt: number): string {
 
   let usePound = false;
 
