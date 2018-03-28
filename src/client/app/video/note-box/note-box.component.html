@@ -1,1 +1,2 @@
-<img class='screenshotContainer' [src]="currentSlide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + currentSlide?.img)">
+<svg id="canvas" class='screenshotContainer' viewBox="0 0 1920 1080" #SVGCanvas></svg>
+<img id="image" class='screenshotContainer' [src]="(currentSlide === undefined || currentSlide?.img === 'blank') ? 'assets/blank.png' : ('data:image/png;base64,' + currentSlide?.img)">

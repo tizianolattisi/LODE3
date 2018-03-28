@@ -13,6 +13,7 @@ import { SocketService } from '../../service/socket.service';
 import { Annotation, DataType } from '../../service/model/annotation';
 import { FetchAnnotations } from '../../store/annotation/annotation.actions';
 import { WsFromServerEvents } from '../../service/model/ws-msg';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'l3-lecture-viewer',
@@ -25,6 +26,7 @@ export class LectureViewerComponent implements OnInit {
   lecture: Lecture;
   layoutSelection: string;
   hasAnnotations: boolean
+  openNotes$: Observable<{ slideId: string; annotationId: string; }[]>;
 
   private allAnnotations: Map<string, Annotation<DataType>[]> = new Map<string, Annotation<DataType>[]>()
   private nSlides: number = 0
@@ -109,6 +111,8 @@ export class LectureViewerComponent implements OnInit {
         }
       }
     });
+
+    this.openNotes$ = this.store.select(s => s.annotation.openNotes);
   }
 
   ngDestroy() {

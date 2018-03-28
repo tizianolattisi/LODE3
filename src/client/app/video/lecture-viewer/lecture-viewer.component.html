@@ -11,3 +11,7 @@
         <note-slider></note-slider>
     </div>
 </div>
+
+<ng-container *ngFor="let noteInfo of openNotes$ | async">
+    <note-reader [noteInfo]="noteInfo"> </note-reader>
+</ng-container>

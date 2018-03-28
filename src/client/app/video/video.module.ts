@@ -12,14 +12,17 @@ import { NoteSliderComponent } from './note-slider/note-slider.component';
 import { LinearPlayerComponent } from './linear-player/linear-player.component';
 import { SecondsToTimePipe } from './seconds-to-time.pipe';
 import { TabularPlayerComponent } from './tabular-player/tabular-player.component'
+import { SharedModule } from '../shared/shared.module';
+import { NoteReaderComponent } from './note-reader/note-reader.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(videoRoutes),
-    MaterialModule
+    MaterialModule,
+    SharedModule
   ],
   declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent,
-    TimelineComponent, ControlsComponent, NoteSliderComponent, LinearPlayerComponent, SecondsToTimePipe, TabularPlayerComponent]
+    TimelineComponent, ControlsComponent, NoteSliderComponent, LinearPlayerComponent, SecondsToTimePipe, TabularPlayerComponent, NoteReaderComponent]
 })
 export class VideoModule { }

@@ -5,6 +5,14 @@
     width: 100%;
 }
 
+#canvas{
+    z-index: 100;
+}
+
+#image{
+    z-index:-100;
+}
+
 @media only screen and (max-width: 600px) {
     .screenshotContainer  {
         width:100vw !important;

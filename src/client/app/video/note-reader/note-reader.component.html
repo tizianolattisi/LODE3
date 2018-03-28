@@ -1,0 +1,25 @@
+<div #window>
+  <mat-card [style.background-color]="note?.data?.color || '#FFCA28'">
+    <mat-card-header l3Draggable [draggableElement]="window">
+      <div fxLayout="row" fxLayoutAlign="center center" l3FxFullWidth>
+        <p class="title-box">{{note?.data?.title}}</p>
+        <span style="flex:1"></span>
+        <button mat-icon-button (click)="onExpand()">
+          <mat-icon svgIcon="expand"></mat-icon>
+        </button>
+
+        <button mat-icon-button (click)="onClose()">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </div>
+
+    </mat-card-header>
+
+    <mat-card-content>
+      <div l3FxFullHeight>
+        <div [innerHTML]="note?.data?.text">
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
