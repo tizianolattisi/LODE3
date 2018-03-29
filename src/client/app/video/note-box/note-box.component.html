@@ -1,2 +1,12 @@
-<svg id="canvas" class='screenshotContainer' viewBox="0 0 1920 1080" #SVGCanvas></svg>
-<img id="image" class='screenshotContainer' [src]="(currentSlide === undefined || currentSlide?.img === 'blank') ? 'assets/blank.png' : ('data:image/png;base64,' + currentSlide?.img)">
+<div fxLayout="column">
+    <div #noteBox>
+        <svg id="canvas" class='screenshotContainer' viewBox="0 0 1920 1080" #SVGCanvas></svg>
+        <img id="image" class='screenshotContainer' [src]="(currentSlide === undefined || currentSlide?.img === 'blank') ? 'assets/blank.png' : ('data:image/png;base64,' + currentSlide?.img)">
+    </div>
+    <div *ngIf="allowFullscreen">
+        <button style=" width:100%; margin-top:58%" mat-raised-button color="primary" (click)="goFullscreen() ">
+            Go Fullscreen
+            <mat-icon svgIcon="expand"></mat-icon>
+        </button>
+    </div>
+</div>

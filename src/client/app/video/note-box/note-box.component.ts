@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
@@ -17,7 +17,10 @@ import { OpenNote } from '../../store/annotation/annotation.actions';
 })
 export class NoteBoxComponent implements OnInit, OnDestroy {
 
+  @Input('allowFullscreen') allowFullscreen: boolean = true;
+
   @ViewChild('SVGCanvas') SVGCanvas: ElementRef;
+  @ViewChild('noteBox') noteBox: ElementRef;
 
   currentSlide: Screenshot
   slides: TimedScreenshot[]
@@ -196,7 +199,9 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  goFullscreen() {
+    this.noteBox.nativeElement.webkitRequestFullScreen()
+  }
 
   ngOnDestroy() {
     this.slidesSubsc.unsubscribe()

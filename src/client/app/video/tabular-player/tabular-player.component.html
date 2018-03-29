@@ -4,7 +4,7 @@
       <video-box id="camVideo" [allowFullscreen]="currentMainView === 'camVideo'" [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
     </div>
     <div class="thumbnail" #secondThumb (click)="changeThumb(2)">
-      <note-box></note-box>
+      <note-box id="notes" [allowFullscreen]="currentMainView === 'notes'"></note-box>
     </div>
   </div>
   <div class="content" #mainView>
