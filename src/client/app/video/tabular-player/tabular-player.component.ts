@@ -87,4 +87,30 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
+  rotateRight() {
+    let wasPlaying = this.playing
+    this.store.dispatch(new Pause())
+
+    if (this.hasAnnotations) {
+      let main = this.mainView.nativeElement
+      let first = this.firstThumb.nativeElement
+      let second = this.secondThumb.nativeElement
+
+      let mainElem = main.childNodes[0]
+      let firstElem = first.childNodes[0]
+      let secondElem = second.childNodes[0]
+
+      main.insertBefore(firstElem, main.childNodes[0])
+      second.insertBefore(mainElem, second.childNodes[0])
+      first.insertBefore(secondElem, first.childNodes[0])
+
+      this.currentMainView = main.childNodes[0].id
+    } else {
+      this.changeThumb(1)
+    }
+
+    if (wasPlaying) {
+      this.store.dispatch(new Play())
+    }
+  }
 }

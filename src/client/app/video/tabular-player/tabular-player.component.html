@@ -1,8 +1,12 @@
 <div fxLayout="row" fxLayoutGap="2em" fxLayoutAlign="center center">
-  <div fxLayout="column" fxLayoutGap="5em">
+  <div fxLayout="column" fxLayoutGap="2vw">
     <div id="firstThumb" class="thumbnail" #firstThumb (click)="changeThumb(1)">
       <video-box id="camVideo" [allowFullscreen]="currentMainView === 'camVideo'" [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
     </div>
+    <button style=" width:100%; margin-top:58%" mat-raised-button color="primary" (click)="rotateRight() ">
+      Rotate views
+      <mat-icon svgIcon="rotate-right"></mat-icon>
+    </button>
     <div class="thumbnail" #secondThumb (click)="changeThumb(2)">
       <note-box id="notes" [allowFullscreen]="currentMainView === 'notes'"></note-box>
     </div>
