@@ -2,33 +2,23 @@ import { Action } from '@ngrx/store';
 import { Layout } from './video.state'
 import { Annotation, DataType } from '../../service/model/annotation';
 
-export const SET_CAM_VIDEO_URL = '[Video] SET_CAM_VIDEO_URL';
-export const SET_PC_VIDEO_URL = '[Video] SET_PC_VIDEO_URL';
+export const SET_VIDEO_DATA = '[VIDEO] SET_VIDEO_DATA'
 
 export const PLAY = '[Video] PLAY';
 export const PAUSE = '[Video] PAUSE';
-export const SET_TOTAL_TIME = '[Video] SET_TOTAL_TIME';
+
 export const SET_CURRENT_TIME = '[Video] SET_CURRENT_TIME';
 export const SET_UPDATED_TIME = '[Video] SET_UPDATED_TIME';
 export const SET_SPEED = '[Video] SET_SPEED';
 export const MUTE_AUDIO = '[Video] MUTE_AUDIO';
 export const UNMUTE_AUDIO = '[Video] UNMUTE_AUDIO';
-export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT';
-export const SET_START_TIMESTAMP = '[Video] SET_START_TIME'
-
-export const SET_HAS_ANNOTATIONS = '[Video] SET_HAS_ANNOTATIONS'
 export const SET_COMPLETE_ANNOTATIONS = '[Video] SET_COMPLETE_ANNOTATIONS'
+export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT'
 
-export class SetCamVideoUrl implements Action {
-  readonly type = SET_CAM_VIDEO_URL;
+export class SetVideoData implements Action {
+  readonly type = SET_VIDEO_DATA;
 
-  constructor(public payload: string) { }
-}
-
-export class SetPcVideoUrl implements Action {
-  readonly type = SET_PC_VIDEO_URL;
-
-  constructor(public payload: string) { }
+  constructor(public payload: any) { }
 }
 
 export class Play implements Action {
@@ -39,11 +29,6 @@ export class Pause implements Action {
   readonly type = PAUSE;
 }
 
-export class SetTotalTime implements Action {
-  readonly type = SET_TOTAL_TIME;
-
-  constructor(public payload: number) { }
-}
 
 export class SetUpdatedTime implements Action {
   readonly type = SET_UPDATED_TIME;
@@ -77,35 +62,19 @@ export class SetVideoLayout implements Action {
   constructor(public payload: Layout) { }
 }
 
-export class SetStartTimestamp implements Action {
-  readonly type = SET_START_TIMESTAMP;
-
-  constructor(public payload: number) { }
-}
-
-export class SetHasAnnotations implements Action {
-  readonly type = SET_HAS_ANNOTATIONS;
-
-  constructor(public payload: boolean) { }
-}
-
 export class SetCompleteAnnotations implements Action {
   readonly type = SET_COMPLETE_ANNOTATIONS;
 
   constructor(public payload: Map<string, Annotation<DataType>[]>) { }
 }
 export type All
-  = SetCamVideoUrl
-  | SetPcVideoUrl
+  = SetVideoData
   | Play
   | Pause
-  | SetTotalTime
   | SetCurrentTime
   | SetUpdatedTime
   | MuteAudio
   | UnmuteAudio
-  | SetVideoLayout
   | SetSpeed
-  | SetStartTimestamp
-  | SetHasAnnotations
+  | SetVideoLayout
   | SetCompleteAnnotations;

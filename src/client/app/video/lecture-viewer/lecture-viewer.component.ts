@@ -23,9 +23,9 @@ import { Observable } from 'rxjs/Observable';
 
 export class LectureViewerComponent implements OnInit {
 
-  lecture: Lecture;
-  layoutSelection: string;
-  hasAnnotations: boolean
+  lecture: Lecture; // utilizzato per estrarre i dati della lezione
+  layoutSelection: string; // determina la tipologia di player da visualizzare (lineare-tabulare)
+  hasAnnotations: boolean // se true visualizza lo slider
   openNotes$: Observable<{ slideId: string; annotationId: string; }[]>;
 
   private allAnnotations: Map<string, Annotation<DataType>[]> = new Map<string, Annotation<DataType>[]>()
@@ -35,6 +35,10 @@ export class LectureViewerComponent implements OnInit {
   private layoutSubs: Subscription
   private videoFetchSubs: Subscription
   private lectureFetchSubs: Subscription
+  private socketSubs: Subscription
+  private tokenSubs: Subscription
+  private slidesSubs: Subscription
+  private fetchVideoSubs: Subscription
 
   constructor(
     private store: Store<AppState>,
@@ -49,44 +53,29 @@ export class LectureViewerComponent implements OnInit {
 
     this.videoFetchSubs = this.currentLectureSubs = this.store.select(s => s.lecture.currentLecture)
       .subscribe(lecture => {
+        //estraggo dati lezione
         this.lecture = lecture;
         if (lecture) {
-          this.store.select(s => s.user.token).subscribe(token => {
-            this.socketService.open(token);
-            this.store.select(s => s.lecture.slides).subscribe(data => {
+          this.tokenSubs = this.store.select(s => s.user.token).subscribe(token => {
+            this.socketService.open(token); // apro soket per annotazioni
+            this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
               this.nSlides = data.length
               for (let x of data) {
+                // prendo annotazioni per ciascuna slide
                 this.store.dispatch(new FetchAnnotations({ lectureId: this.lecture.uuid, slideId: x._id }));
               }
             })
           })
-
-          this.videoService.FetchVideoData(this.lecture.uuid).subscribe(data => {
+          // estrazione dei dati del video dal file XML
+          this.fetchVideoSubs = this.videoService.FetchVideoData(this.lecture.uuid).subscribe(data => {
             let parser = new Parser()
             parser.parseString(data, (err, result) => {
-              this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
+              if (result.data.camvideo !== undefined)
+                result.data.camvideo[0].name = this.videoService.BASE_URL + '/' + this.lecture.uuid + '/video/' + result.data.camvideo[0].name
+              result.data.pcvideo[0].name = this.videoService.BASE_URL + '/' + this.lecture.uuid + '/video/' + result.data.pcvideo[0].name
               this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid))
-              this.store.dispatch(new VideoActions.SetUpdatedTime(0))
-
-              //setto tipo url di camVideo e tipo di layout
-              if (result.data.camvideo !== undefined) {
-                this.store.dispatch(new VideoActions.SetCamVideoUrl(this.videoService.BASE_URL + '/' + this.lecture.uuid + '/video/' + result.data.camvideo[0].name))
-                if (this.hasAnnotations)
-                  this.store.dispatch(new VideoActions.SetVideoLayout(Layout.LINEAR3))
-                else
-                  this.store.dispatch(new VideoActions.SetVideoLayout(Layout.LINEAR2))
-              }
-              else {
-                this.store.dispatch(new VideoActions.SetCamVideoUrl(''))
-                if (this.hasAnnotations)
-                  this.store.dispatch(new VideoActions.SetVideoLayout(Layout.LINEAR2))
-                else
-                  this.store.dispatch(new VideoActions.SetVideoLayout(Layout.NONE))
-              }
-              this.store.dispatch(new VideoActions.SetPcVideoUrl(this.videoService.BASE_URL + '/' + this.lecture.uuid + '/video/' + result.data.pcvideo[0].name))
-              this.store.dispatch(new VideoActions.SetTotalTime(parseInt(result.data.pcvideo[0].totaltime)))
-              this.store.dispatch(new VideoActions.SetStartTimestamp(parseInt(result.data.info[0].startDate)))
-              this.store.dispatch(new VideoActions.SetHasAnnotations(result.data.info[0].annotations.toString() === 'true'))
+              this.store.dispatch(new VideoActions.SetVideoData(result))
+              this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
             });
           })
         } else {
@@ -94,12 +83,13 @@ export class LectureViewerComponent implements OnInit {
         }
         this.cd.detectChanges()
       })
+    // setto valore layout
     this.layoutSubs = this.store.select(s => s.video.videoLayout).subscribe(data => {
       this.layoutSelection = Layout[data]
     })
-    this.socketService.onReceive().subscribe(msg => {
+    this.socketSubs = this.socketService.onReceive().subscribe(msg => {
       if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
-        // Annotations from server
+        // estraggo annotazioni dal server
         const anns: Annotation<DataType>[] = msg.data;
         if (anns.length > 0) {
           let slideuuid = anns[0].slideId
@@ -107,6 +97,7 @@ export class LectureViewerComponent implements OnInit {
 
         }
         if (this.allAnnotations.size === this.nSlides) {
+          // se ho estratto le annotazioni per ogni slide aggiorno lo store
           this.store.dispatch(new VideoActions.SetCompleteAnnotations(this.allAnnotations))
         }
       }
@@ -121,5 +112,9 @@ export class LectureViewerComponent implements OnInit {
     this.currentLectureSubs.unsubscribe()
     this.videoFetchSubs.unsubscribe()
     this.lectureFetchSubs.unsubscribe()
+    this.socketSubs.unsubscribe()
+    this.tokenSubs.unsubscribe()
+    this.slidesSubs.unsubscribe()
+    this.fetchVideoSubs.unsubscribe()
   }
 }
