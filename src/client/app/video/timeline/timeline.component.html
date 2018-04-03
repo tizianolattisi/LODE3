@@ -7,8 +7,8 @@
       <span class="viewed-bar" #viewedBar></span>
     </div>
     <div *ngIf="hasAnnotations" fxLayout="row" class="markerRow">
-      <mat-icon class="marker" *ngFor="let slide of slides$ | async" (click)="setTimeMarker(slide)" [style.margin-left]="markerPosition(slide)"
-        svgIcon="marker"></mat-icon>
+      <mat-icon class="marker grow" [style.color]="(slide === currentSlide) ? '#1f7bdd' : '#000000'" *ngFor="let slide of slides"
+        (click)="setTimeMarker(slide)" [style.margin-left]="markerPosition(slide)" svgIcon="marker"></mat-icon>
     </div>
   </div>
   <span class="time mat-body-1">

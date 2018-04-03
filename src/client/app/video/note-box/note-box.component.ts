@@ -9,6 +9,7 @@ import { Annotation, DataType, PencilData, NoteData } from '../../service/model/
 import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
 import { G } from 'svg.js';
 import { OpenNote } from '../../store/annotation/annotation.actions';
+import { SetCurrentSlide } from '../../store/lecture/lecture.actions'
 
 @Component({
   selector: 'note-box',
@@ -41,6 +42,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.store.dispatch(new SetCurrentSlide(-1))
     this.svgAnnotationContainer = SVG.adopt(this.SVGCanvas.nativeElement) as Doc;
     this.store.select(s => s.video.startTimestamp).subscribe(data => this.initialTime = data)
 
@@ -93,10 +95,10 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     if (this.slides[this.screenshotIndex + 1] !== undefined)
       if (this.screenshotIndex < this.slides.length - 1 && this.slides[this.screenshotIndex + 1].seconds < data) {
         this.screenshotIndex += 1
+        this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
         this.currentSlide = this.slides[this.screenshotIndex].screenshot
         this.clearSVG()
       } else if (this.slides[this.screenshotIndex] !== undefined) {
-
         let actual = this.annotations.get(this.slides[this.screenshotIndex].screenshot._id)
         let isPossible = true
         while (isPossible) {
@@ -144,6 +146,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
         }
       }
     }
+    this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
   }
 
   drawSVG(actualAnnotation: Annotation<DataType>) {

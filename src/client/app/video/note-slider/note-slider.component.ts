@@ -1,43 +1,45 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
-import { Observable } from 'rxjs/Observable';
 import { SetUpdatedTime } from '../../store/video/video.actions'
 import * as SVG from 'svg.js';
 import { Doc } from 'svg.js';
 import { Annotation, DataType, PencilData, NoteData } from '../../service/model/annotation';
 import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
 import { G } from 'svg.js';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'note-slider',
   templateUrl: './note-slider.component.html',
   styleUrls: ['./note-slider.component.scss']
 })
-export class NoteSliderComponent implements OnInit, AfterViewInit {
-
-  private svgAnnotationContainer: Doc
-
-  uuid$: Observable<string>
-  slides$: Observable<Screenshot[]>
-  startDate: number
+export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('SVGCanvas') SVGCanvas: ElementRef;
   @ViewChild('annotationContainer') annotationContainer: ElementRef;
-  private slides: Screenshot[]
+
+  startDate: number
+  slides: Screenshot[]
+  currentSlide: Screenshot
+
+  private svgAnnotationContainer: Doc
   private allAnnotations: Map<string, Annotation<DataType>[]>
+
+  private startDateSubs: Subscription
+  private slideSubs: Subscription
+  private annotationSubs: Subscription
 
   constructor(
     private store: Store<AppState>,
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
 
-    this.uuid$ = this.store.select(s => s.lecture.currentLecture.uuid)
-    this.slides$ = this.store.select(s => s.lecture.slides)
-    this.startDate = 20171129045450297000
+    this.startDateSubs = this.store.select(s => s.video.startTimestamp).subscribe(data => {
+      this.startDate = data
+    })
   }
 
   private setCompleteSlides() {
@@ -71,14 +73,19 @@ export class NoteSliderComponent implements OnInit, AfterViewInit {
       }
     }
     this.SVGCanvas.nativeElement.style.display = "none"
+    this.store.select(s => s.lecture.currentSlideIndex).subscribe(data => {
+      if (this.slides !== undefined) {
+        this.currentSlide = this.slides[data]
+      }
+    })
   }
 
   public ngAfterViewInit(): void {
-    this.store.select(s => s.lecture.slides).subscribe(data => {
+    this.slideSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
       this.slides = data
       this.setCompleteSlides()
     })
-    this.store.select(s => s.video.allAnnotations).subscribe(data => {
+    this.annotationSubs = this.store.select(s => s.video.allAnnotations).subscribe(data => {
       this.allAnnotations = data
       this.setCompleteSlides()
     })
@@ -113,61 +120,16 @@ export class NoteSliderComponent implements OnInit, AfterViewInit {
     return group;
   }
 
-  setTime(slide: Screenshot) {
-    this.store.dispatch(new SetUpdatedTime(this.secondsDifference(slide.timestamp, this.startDate)))
+  setTime(actual: Screenshot) {
+    let timestamp = actual._id.toString().substring(0, 8)
+    let date = new Date(parseInt(timestamp, 16) * 1000)
+    this.store.dispatch(new SetUpdatedTime((date.getTime() - this.startDate) / 1000))
   }
 
-  private secondsDifference(timestamp1: number, timestamp2: number): number {
-    timestamp1 /= 1000
-    timestamp2 /= 1000
-
-    let year1 = Math.floor(timestamp1 / 10000000000000)
-    let year2 = Math.floor(timestamp2 / 10000000000000)
-    timestamp1 = timestamp1 - year1 * 10000000000000
-    timestamp2 = timestamp2 - year2 * 10000000000000
-
-    let month1 = Math.floor(timestamp1 / 100000000000)
-    let month2 = Math.floor(timestamp2 / 100000000000)
-    timestamp1 = timestamp1 - month1 * 100000000000
-    timestamp2 = timestamp2 - month2 * 100000000000
-    if (year1 - year2 > 0)
-      month1 += (year1 - year2) * 12
-
-    let day1 = Math.floor(timestamp1 / 1000000000)
-    let day2 = Math.floor(timestamp2 / 1000000000)
-    timestamp1 = timestamp1 - day1 * 1000000000
-    timestamp2 = timestamp2 - day2 * 1000000000
-    if (month1 - month2 > 0)
-      day1 += (month1 - month2) * 31
-
-    let hour1 = Math.floor(timestamp1 / 10000000)
-    let hour2 = Math.floor(timestamp2 / 10000000)
-    timestamp1 = timestamp1 - hour1 * 10000000
-    timestamp2 = timestamp2 - hour2 * 10000000
-    if (day1 - day2 > 0)
-      hour1 += (day1 - day1) * 24
-
-    let minutes1 = Math.floor(timestamp1 / 100000)
-    let minutes2 = Math.floor(timestamp2 / 100000)
-    timestamp1 = timestamp1 - minutes1 * 100000
-    timestamp2 = timestamp2 - minutes2 * 100000
-    if (hour1 - hour2 > 0)
-      minutes1 += (hour1 - hour2) * 60
-
-    let seconds1 = Math.floor(timestamp1 / 1000)
-    let seconds2 = Math.floor(timestamp2 / 1000)
-    timestamp1 = timestamp1 - seconds1 * 1000
-    timestamp2 = timestamp2 - seconds2 * 1000
-    if (minutes1 - minutes2 > 0)
-      seconds1 += (minutes1 - minutes2) * 60
-
-    if (timestamp2 - timestamp1 < 0) {
-      timestamp1 = (-(timestamp2 % -1000) + timestamp1 % 1000)
-    } else {
-      timestamp1 = timestamp1 - timestamp2
-    }
-
-    return (seconds1 - seconds2) + (timestamp1 / 1000)
-
+  ngOnDestroy() {
+    this.startDateSubs.unsubscribe()
+    this.slideSubs.unsubscribe()
+    this.annotationSubs.unsubscribe()
   }
+
 }

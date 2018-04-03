@@ -4,16 +4,17 @@
   box-sizing: border-box;
 }
 
-.wrapper-row {
-  left:4vw;
+.active {
+  outline: 5px solid #1f7bdd;
+    outline-offset: -5px;
 }
 
 .wrapper-svg{
-  position:relative;
+  position:absolute;
   z-index: 10;
 }
 
-.wrapper-for{
+.wrapper-img{
   margin-top:10px; 
   z-index:0; 
   position: absolute; 
@@ -21,7 +22,7 @@
   height:8vw
 }
 
-.images-wrapper {
+.notes-wrapper {
   position:relative;
   width: 90vw;
   height: 11vw;
@@ -31,6 +32,7 @@
   overflow-y: hidden;
   overflow-x: auto;
   white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
 }
 
 .attached-image {
@@ -64,7 +66,9 @@
   border-radius: 6px;
 }
 
-
+.no-clickable{
+  pointer-events: none
+}
 
 .annotation-container {
   position: absolute;
@@ -80,7 +84,7 @@ img {
 }
 
 @media only screen and (max-width: 600px) {
-  .images-wrapper  {
+  .notes-wrapper  {
       height:20vw !important;
   }
 }

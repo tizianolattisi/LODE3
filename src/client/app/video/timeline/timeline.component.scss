@@ -20,7 +20,7 @@ $barHeight: 4vh;
 .viewed-bar{
 	z-index:10;
 	width:0%;
-	background: #2673E7;
+	background: #1f7bdd;
 }
 
 .markerRow{
@@ -38,7 +38,9 @@ $barHeight: 4vh;
 .marker {
 	position: absolute;
 	cursor: pointer;
+	z-index:10;
 }
+
 
 
 @media only screen and (max-width: 600px) {
@@ -58,3 +60,7 @@ $barHeight: 4vh;
 		width: 50vw;
 	}
 }
+
+.grow { transition: all .3s ease-in-out; }
+
+.grow:hover { transform: scale(1.3); }

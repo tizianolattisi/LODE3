@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { SetUpdatedTime, Play, Pause } from '../../store/video/video.actions'
 import { Screenshot } from '../../service/model/screenshot';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -19,15 +19,19 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
   totalTime: number
   currentTime: number
-  slides$: Observable<Screenshot[]>
+  slides: Screenshot[]
   startDate: number
   hasAnnotations: boolean
-
-  private videoSubsc: Subscription
-  private currentTimeSubsc: Subscription
-  private slideSubsc: Subscription
+  currentSlide: Screenshot
   private timeDrag: boolean = false
   private playing: boolean
+
+  private currentSlideSubsc: Subscription
+  private videoSubsc: Subscription
+  private currentTimeSubsc: Subscription
+  private startDateSubsc: Subscription
+  private slidesSubsc: Subscription
+
 
   private playingWhileChange: boolean
 
@@ -48,9 +52,17 @@ export class TimelineComponent implements OnInit, OnDestroy {
       this.viewedBar.nativeElement.style.width = this.percentageViewed(data)
     })
 
-    this.slides$ = this.store.select(s => s.lecture.slides)
-    this.slideSubsc = this.store.select(s => s.video.startTimestamp).subscribe(data => {
+    this.slidesSubsc = this.store.select(s => s.lecture.slides).subscribe(data => {
+      this.slides = data
+    })
+    this.startDateSubsc = this.store.select(s => s.video.startTimestamp).subscribe(data => {
       this.startDate = data
+    })
+
+    this.currentSlideSubsc = this.store.select(s => s.lecture.currentSlideIndex).subscribe(data => {
+      if (this.slides !== undefined) {
+        this.currentSlide = this.slides[data]
+      }
     })
   }
 
@@ -117,7 +129,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.videoSubsc.unsubscribe()
-    this.slideSubsc.unsubscribe()
+    this.startDateSubsc.unsubscribe()
     this.currentTimeSubsc.unsubscribe()
+    this.currentSlideSubsc.unsubscribe()
+    this.slidesSubsc.unsubscribe()
   }
 }

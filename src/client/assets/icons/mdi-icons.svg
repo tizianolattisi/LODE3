@@ -55,7 +55,7 @@
 <svg id="linear2"  x="0px" y="4px" > <path d="M0 4 L10 4 L10 9 L0 9 Z   M12 4 L22 4 L22 9 L12 9 Z" /></svg>
 <svg id="tabular3" x="0px" y="8px" >  <path d="M0 0 L8 0 L8 5 L0 5 Z M0 7 L8 7 L8 12 L0 12 Z  M10 0 L28 0 L28 12  L10 12  Z" /></svg>
 <svg id="tabular2" x="0px" y="8px" >  <path d="M0 0 L8 0 L8 5 L0 5 Z M10 0 L28 0 L28 12  L10 12  Z" /></svg>
-<svg id="marker" transform="rotate(-90)" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg>
+<svg id="marker" transform="rotate(-90)" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg>
 <svg id="rotate-right" fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M0 0h24v24H0z" fill="none"/>
     <path d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z"/>
