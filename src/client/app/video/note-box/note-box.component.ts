@@ -47,9 +47,9 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     this.store.select(s => s.video.startTimestamp).subscribe(data => this.initialTime = data)
 
     this.slidesSubsc = this.store.select(s => s.lecture.slides).subscribe(data => {
-      this.updateSlides(data)
+      this.setSlides(data)
       this.annotationSubsc = this.store.select(s => s.video.allAnnotations).subscribe(data => {
-        this.updateAnnotations(data)
+        this.setAnnotations(data)
       })
 
       this.updatedTimeSubsc = this.store.select(s => s.video.updatedTime).subscribe(data => {
@@ -63,7 +63,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     })
   }
 
-  updateSlides(data: Screenshot[]) {
+  setSlides(data: Screenshot[]) {
     this.slides = []
     for (let actual of data) {
       let timestamp = actual._id.toString().substring(0, 8)
@@ -74,88 +74,72 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateAnnotations(data: Map<string, Annotation<DataType>[]>) {
-    if (this.slides !== undefined) {
-      for (let slide of this.slides) {
-        let x = data.get(slide.screenshot._id)
-        let currentAnnotations: TimedAnnotation[] = []
-        if (x !== undefined) {
-          for (let ann of x) {
-            let actualDate = new Date(ann.timestamp * 1000)
-            let current: TimedAnnotation = { annotation: ann, seconds: (actualDate.getTime() - this.initialTime) / 1000 }
-            currentAnnotations.push(current)
-          }
-          this.annotations.set(slide.screenshot._id, currentAnnotations)
+  setAnnotations(data: Map<string, Annotation<DataType>[]>) {
+    for (let slide of this.slides) {
+      let x = data.get(slide.screenshot._id)
+      let currentAnnotations: TimedAnnotation[] = []
+      if (x !== undefined) {
+        for (let ann of x) {
+          let actualDate = new Date(ann.timestamp * 1000)
+          let current: TimedAnnotation = { annotation: ann, seconds: (actualDate.getTime() - this.initialTime) / 1000 }
+          currentAnnotations.push(current)
         }
+        this.annotations.set(slide.screenshot._id, currentAnnotations)
       }
     }
   }
 
-  setCurrentView(data: number) {
-    if (this.slides[this.screenshotIndex + 1] !== undefined)
-      if (this.screenshotIndex < this.slides.length - 1 && this.slides[this.screenshotIndex + 1].seconds < data) {
+  setCurrentView(seconds: number) {
+    if (this.slides[0] !== undefined) {
+      if (this.slides[this.screenshotIndex + 1] !== undefined && this.slides[this.screenshotIndex + 1].seconds < seconds) {
         this.screenshotIndex += 1
-        this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
         this.currentSlide = this.slides[this.screenshotIndex].screenshot
+        this.annotationIndex = 0
         this.clearSVG()
-      } else if (this.slides[this.screenshotIndex] !== undefined) {
-        let actual = this.annotations.get(this.slides[this.screenshotIndex].screenshot._id)
-        let isPossible = true
-        while (isPossible) {
-          if (this.annotationIndex < actual.length && actual[this.annotationIndex].seconds < data) {
-            let actualAnnotation = actual[this.annotationIndex].annotation
-            this.drawSVG(actualAnnotation)
-            this.annotationIndex += 1
-          } else {
-            isPossible = false
-          }
-        }
+        this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
       }
+      this.drawSVG(seconds)
+    }
   }
 
   updateView(seconds: number) {
-    if (this.slides !== undefined) {
-      if (this.slides.length === 0 || this.slides[0].seconds > seconds) {
+    if (this.slides[0] !== undefined) {
+      if (this.slides[0].seconds > seconds) {
         this.screenshotIndex = -1
         this.currentSlide = undefined
       } else {
-        if (this.slides[this.slides.length - 1].seconds <= seconds) {
-          this.screenshotIndex = this.slides.length - 1
-        } else {
-          for (let i = 0; i < this.slides.length - 1; i += 1) {
-            if (this.slides[i].seconds <= seconds && seconds < this.slides[i + 1].seconds) {
-              this.screenshotIndex = i
-              break
-            }
+        for (this.screenshotIndex = 0; this.screenshotIndex < this.slides.length; this.screenshotIndex += 1) {
+          if (this.slides[this.screenshotIndex].seconds > seconds) {
+            break
           }
         }
+        this.screenshotIndex -= 1
         this.currentSlide = this.slides[this.screenshotIndex].screenshot
-        if (this.annotations !== undefined && this.currentSlide !== undefined) {
-          this.clearSVG()
-          let slideAnnotation = this.annotations.get(this.currentSlide._id)
-          if (slideAnnotation.length !== undefined && slideAnnotation.length > 0) {
-            for (let x of slideAnnotation) {
-              if (x.seconds > seconds) {
-                this.annotationIndex = slideAnnotation.indexOf(x)
-                break
-              } else {
-                this.drawSVG(x.annotation)
-              }
-            }
-          }
-        }
+        this.annotationIndex = 0
+        this.clearSVG()
+        this.drawSVG(seconds)
       }
+      this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
     }
-    this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
   }
 
-  drawSVG(actualAnnotation: Annotation<DataType>) {
-    if (actualAnnotation.type === 'pencil') {
-      let pencilAnnotation = actualAnnotation as Annotation<PencilData>
-      this.drawPencilAnnotation(pencilAnnotation)
-    } else if (actualAnnotation.type === 'note') {
-      let pencilAnnotation = actualAnnotation as Annotation<NoteData>
-      this.drawNoteAnnotation(pencilAnnotation)
+  drawSVG(seconds: number) {
+    if (this.currentSlide !== undefined) {
+      let currentAnnotations = this.annotations.get(this.currentSlide._id)
+      for (; this.annotationIndex < currentAnnotations.length; this.annotationIndex += 1) {
+        if (currentAnnotations[this.annotationIndex].seconds < seconds) {
+          let actualAnnotation = currentAnnotations[this.annotationIndex].annotation
+          if (actualAnnotation.type === 'pencil') {
+            let pencilAnnotation = actualAnnotation as Annotation<PencilData>
+            this.drawPencilAnnotation(pencilAnnotation)
+          } else if (actualAnnotation.type === 'note') {
+            let pencilAnnotation = actualAnnotation as Annotation<NoteData>
+            this.drawNoteAnnotation(pencilAnnotation)
+          }
+        } else {
+          break
+        }
+      }
     }
   }
 
