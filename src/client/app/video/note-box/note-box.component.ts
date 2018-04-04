@@ -31,11 +31,13 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   private annotationSubsc: Subscription
   private updatedTimeSubsc: Subscription
   private currentTimeSubsc: Subscription
+  private playingSubsc: Subscription
 
   private initialTime: number
   private screenshotIndex: number = -1
   private annotationIndex: number = 0
   private svgAnnotationContainer: Doc
+  private playing: boolean = false
 
   constructor(
     private store: Store<AppState>
@@ -60,6 +62,10 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
         this.setCurrentView(data)
       })
 
+    })
+
+    this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
+      this.playing = data
     })
   }
 
@@ -127,11 +133,23 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     if (this.currentSlide !== undefined) {
       let currentAnnotations = this.annotations.get(this.currentSlide._id)
       for (; this.annotationIndex < currentAnnotations.length; this.annotationIndex += 1) {
-        if (currentAnnotations[this.annotationIndex].seconds < seconds) {
+        if (currentAnnotations[this.annotationIndex].seconds <= seconds) {
           let actualAnnotation = currentAnnotations[this.annotationIndex].annotation
           if (actualAnnotation.type === 'pencil') {
+            let transitionsSeconds = 5
+            if (currentAnnotations[this.annotationIndex + 1] === undefined) {
+              if (this.slides[this.screenshotIndex + 1] !== undefined) {
+                transitionsSeconds = Math.min(transitionsSeconds, this.slides[this.screenshotIndex + 1].seconds - seconds)
+              }
+            } else {
+              if (currentAnnotations[this.annotationIndex + 1].seconds <= seconds) {
+                transitionsSeconds = 0
+              } else {
+                transitionsSeconds = Math.min(transitionsSeconds, currentAnnotations[this.annotationIndex + 1].seconds - seconds)
+              }
+            }
             let pencilAnnotation = actualAnnotation as Annotation<PencilData>
-            this.drawPencilAnnotation(pencilAnnotation)
+            this.drawPencilAnnotation(pencilAnnotation, transitionsSeconds)
           } else if (actualAnnotation.type === 'note') {
             let pencilAnnotation = actualAnnotation as Annotation<NoteData>
             this.drawNoteAnnotation(pencilAnnotation)
@@ -152,12 +170,25 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   /*
     Metodo che disegna appunti di tipo "matita"
   */
-  drawPencilAnnotation(annotation: Annotation<PencilData>): void {
-    const path = this.svgAnnotationContainer.path(annotation.data.path);
-    path.stroke({ color: annotation.data.color, width: annotation.data.width });
-    path.fill({ color: 'none' })
-    path.id('a' + annotation.uuid);
+  drawPencilAnnotation(annotation: Annotation<PencilData>, seconds: number): void {
+    const createdPath = this.svgAnnotationContainer.path(annotation.data.path);
+    createdPath.stroke({ color: annotation.data.color, width: annotation.data.width });
+    createdPath.fill({ color: 'none' })
+    createdPath.id('a' + annotation.uuid);
 
+    //ANIMAZIONE
+    if (this.playing) {
+      let path = this.SVGCanvas.nativeElement.querySelector('#' + 'a' + annotation.uuid)
+      var length = path.getTotalLength();
+      path.style.transition = path.style.WebkitTransition =
+        'none';
+      path.style.strokeDasharray = length + ' ' + length;
+      path.style.strokeDashoffset = length;
+      path.getBoundingClientRect();
+      path.style.transition = path.style.WebkitTransition =
+        'stroke-dashoffset ' + seconds + 's ease-in-out';
+      path.style.strokeDashoffset = '0';
+    }
   }
   /*
     Metodo che disegna appunti di tipo "nota"
@@ -195,6 +226,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     this.updatedTimeSubsc.unsubscribe()
     this.annotationSubsc.unsubscribe()
     this.currentTimeSubsc.unsubscribe()
+    this.playingSubsc.unsubscribe()
   }
 }
 
