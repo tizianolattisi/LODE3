@@ -3,7 +3,7 @@
     <div id="firstThumb" class="thumbnail" #firstThumb (click)="changeThumb(1)">
       <video-box id="camVideo" [allowFullscreen]="currentMainView === 'camVideo'" [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
     </div>
-    <button style=" width:100%; margin-top:58%" mat-raised-button color="primary" (click)="rotateRight() ">
+    <button id="rotateButton" mat-raised-button (click)="rotateRight() ">
       Rotate views
       <mat-icon svgIcon="rotate-right"></mat-icon>
     </button>

@@ -103,6 +103,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   }
 
   updateView(seconds: number) {
+    this.clearSVG()
     if (this.slides[0] !== undefined) {
       if (this.slides[0].seconds > seconds) {
         this.screenshotIndex = -1
@@ -116,7 +117,6 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
         this.screenshotIndex -= 1
         this.currentSlide = this.slides[this.screenshotIndex].screenshot
         this.annotationIndex = 0
-        this.clearSVG()
         this.drawSVG(seconds)
       }
       this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))

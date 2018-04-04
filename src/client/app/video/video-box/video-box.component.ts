@@ -73,7 +73,9 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
     Quando viene distrutto il componente elimina tutte le subscription.
   */
   ngOnDestroy() {
-    this.playingSubsc.unsubscribe()
+    if (this.playingSubsc !== undefined) {
+      this.playingSubsc.unsubscribe()
+    }
     this.updateTimeSubsc.unsubscribe()
     this.speedSubsc.unsubscribe()
     this.volumeSubsc.unsubscribe()

@@ -13,6 +13,16 @@
     z-index:-100;
 }
 
+#fullscreenButton{
+    width:100%; 
+    margin-top:58%;
+    background-color: #d1d1d1
+}
+
+#fullscreenButton:hover{
+    background-color: #b5b5b5
+}
+
 @media only screen and (max-width: 600px) {
     .screenshotContainer  {
         width:100vw !important;

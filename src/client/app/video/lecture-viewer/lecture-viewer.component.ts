@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { ActivatedRoute } from '@angular/router';
@@ -21,7 +21,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./lecture-viewer.component.scss']
 })
 
-export class LectureViewerComponent implements OnInit {
+export class LectureViewerComponent implements OnInit, OnDestroy {
 
   lecture: Lecture; // utilizzato per estrarre i dati della lezione
   layoutSelection: string; // determina la tipologia di player da visualizzare (lineare-tabulare)
@@ -106,15 +106,18 @@ export class LectureViewerComponent implements OnInit {
     this.openNotes$ = this.store.select(s => s.annotation.openNotes);
   }
 
-  ngDestroy() {
+  ngOnDestroy() {
     this.store.dispatch(new VideoActions.SetVideoLayout(Layout.NONE))
     this.layoutSubs.unsubscribe()
     this.currentLectureSubs.unsubscribe()
     this.videoFetchSubs.unsubscribe()
-    this.lectureFetchSubs.unsubscribe()
+    if (this.lectureFetchSubs !== undefined) {
+      this.lectureFetchSubs.unsubscribe()
+    }
     this.socketSubs.unsubscribe()
     this.tokenSubs.unsubscribe()
     this.slidesSubs.unsubscribe()
     this.fetchVideoSubs.unsubscribe()
+    this.socketService.close()
   }
 }

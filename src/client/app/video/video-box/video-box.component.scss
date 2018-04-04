@@ -25,6 +25,16 @@ video {
     vertical-align: middle;
 }
 
+
+#fullscreenButton{
+    width:100%; 
+    background-color: #d1d1d1
+}
+
+#fullscreenButton:hover{
+    background-color: #b5b5b5
+}
+
 .fullscreen-icon{
     display:block;
     margin-left: auto;

@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
   currentLecture$: Observable<Lecture>;
   isInViewer: boolean
   has3Stream: boolean = true
+  showInfo: boolean = false
+  showHelp: boolean = false
 
   constructor(private iconService: IconService, private store: Store<AppState>, private router: Router) { }
 
@@ -36,7 +38,7 @@ export class AppComponent implements OnInit {
 
     // Verify if user is in the viewer
     this.store.select(s => s.video.videoLayout).subscribe(data => {
-      this.isInViewer = data !== Layout.NONE
+      this.isInViewer = (data !== Layout.NONE)
       if (data === Layout.LINEAR2 || data === Layout.TABULAR2)
         this.has3Stream = false
     })
