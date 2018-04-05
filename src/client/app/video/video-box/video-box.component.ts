@@ -22,6 +22,7 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
   @ViewChild('videoElement') videoElement: ElementRef;
 
   private playing = false;
+
   private playingSubsc: Subscription
   private volumeSubsc: Subscription
   private speedSubsc: Subscription
@@ -47,6 +48,7 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
     this.updateTimeSubsc = this.store.select(s => s.video.updatedTime).subscribe(data => {
       this.videoElement.nativeElement.currentTime = data
     })
+
   }
 
   /*

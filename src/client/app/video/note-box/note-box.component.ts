@@ -32,12 +32,14 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   private updatedTimeSubsc: Subscription
   private currentTimeSubsc: Subscription
   private playingSubsc: Subscription
+  private speedSubsc: Subscription
 
   private initialTime: number
   private screenshotIndex: number = -1
   private annotationIndex: number = 0
   private svgAnnotationContainer: Doc
   private playing: boolean = false
+  private speed: number = 1
 
   constructor(
     private store: Store<AppState>
@@ -66,6 +68,10 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
 
     this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
       this.playing = data
+    })
+
+    this.speedSubsc = this.store.select(s => s.video.speed).subscribe(data => {
+      this.speed = data
     })
   }
 
@@ -149,6 +155,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
               }
             }
             let pencilAnnotation = actualAnnotation as Annotation<PencilData>
+            transitionsSeconds /= this.speed
             this.drawPencilAnnotation(pencilAnnotation, transitionsSeconds)
           } else if (actualAnnotation.type === 'note') {
             let pencilAnnotation = actualAnnotation as Annotation<NoteData>
@@ -227,6 +234,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     this.annotationSubsc.unsubscribe()
     this.currentTimeSubsc.unsubscribe()
     this.playingSubsc.unsubscribe()
+    this.speedSubsc.unsubscribe()
   }
 }
 

@@ -5,6 +5,7 @@ import { SetUpdatedTime, Play, Pause } from '../../store/video/video.actions'
 import { Screenshot } from '../../service/model/screenshot';
 // import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { TrackerService } from '../../service/tracker.service';
 
 @Component({
   selector: 'timeline',
@@ -25,6 +26,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
   currentSlide: Screenshot
   private timeDrag: boolean = false
   private playing: boolean
+  private jumpFrom: number = 0
 
   private currentSlideSubsc: Subscription
   private videoSubsc: Subscription
@@ -36,7 +38,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
   private playingWhileChange: boolean
 
   constructor(
-    private store: Store<AppState>) {
+    private store: Store<AppState>,
+    private tracker: TrackerService) {
   }
 
   ngOnInit() {
@@ -67,6 +70,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
   }
 
   timebarMouseDown(event: MouseEvent) {
+    this.jumpFrom = this.currentTime
     this.timeDrag = true;
     this.playingWhileChange = this.playing
     this.store.dispatch(new Pause())
@@ -87,7 +91,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
       this.store.dispatch(new SetUpdatedTime(newTime))
       if (this.playingWhileChange)
         this.store.dispatch(new Play())
+      this.tracker.trackEvent("jump", this.jumpFrom, newTime);
     }
+
   }
 
   private updateBar(event: MouseEvent): number {

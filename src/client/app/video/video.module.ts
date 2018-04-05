@@ -14,6 +14,7 @@ import { SecondsToTimePipe } from './seconds-to-time.pipe';
 import { TabularPlayerComponent } from './tabular-player/tabular-player.component'
 import { SharedModule } from '../shared/shared.module';
 import { NoteReaderComponent } from './note-reader/note-reader.component';
+import { TrackerService } from '../service/tracker.service'
 
 @NgModule({
   imports: [
@@ -22,7 +23,19 @@ import { NoteReaderComponent } from './note-reader/note-reader.component';
     MaterialModule,
     SharedModule
   ],
-  declarations: [LectureViewerComponent, VideoBoxComponent, NoteBoxComponent,
-    TimelineComponent, ControlsComponent, NoteSliderComponent, LinearPlayerComponent, SecondsToTimePipe, TabularPlayerComponent, NoteReaderComponent]
+  providers: [
+    TrackerService
+  ],
+  declarations: [
+    LectureViewerComponent,
+    VideoBoxComponent,
+    NoteBoxComponent,
+    TimelineComponent,
+    ControlsComponent,
+    NoteSliderComponent,
+    LinearPlayerComponent,
+    SecondsToTimePipe,
+    TabularPlayerComponent,
+    NoteReaderComponent]
 })
 export class VideoModule { }

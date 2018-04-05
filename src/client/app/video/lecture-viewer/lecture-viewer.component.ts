@@ -14,6 +14,7 @@ import { Annotation, DataType } from '../../service/model/annotation';
 import { FetchAnnotations } from '../../store/annotation/annotation.actions';
 import { WsFromServerEvents } from '../../service/model/ws-msg';
 import { Observable } from 'rxjs/Observable';
+import { TrackerService } from '../../service/tracker.service';
 
 @Component({
   selector: 'l3-lecture-viewer',
@@ -45,17 +46,22 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private socketService: SocketService,
-    private videoService: VideoService
+    private videoService: VideoService,
+    private tracker: TrackerService
   ) {
   }
 
   ngOnInit() {
+    this.store.select(s => s.user.email).subscribe(data => {
+      this.tracker.sessionIdMaker(data)
+    }).unsubscribe()
 
     this.videoFetchSubs = this.currentLectureSubs = this.store.select(s => s.lecture.currentLecture)
       .subscribe(lecture => {
         //estraggo dati lezione
         this.lecture = lecture;
         if (lecture) {
+          this.tracker.trackEvent("title", lecture.name, lecture.course)
           this.tokenSubs = this.store.select(s => s.user.token).subscribe(token => {
             this.socketService.open(token); // apro soket per annotazioni
             this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
@@ -102,7 +108,6 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
         }
       }
     });
-
     this.openNotes$ = this.store.select(s => s.annotation.openNotes);
   }
 
