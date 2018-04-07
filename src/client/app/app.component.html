@@ -4,12 +4,12 @@
     <div fxLayout>
       <span class="app-title" routerLink="/">Lode3</span>
       <div *ngIf="isInViewer" fxFlexOffset="24px">
-        <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
-          <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
-            <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
-          </mat-button-toggle>
+        <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
           <mat-button-toggle value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
             <mat-icon class="black-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
+            <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
 

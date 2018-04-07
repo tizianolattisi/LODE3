@@ -32,7 +32,7 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         camUrl: action.payload.data.camvideo === undefined ? '' : action.payload.data.camvideo[0].name,
         pcUrl: action.payload.data.pcvideo[0].name,
         hasAnnotations: action.payload.data.info[0].annotations.toString() === 'true',
-        videoLayout: action.payload.data.info[0].annotations.toString() === 'true' ? (action.payload.data.camvideo !== undefined ? Layout.LINEAR3 : Layout.LINEAR2) : (action.payload.data.camvideo !== undefined ? Layout.LINEAR2 : Layout.NONE),
+        videoLayout: action.payload.data.info[0].annotations.toString() === 'true' ? (action.payload.data.camvideo !== undefined ? Layout.TABULAR3 : Layout.TABULAR2) : (action.payload.data.camvideo !== undefined ? Layout.TABULAR2 : Layout.NONE),
         totalTime: parseInt(action.payload.data.pcvideo[0].totaltime),
         startTimestamp: parseInt(action.payload.data.info[0].startDate)
       };
