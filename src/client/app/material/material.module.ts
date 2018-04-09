@@ -15,6 +15,7 @@ import {
   MatSnackBarModule,
   MatMenuModule,
   MatSliderModule,
+  MatSidenavModule,
   MatButtonToggleModule
 } from '@angular/material';
 
@@ -30,6 +31,7 @@ import {
     MatListModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    MatSidenavModule,
     MatSnackBarModule,
     MatMenuModule,
     MatSliderModule,
@@ -49,6 +51,7 @@ import {
     FxFullWidthDirective,
     MatSnackBarModule,
     MatMenuModule,
+    MatSidenavModule,
     MatSliderModule,
     MatButtonToggleModule
   ],

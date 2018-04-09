@@ -1,27 +1,8 @@
 <div fxLayout="column" class="app-wrapper">
-  <mat-toolbar color="primary">
+  <mat-toolbar color="primary" *ngIf="! isInViewer">
 
     <div fxLayout>
       <span class="app-title" routerLink="/">Lode3</span>
-      <div *ngIf="isInViewer" fxFlexOffset="24px">
-        <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
-          <mat-button-toggle value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
-            <mat-icon class="black-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
-          </mat-button-toggle>
-          <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
-            <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-
-        <div fxFlexOffset="24px">
-          <button mat-icon-button>
-            <mat-icon class="black-icon" svgIcon="info" (click)="showInfo = !showInfo"></mat-icon>
-          </button>
-          <button mat-icon-button>
-            <mat-icon class="black-icon" svgIcon="help" (click)="showHelp = !showHelp"></mat-icon>
-          </button>
-        </div>
-      </div>
     </div>
     <div *ngIf="currentLecture$ | async" fxFlexOffset="24px" class="lecture-title">
       <b>{{(currentLecture$ | async).name}}</b>
@@ -29,31 +10,92 @@
     </div>
     <div fxFlex="auto">
     </div>
-
     <div fxLayout fxLayoutAlign="center center">
       <button mat-raised-button routerLink='/lecture-list' *ngIf="email$ | async" fxFlexOffset="24px">Lectures</button>
-
       <div fxFlexOffset="12px">
         <ng-container *ngIf="!(email$ | async)">
           <button mat-raised-button routerLink='/user/login'>Login</button>
         </ng-container>
 
         <ng-container *ngIf="email$ | async">
-
           <div fxLayout fxLayoutAlign="center center" class="user-info">
             <mat-icon svgIcon="account"></mat-icon>
             <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
           </div>
-
           <button mat-icon-button (click)="onLogout()" fxFlexOffset="6px" class="user-info">
             <mat-icon svgIcon="logout"></mat-icon>
           </button>
         </ng-container>
       </div>
-
     </div>
-
   </mat-toolbar>
+
+
+  <div *ngIf="isInViewer" style="z-index:40000; position:fixed; top:0;left:0;">
+    <mat-sidenav-container class="example-container">
+      <mat-sidenav #sidenav mode="side" opened="false" class="example-sidenav" [fixedInViewport]="true" [fixedTopGap]="0" [fixedBottomGap]="0">
+        <div fxLayout="column" fxFlexOffset="3vh" style="margin-top:1vh">
+          <b class="title" style="text-align: center" routerLink="/">Lode3</b>
+          <div *ngIf="currentLecture$ | async" class="lecture-info" style="text-align: center">
+            <b>{{(currentLecture$ | async).name}}</b>
+            <span>{{(currentLecture$ | async).course}}</span>
+          </div>
+          <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
+            <mat-button-toggle value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
+              <mat-icon class="black-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
+              <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <div fxLayout="row">
+            <button mat-icon-button>
+              <mat-icon class="black-icon" svgIcon="info" (click)="showInfo = !showInfo"></mat-icon>
+            </button>
+            <button mat-icon-button>
+              <mat-icon class="black-icon" svgIcon="help" (click)="showHelp = !showHelp"></mat-icon>
+            </button>
+            <ng-container *ngIf="!(email$ | async)">
+              <button mat-raised-button routerLink='/user/login'>Login</button>
+            </ng-container>
+            <ng-container *ngIf="email$ | async">
+              <button mat-icon-button (click)="onLogout()" fxFlexOffset="6px" class="black-icon">
+                <mat-icon svgIcon="logout"></mat-icon>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </mat-sidenav>
+      <button style="top:0" color="primary" mat-raised-button (click)="sidenav.toggle()">
+        <mat-icon svgIcon="menu"></mat-icon>
+      </button>
+    </mat-sidenav-container>
+  </div>
+  <main fxLayout fxLayoutAlign="center center">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+<!--
+<div fxLayout="column" class="app-wrapper" *ngIf="isInViewer">
+  <div *ngIf="isInViewer" fxFlexOffset="24px">
+    <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
+      <mat-button-toggle value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
+        <mat-icon class="black-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
+        <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <div fxFlexOffset="24px">
+      <button mat-icon-button>
+        <mat-icon class="black-icon" svgIcon="info" (click)="showInfo = !showInfo"></mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon class="black-icon" svgIcon="help" (click)="showHelp = !showHelp"></mat-icon>
+      </button>
+    </div>
+  </div>
   <div fxLayout="column" *ngIf="showHelp && isInViewer" class="info-text">
     <h4>Utilizzo del player</h4>
     <p>
@@ -73,7 +115,6 @@
       <a href='http://latemar.science.unitn.it/LODE'>il sito di progetto.</a>
     </p>
   </div>
-  <main fxLayout fxLayoutAlign="center center">
-    <router-outlet></router-outlet>
-  </main>
 </div>
+
+-->
