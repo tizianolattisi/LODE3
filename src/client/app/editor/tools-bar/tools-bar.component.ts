@@ -28,7 +28,7 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
 
   isLiteLayout: boolean;
   colors: String[] = ['#FF0000', '#00FF00', '#0000FF'];
-  tags: String[] = ['#FF0000', '#00FF00', '#0000FF'];
+  tags: String[] = ['generic', 'important', 'question', 'remember', 'favorite'];
 
   private selectedToolTypeSubscr: Subscription;
   private selectedToolColorSubscr: Subscription;

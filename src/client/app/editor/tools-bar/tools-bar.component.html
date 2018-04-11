@@ -10,7 +10,7 @@
     <button *ngFor="let tag of tags"
             mat-icon-button (click)="onBookmarkSelect(tag)"
             [ngClass]="{'selected': ('bookmark' === selectedToolType && tag === selectedToolTag)}">
-      <mat-icon svgIcon="bookmark" class="material-icons" [ngStyle]="{ 'color': tag}"></mat-icon>
+      <mat-icon [svgIcon]="tag" class="material-icons" [ngStyle]="{ 'color': '#333333'}"></mat-icon>
     </button>
   </div>
 

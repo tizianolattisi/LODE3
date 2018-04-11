@@ -28,6 +28,5 @@ export interface PencilData {
 export interface BookmarkData {
   x: number;
   y: number;
-  title: string;
-  color: string;
+  tag: string;
 }
