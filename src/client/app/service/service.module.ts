@@ -10,6 +10,7 @@ import {AuthService} from '../service/auth.service';
 import {LectureService} from '../service/lecture.service';
 import {VideoService} from '../service/video.service';
 import {TOOLS} from './tools//tool-opaque-token';
+import {BookmarkTool} from './tools/bookmark-tool';
 
 @NgModule()
 export class ServiceModule {
@@ -24,6 +25,7 @@ export class ServiceModule {
         },
         {provide: TOOLS, useFactory: PencilTool.factory, deps: [Store], multi: true},
         {provide: TOOLS, useFactory: NoteTool.factory, deps: [Store], multi: true},
+        {provide: TOOLS, useFactory: BookmarkTool.factory, deps: [Store], multi: true},
         SocketService,
         AuthService,
         LectureService,
