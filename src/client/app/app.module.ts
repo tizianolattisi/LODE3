@@ -14,6 +14,7 @@ import { LectureListComponent } from './lecture-list/lecture-list.component';
 import { StoreModule } from './store/store.module';
 import { ServiceModule } from './service/service.module';
 import { NoteSliderComponent } from './video/note-slider/note-slider.component'
+import { InfoDialogComponent } from './shared/info-dialog/info-dialog.component'
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { NoteSliderComponent } from './video/note-slider/note-slider.component'
     LectureListComponent
   ],
   entryComponents: [
-    NoteSliderComponent
+    NoteSliderComponent,
+    InfoDialogComponent
   ],
   bootstrap: [AppComponent]
 })

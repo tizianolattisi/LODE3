@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { SetVideoLayout } from './store/video/video.actions'
 import { Layout } from './store/video/video.state'
 import { NoteSliderComponent } from './video/note-slider/note-slider.component'
+import { InfoDialogComponent } from './shared/info-dialog/info-dialog.component'
 import { MatDialog } from '@angular/material';
 import * as UserActions from './store/user/user.actions';
 
@@ -75,6 +76,33 @@ export class AppComponent implements OnInit {
   showSlides() {
     this.slideDialog.open(NoteSliderComponent, {
       width: '100vw'
+    })
+  }
+
+  showInfo() {
+    this.slideDialog.open(InfoDialogComponent, {
+      width: '100vw',
+      data: {
+        title: 'About Lode',
+        content: "  Lode (Lectures On DEmand) è un software di acquisizione e riproduzione di videolezioni sviluppato da " +
+          "<a href='http://latemar.science.unitn.it'>Marco Ronchetti</a> e collaboratori presso l'Università degli Studi di Trento." +
+          "<br/> Per dettagli si veda <a href='http://latemar.science.unitn.it/LODE'>il sito del progetto</a>"
+      }
+
+    })
+  }
+
+  showHelp() {
+    this.slideDialog.open(InfoDialogComponent, {
+      width: '100vw',
+      data: {
+        title: 'Utilizzo del player',
+        content: "Il video può essere controllato dai pulsanti posizionati sotto lo stesso, che permettono di avviare/fermare la riproduzione," +
+          "modificare la velocità (1x, 1.3x, 2x), escludere l'audio, saltare indietro o in avanti di 10 secondi." +
+          "<br/> Il layout può essere modificato con i pulsanti sulla barra soprastante, mostrando i due stream video con" +
+          " la stessa dimensione, oppure visualizzando uno stream principale più grande." +
+          "<br/> La barra di avanzamento riporta la posizione corrente nel video."
+      }
     })
   }
 
