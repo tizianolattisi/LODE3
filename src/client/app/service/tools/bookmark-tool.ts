@@ -6,11 +6,11 @@ import {G} from 'svg.js';
 
 import 'rxjs/add/operator/combineLatest';
 import {ToggleSelection} from '../../store/annotation/annotation.actions';
-import {SelectTool, SetColor} from '../../store/editor/editor.actions';
+import {SelectTool} from '../../store/editor/editor.actions';
 
 export const PL_RADIUS = 80;
 
-export const PL_ICON_PATH = `M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z`;
+export const PL_ICON_PATH = `M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z`;
 
 export class BookmarkTool extends Tool<BookmarkData> {
   TYPE = 'bookmark';
@@ -25,9 +25,7 @@ export class BookmarkTool extends Tool<BookmarkData> {
     super(store);
   }
 
-  onToolSelected(): void {
-    this.store.dispatch(new SetColor('#59ff27'));
-  }
+  onToolSelected(): void {}
 
   onToolDeselected(): void {}
 

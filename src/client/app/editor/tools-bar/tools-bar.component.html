@@ -7,7 +7,11 @@
             [ngClass]="{'selected': ('pencil' === selectedToolType && color === selectedToolColor)}">
       <mat-icon svgIcon="pencil" class="material-icons" [ngStyle]="{ 'color': color}"></mat-icon>
     </button>
-
+    <button *ngFor="let tag of tags"
+            mat-icon-button (click)="onBookmarkSelect(tag)"
+            [ngClass]="{'selected': ('bookmark' === selectedToolType && tag === selectedToolTag)}">
+      <mat-icon svgIcon="bookmark" class="material-icons" [ngStyle]="{ 'color': tag}"></mat-icon>
+    </button>
   </div>
 
   <div *ngIf="isLiteLayout">

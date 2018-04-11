@@ -11,4 +11,5 @@ export interface EditorState {
 
   color: string;
   stroke: number;
+  tag: string;
 }
