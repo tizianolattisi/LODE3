@@ -7,9 +7,6 @@
         <controls></controls>
         <timeline></timeline>
     </div>
-    <div *ngIf="hasAnnotations" fxLayout="row" id="note-slider" fxLayoutAlign="center center">
-        <note-slider></note-slider>
-    </div>
 </div>
 
 <ng-container *ngFor="let noteInfo of openNotes$ | async">

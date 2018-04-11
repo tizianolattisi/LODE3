@@ -1,9 +1,16 @@
-<div class="notes-wrapper">
-    <div fxLayout class="wrapper-svg no-clickable" #annotationContainer>
+<h1 mat-dialog-title>
+    Slides</h1>
+<div mat-dialog-content>
+    <div class="notes-wrapper">
+        <div fxLayout class="wrapper-svg no-clickable" #annotationContainer>
+        </div>
+        <div fxLayout class="wrapper-img">
+            <img [ngClass]="{'active' : slide === currentSlide}" id="{{slide._id}}" (click)="setTime(slide)" class="attached-image" *ngFor="let slide of slides"
+                [src]="slide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + slide?.img)">
+        </div>
     </div>
-    <div fxLayout class="wrapper-img">
-        <img [ngClass]="{'active' : slide === currentSlide}" id="{{slide._id}}" (click)="setTime(slide)" class="attached-image" *ngFor="let slide of slides"
-            [src]="slide?.img === 'blank' ? 'assets/blank.png' : ('data:image/png;base64,' + slide?.img)">
-    </div>
+    <svg #SVGCanvas class="attached-image no-clickable" viewBox="0 0 1920 1080"></svg>
 </div>
-<svg #SVGCanvas class="attached-image no-clickable" viewBox="0 0 1920 1080"></svg>
+<div mat-dialog-actions>
+    <button mat-button color="secondary" mat-dialog-close cdkFocusInitial>Close</button>
+</div>

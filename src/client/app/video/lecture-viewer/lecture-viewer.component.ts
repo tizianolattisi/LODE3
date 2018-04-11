@@ -15,6 +15,8 @@ import { FetchAnnotations } from '../../store/annotation/annotation.actions';
 import { WsFromServerEvents } from '../../service/model/ws-msg';
 import { Observable } from 'rxjs/Observable';
 import { TrackerService } from '../../service/tracker.service';
+import { MatDialog } from '@angular/material';
+import { NoteSliderComponent } from '../note-slider/note-slider.component'
 
 @Component({
   selector: 'l3-lecture-viewer',
@@ -47,7 +49,8 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private socketService: SocketService,
     private videoService: VideoService,
-    private tracker: TrackerService
+    private tracker: TrackerService,
+    public dialog: MatDialog
   ) {
   }
 
@@ -109,6 +112,17 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
       }
     });
     this.openNotes$ = this.store.select(s => s.annotation.openNotes);
+
+    this.store.select(s => s.video.showSlides).subscribe(data => {
+      if (data) {
+        let dialog = this.dialog.open(NoteSliderComponent, {
+          width: '100vw'
+        });
+        dialog.afterClosed().subscribe(result => {
+          this.store.dispatch(new VideoActions.ShowSlides(false))
+        });
+      }
+    })
   }
 
   ngOnDestroy() {

@@ -14,6 +14,7 @@ export const MUTE_AUDIO = '[Video] MUTE_AUDIO';
 export const UNMUTE_AUDIO = '[Video] UNMUTE_AUDIO';
 export const SET_COMPLETE_ANNOTATIONS = '[Video] SET_COMPLETE_ANNOTATIONS'
 export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT'
+export const SHOW_SLIDES = '[Video] SHOW_SLIDES'
 
 export class SetVideoData implements Action {
   readonly type = SET_VIDEO_DATA;
@@ -62,6 +63,12 @@ export class SetVideoLayout implements Action {
   constructor(public payload: Layout) { }
 }
 
+export class ShowSlides implements Action {
+  readonly type = SHOW_SLIDES;
+
+  constructor(public payload: boolean) { }
+}
+
 export class SetCompleteAnnotations implements Action {
   readonly type = SET_COMPLETE_ANNOTATIONS;
 
@@ -77,4 +84,5 @@ export type All
   | UnmuteAudio
   | SetSpeed
   | SetVideoLayout
-  | SetCompleteAnnotations;
+  | SetCompleteAnnotations
+  | ShowSlides;

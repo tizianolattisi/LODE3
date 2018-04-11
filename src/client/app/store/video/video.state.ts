@@ -19,6 +19,7 @@ export interface VideoState {
   speed: number;
   volume: boolean;
   videoLayout: Layout;
+  showSlides: boolean;
 
   startTimestamp: number;
   hasAnnotations: boolean;

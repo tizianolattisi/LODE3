@@ -16,6 +16,7 @@ import {
   MatMenuModule,
   MatSliderModule,
   MatSidenavModule,
+  MatDialogModule,
   MatButtonToggleModule
 } from '@angular/material';
 
@@ -35,7 +36,8 @@ import {
     MatSnackBarModule,
     MatMenuModule,
     MatSliderModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDialogModule
   ],
   exports: [
     FlexLayoutModule,
@@ -53,7 +55,8 @@ import {
     MatMenuModule,
     MatSidenavModule,
     MatSliderModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDialogModule
   ],
   declarations: [
     FxFullHeightDirective,

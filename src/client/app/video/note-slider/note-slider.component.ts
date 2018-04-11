@@ -9,7 +9,7 @@ import { Annotation, DataType, PencilData, NoteData } from '../../service/model/
 import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
 import { G } from 'svg.js';
 import { Subscription } from 'rxjs/Subscription';
-
+import { MatDialogRef } from '@angular/material';
 @Component({
   selector: 'note-slider',
   templateUrl: './note-slider.component.html',
@@ -33,6 +33,7 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
+    public dialogRef: MatDialogRef<NoteSliderComponent>
   ) { }
 
   ngOnInit() {

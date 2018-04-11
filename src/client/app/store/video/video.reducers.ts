@@ -18,6 +18,7 @@ const initialState: VideoState = {
   videoLayout: Layout.NONE,
   hasAnnotations: false,
   startTimestamp: 0,
+  showSlides: false,
   allAnnotations: new Map<string, Annotation<DataType>[]>()
 }
 
@@ -90,6 +91,12 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         ...state,
         videoLayout: action.payload
       };
+
+    case VideoActions.SHOW_SLIDES:
+      return {
+        ...state,
+        showSlides: action.payload
+      }
 
     default:
       return state;
