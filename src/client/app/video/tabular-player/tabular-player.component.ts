@@ -17,9 +17,15 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
   hasAnnotations: boolean
   currentMainView: string = "pcVideo"
   playing: boolean
+  mainWidth: string
+  thumbWidth: string
+  thumbHeight: string
+
+  private hiddenHeader: boolean = false
 
   private annotationsSubsc: Subscription
   private playingSubsc: Subscription
+  private headerSubsc: Subscription
 
   @ViewChild('mainView') mainView: ElementRef;
   @ViewChild('firstThumb') firstThumb: ElementRef;
@@ -42,6 +48,11 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
       this.playing = data
     })
 
+    this.headerSubsc = this.store.select(s => s.video.hiddenHeader).subscribe(data => {
+      this.hiddenHeader = data
+      this.calculateAspectRatio()
+    })
+
     let thumb1 = this.firstThumb.nativeElement
     let thumb2 = this.secondThumb.nativeElement
     let main = this.mainView.nativeElement
@@ -51,6 +62,7 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     thumb2.insertBefore(thumb2.childNodes[1], thumb2.childNodes[0])
     main.insertBefore(main.childNodes[1], main.childNodes[0])
 
+    this.calculateAspectRatio()
   }
 
   ngOnDestroy() {
@@ -61,6 +73,7 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     signalTimeSubs.unsubscribe()
     this.annotationsSubsc.unsubscribe()
     this.playingSubsc.unsubscribe()
+    this.headerSubsc.unsubscribe()
   }
 
   /*
@@ -111,6 +124,25 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
 
     if (wasPlaying) {
       this.store.dispatch(new Play())
+    }
+  }
+
+  calculateAspectRatio() {
+    let actualHeight = window.innerHeight - 220;
+    if (this.hiddenHeader) {
+      actualHeight += 60
+    }
+    const actualWidth = window.innerWidth;
+    let width = 80
+    let height = Math.min(actualHeight, (actualWidth * (width / 100) * (9 / 16)))
+    if (height === actualHeight) {
+      this.mainWidth = (height * (16 / 9)) + 'px'
+      this.thumbHeight = height / 3 + 'px'
+      this.thumbWidth = (height / 3 * (16 / 9)) + 'px'
+    } else {
+      this.mainWidth = width + '%'
+      this.thumbWidth = '16vw'
+      this.thumbHeight = '9vw'
     }
   }
 }

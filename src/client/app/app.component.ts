@@ -5,7 +5,7 @@ import { IconService } from './shared/icon.service';
 import { Store } from '@ngrx/store';
 import { AppState } from './store/app-state';
 import { Observable } from 'rxjs/Observable';
-import { SetVideoLayout } from './store/video/video.actions'
+import { SetVideoLayout, HideHeader } from './store/video/video.actions'
 import { Layout } from './store/video/video.state'
 import { NoteSliderComponent } from './video/note-slider/note-slider.component'
 import { InfoDialogComponent } from './shared/info-dialog/info-dialog.component'
@@ -24,8 +24,9 @@ export class AppComponent implements OnInit {
   isInViewer: boolean
   has3Stream: boolean = true
   isCollapsed: boolean = false
+  currentLayout: string = ''
 
-  @ViewChild('header') header: ElementRef;
+  @ViewChild('content') content: ElementRef;
 
   constructor(private iconService: IconService,
     private store: Store<AppState>,
@@ -46,24 +47,21 @@ export class AppComponent implements OnInit {
     // Verify if user is in the viewer
     this.store.select(s => s.video.videoLayout).subscribe(data => {
       this.isInViewer = (data !== Layout.NONE)
+      this.currentLayout = Layout[data]
       if (data === Layout.LINEAR2 || data === Layout.TABULAR2)
         this.has3Stream = false
-      if (this.isInViewer) {
-        this.isCollapsed = false
-        this.collapseNavbar()
-      } else {
-        this.isCollapsed = true
-        this.collapseNavbar()
-      }
     })
   }
 
   collapseNavbar() {
     this.isCollapsed = !this.isCollapsed
-    if (this.isCollapsed) {
-      this.header.nativeElement.style.marginRight = '95vw'
-    } else {
-      this.header.nativeElement.style.marginRight = '0'
+    if (this.isCollapsed && (this.currentLayout === 'TABULAR3' || this.currentLayout === 'TABULAR2')) {
+      this.content.nativeElement.style.marginTop = '-40px'
+      this.store.dispatch(new HideHeader(true))
+    }
+    if (!this.isCollapsed && (this.currentLayout === 'TABULAR3' || this.currentLayout === 'TABULAR2')) {
+      this.content.nativeElement.style.marginTop = '0'
+      this.store.dispatch(new HideHeader(false))
     }
 
   }

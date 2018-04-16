@@ -1,13 +1,14 @@
-<div style="z-index:0" class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="1em" fxLayoutGap.xs="0.2em">
+<div (window:resize)="calculateAspectRatio()" class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center center"
+  fxLayoutGap="1em" fxLayoutGap.xs="0.2em">
 
-  <div *ngIf="hasCamVideo" class="content margin-left" [style.width]='screenSize' [style.height]='screenHeight'>
+  <div *ngIf="hasCamVideo" class="content margin-left" [style.width]='streamWidth'>
     <video-box [videoUrl]='camVideoUrl | async'></video-box>
   </div>
-  <div class="content" [style.width]='screenSize' [style.height]='screenHeight'>
-    <video-box [videoUrl]='pcVideoUrl | async' [isMaster]="true"></video-box>
+  <div class="content" [style.width]='streamWidth'>
+    <video-box [videoUrl]='pcVideoUrl | async' [isMaster]="true" [style.width]='streamWidth'></video-box>
   </div>
 
-  <div *ngIf="hasAnnotations" class="content" [style.width]='screenSize' [style.height]='screenHeight'>
+  <div *ngIf="hasAnnotations" class="content" [style.width]='streamWidth'>
     <note-box></note-box>
   </div>
 </div>

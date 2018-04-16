@@ -1,11 +1,13 @@
 <div fxLayout="column" class="app-wrapper">
-  <div style="z-index:100000" #header>
+  <button color="primary" style="min-width:0 !important; width:30px !important" mat-raised-button *ngIf="isCollapsed" (click)="collapseNavbar()">
+    <mat-icon style="margin-left:-10px" svgIcon="menu"></mat-icon>
+  </button>
+  <div *ngIf="! isCollapsed">
     <mat-toolbar color="primary">
-
       <div fxLayout>
-        <span *ngIf="! isCollapsed" class="app-title" routerLink="/">Lode3</span>
-        <div *ngIf="isInViewer && ! isCollapsed" fxFlexOffset="24px">
-          <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
+        <span class="app-title" routerLink="/">Lode3</span>
+        <div *ngIf="isInViewer " fxFlexOffset="24px">
+          <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{currentLayout}}">
             <mat-button-toggle value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
               <mat-icon class="black-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
             </mat-button-toggle>
@@ -13,7 +15,7 @@
               <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
             </mat-button-toggle>
           </mat-button-toggle-group>
-          <button mat-raised-button (click)="showSlides()">Show slides</button>
+          <button mat-raised-button style='margin-left:24px' (click)="showSlides()">Annotations gallery</button>
           <div fxFlexOffset="24px">
             <button mat-icon-button>
               <mat-icon class="black-icon" svgIcon="info" (click)="showInfo()"></mat-icon>
@@ -24,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="(currentLecture$ | async) && ! isCollapsed" fxFlexOffset="24px" class="lecture-title">
+      <div *ngIf="(currentLecture$ | async) " fxFlexOffset="24px" class="lecture-title">
         <b>{{(currentLecture$ | async).name}}</b>
         <span>{{(currentLecture$ | async).course}}</span>
       </div>
@@ -33,11 +35,11 @@
 
       <div fxLayout fxLayoutAlign="center center">
         <div fxFlexOffset="12px">
-          <ng-container *ngIf="!(email$ | async) && ! isCollapsed">
+          <ng-container *ngIf="!(email$ | async) ">
             <button mat-raised-button routerLink='/user/login'>Login</button>
           </ng-container>
 
-          <ng-container *ngIf="(email$ | async) && ! isCollapsed">
+          <ng-container *ngIf="(email$ | async) ">
             <div fxLayout fxLayoutAlign="center center" class="user-info">
               <mat-icon svgIcon="account"></mat-icon>
               <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
@@ -46,14 +48,14 @@
               <mat-icon svgIcon="logout"></mat-icon>
             </button>
           </ng-container>
-          <button ngClass="{{isCollapsed ? 'setMargin' : 'notMargin'}}" *ngIf="isInViewer" mat-icon-button (click)="collapseNavbar()">
+          <button *ngIf="isInViewer" mat-icon-button (click)="collapseNavbar()">
             <mat-icon svgIcon="menu"></mat-icon>
           </button>
         </div>
       </div>
     </mat-toolbar>
   </div>
-  <main fxLayout fxLayoutAlign="center center">
+  <main #content fxLayout fxLayoutAlign="center center">
     <router-outlet></router-outlet>
   </main>
 </div>

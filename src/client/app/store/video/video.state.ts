@@ -20,6 +20,7 @@ export interface VideoState {
   volume: boolean;
   videoLayout: Layout;
   showSlides: boolean;
+  hiddenHeader: boolean;
 
   startTimestamp: number;
   hasAnnotations: boolean;

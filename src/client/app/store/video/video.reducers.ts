@@ -19,6 +19,7 @@ const initialState: VideoState = {
   hasAnnotations: false,
   startTimestamp: 0,
   showSlides: false,
+  hiddenHeader: false,
   allAnnotations: new Map<string, Annotation<DataType>[]>()
 }
 
@@ -96,6 +97,12 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
       return {
         ...state,
         showSlides: action.payload
+      }
+
+    case VideoActions.HIDE_HEADER:
+      return {
+        ...state,
+        hiddenHeader: action.payload
       }
 
     default:

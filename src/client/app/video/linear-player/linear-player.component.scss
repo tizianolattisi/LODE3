@@ -2,6 +2,7 @@
 .container {
     width: 97vw;
     margin-left: 0;
+    z-index:0
 }
 
 .content{
@@ -15,6 +16,6 @@
 @media only screen and (max-width: 600px) {
     .content  {
         width:100vw !important;
-        height: 50vw !important;
+        height: 63vw !important;
     }
 }
