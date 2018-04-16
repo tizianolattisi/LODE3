@@ -11,7 +11,10 @@ export enum ActionTypes {
   SELECT_TOOL = '[Editor] SELECT_TOOL',
 
   SET_COLOR = '[Editor] SET_COLOR',
-  SET_STROKE = '[Editor] SET_STROKE'
+  SET_STROKE = '[Editor] SET_STROKE',
+
+  SET_TAG = '[Editor] SET_TAG'
+
 };
 
 export class SetAnnotationContainer implements Action {
@@ -44,10 +47,17 @@ export class SetStroke implements Action {
   constructor(public payload: number) {}
 }
 
+export class SetTag implements Action {
+  readonly type = ActionTypes.SET_TAG;
+
+  constructor(public payload: string) {}
+}
+
 
 export type All
   = SetAnnotationContainer
   | SetTools
   | SelectTool
   | SetColor
-  | SetStroke;
+  | SetStroke
+  | SetTag;

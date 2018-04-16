@@ -10,6 +10,7 @@
     "client:serve": "ng serve --proxy-config proxy.conf.js",
     "client:serve:prod": "ng serve --proxy-config proxy.conf.js --prod",
     "client:build": "ng build",
+    "client:build:w": "ng build -w",
     "client:build:prod": "cross-env NODE_ENV=production ng build --prod",
     "client:test": "ng test",
     "client:lint": "ng lint",

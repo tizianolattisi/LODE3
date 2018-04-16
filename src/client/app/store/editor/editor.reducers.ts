@@ -10,7 +10,8 @@ const initialState: EditorState = {
   selectedTool: 'default',
 
   color: '#212121',
-  stroke: 2
+  stroke: 2,
+  tag: '#111111'
 }
 
 export function editorReducer(state: EditorState = initialState, action: All): EditorState {
@@ -39,6 +40,12 @@ export function editorReducer(state: EditorState = initialState, action: All): E
       return {
         ...state,
         color: action.payload
+      };
+
+    case ActionTypes.SET_TAG:
+      return {
+        ...state,
+        tag: action.payload
       };
 
     case ActionTypes.SET_STROKE:

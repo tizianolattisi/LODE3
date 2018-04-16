@@ -1,4 +1,4 @@
-export type DataType = NoteData | PencilData;
+export type DataType = NoteData | PencilData | BookmarkData;
 
 export interface Annotation<T extends DataType> {
   uuid: string;
@@ -23,4 +23,10 @@ export interface PencilData {
   path: string;
   color: string;
   width: number;
+}
+
+export interface BookmarkData {
+  x: number;
+  y: number;
+  tag: string;
 }

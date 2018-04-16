@@ -91,6 +91,10 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
     return this.store.select(s => s.editor.color).first();
   }
 
+  getCurrentTag(): Observable<string> {
+    return this.store.select(s => s.editor.tag).first();
+  }
+
   private generateUUID(): string {
     let d = new Date().getTime();
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

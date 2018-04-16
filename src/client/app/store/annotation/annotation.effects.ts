@@ -44,8 +44,8 @@ export class AnnotationEffects {
         .first()
         .withLatestFrom(this.store.select(s => s.annotation.annotations))
         .subscribe(([selection, annotations]) => {
-          selection.forEach(annoationId => {
-            const ann = findAnnotation(annotations, annoationId);
+          selection.forEach(annotationId => {
+            const ann = findAnnotation(annotations, annotationId);
             if (ann) {
               this.store.dispatch(new DeleteAnnotation({lectureId: ann.lectureId, slideId: ann.slideId, annotationId: ann.uuid}));
             }
@@ -58,8 +58,8 @@ export class AnnotationEffects {
 
 function findAnnotation(annotations: {[slideId: string]: {[uuid: string]: Annotation<DataType>}}, uuid: string): Annotation<DataType> {
   for (const anns of Object.keys(annotations)) {
-    if (anns[uuid]) {
-      return anns[uuid];
+    if (annotations[anns][uuid]) {
+      return annotations[anns][uuid];
     }
   }
   return null;
