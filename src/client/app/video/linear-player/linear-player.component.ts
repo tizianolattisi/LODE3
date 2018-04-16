@@ -21,9 +21,11 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
   hasAnnotations: boolean
   hasCamVideo: boolean
   streamWidth: string
+  hiddenHeader: boolean = false
 
   private camVideoSubsc: Subscription
   private annotationsSubsc: Subscription
+  private headerSubsc: Subscription
 
   constructor(
     private store: Store<AppState>
@@ -41,10 +43,17 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
       this.hasAnnotations = data
       this.calculateAspectRatio()
     })
+    this.headerSubsc = this.store.select(s => s.video.hiddenHeader).subscribe(data => {
+      this.hiddenHeader = data
+      this.calculateAspectRatio()
+    })
   }
 
   calculateAspectRatio() {
-    const actualHeight = window.innerHeight - 220;
+    let actualHeight = window.innerHeight - 220;
+    if (this.hiddenHeader) {
+      actualHeight += 60
+    }
     const actualWidth = window.innerWidth;
     let width = this.hasAnnotations ? (this.hasCamVideo ? 33 : 49) : 49
     let height = Math.min(actualHeight, (actualWidth * (width / 100) * (9 / 16)))
@@ -67,5 +76,6 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
     signalTimeSubs.unsubscribe()
     this.annotationsSubsc.unsubscribe()
     this.camVideoSubsc.unsubscribe()
+    this.headerSubsc.unsubscribe()
   }
 }

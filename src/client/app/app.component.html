@@ -1,5 +1,6 @@
 <div fxLayout="column" class="app-wrapper">
-  <button color="primary" style="min-width:0 !important; width:30px !important" mat-raised-button *ngIf="isCollapsed" (click)="collapseNavbar()">
+  <button color="primary" style="min-width:0 !important; width:30px !important; z-index:10000" mat-raised-button *ngIf="isCollapsed"
+    (click)="collapseNavbar()">
     <mat-icon style="margin-left:-10px" svgIcon="menu"></mat-icon>
   </button>
   <div *ngIf="! isCollapsed">

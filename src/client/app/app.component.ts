@@ -55,11 +55,11 @@ export class AppComponent implements OnInit {
 
   collapseNavbar() {
     this.isCollapsed = !this.isCollapsed
-    if (this.isCollapsed && (this.currentLayout === 'TABULAR3' || this.currentLayout === 'TABULAR2')) {
+    if (this.isCollapsed) {
       this.content.nativeElement.style.marginTop = '-40px'
       this.store.dispatch(new HideHeader(true))
     }
-    if (!this.isCollapsed && (this.currentLayout === 'TABULAR3' || this.currentLayout === 'TABULAR2')) {
+    if (!this.isCollapsed) {
       this.content.nativeElement.style.marginTop = '0'
       this.store.dispatch(new HideHeader(false))
     }
