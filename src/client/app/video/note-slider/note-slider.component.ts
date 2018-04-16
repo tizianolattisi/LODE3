@@ -5,7 +5,8 @@ import { Screenshot } from '../../service/model/screenshot';
 import { SetUpdatedTime } from '../../store/video/video.actions'
 import * as SVG from 'svg.js';
 import { Doc } from 'svg.js';
-import { Annotation, DataType, PencilData, NoteData } from '../../service/model/annotation';
+import { PL_FAVORITE_PATH, PL_GENERIC_PATH, PL_IMPORTANT_PATH, PL_QUESTION_PATH, PL_REMEMBER_PATH } from '../../service/tools/bookmark-tool'
+import { Annotation, DataType, PencilData, NoteData, BookmarkData } from '../../service/model/annotation';
 import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
 import { G } from 'svg.js';
 import { Subscription } from 'rxjs/Subscription';
@@ -60,6 +61,8 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
             } else if (actualAnnotation.type === 'note') {
               let pencilAnnotation = actualAnnotation as Annotation<NoteData>
               this.drawNoteAnnotation(pencilAnnotation)
+            } else if (actualAnnotation.type === 'bookmark') {
+              this.drawBookmarkAnnotation(actualAnnotation as Annotation<BookmarkData>)
             }
           }
           let actualSVG = this.SVGCanvas.nativeElement.cloneNode(true)
@@ -90,6 +93,40 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
       this.allAnnotations = data
       this.setCompleteSlides()
     })
+  }
+
+
+  drawBookmarkAnnotation(annotation: Annotation<BookmarkData>) {
+    const placeholder = this.drawBookmarkPlaceholder(annotation.data.x, annotation.data.y, annotation.data.tag);
+    placeholder.id(annotation.uuid);
+  }
+
+
+  private drawBookmarkPlaceholder(x: number, y: number, tag: string): G {
+    const group = this.svgAnnotationContainer.group();
+    group.translate(x, y);
+    group.circle(PL_RADIUS).addClass('note-placeholder').fill('#333333').stroke({ color: lightenDarkenColor('#333333', 20), width: 5 });
+    let path = PL_GENERIC_PATH;
+    switch (tag) {
+      case 'generic':
+        path = PL_GENERIC_PATH;
+        break;
+      case 'important':
+        path = PL_IMPORTANT_PATH;
+        break;
+      case 'question':
+        path = PL_QUESTION_PATH;
+        break;
+      case 'remember':
+        path = PL_REMEMBER_PATH;
+        break;
+      case 'favorite':
+        path = PL_FAVORITE_PATH;
+        break;
+    }
+    group.path(path).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+
+    return group;
   }
 
   /*

@@ -3,11 +3,15 @@
     {{ currentTime | secondsToTime}}
   </span>
   <div fxLayout="column">
+    <div *ngIf="hasAnnotations" fxLayout="row" class="markerRow">
+      <mat-icon class="marker grow bookmark" *ngFor="let bm of bookmarks" (click)="setTimeBookmark(bm)" [style.margin-left]="bookmarkPosition(bm)"
+        svgIcon="{{bm.data.tag}}"></mat-icon>
+    </div>
     <div class="progress-bar" #progressBar (mouseup)="timebarMouseUp($event)" (mousemove)="timebarMouseMove($event)" (mousedown)="timebarMouseDown($event)">
       <span class="viewed-bar" #viewedBar></span>
     </div>
     <div *ngIf="hasAnnotations" fxLayout="row" class="markerRow">
-      <mat-icon class="marker grow" [style.color]="(slide === currentSlide) ? '#1f7bdd' : '#000000'" *ngFor="let slide of slides"
+      <mat-icon class="marker grow" [style.color]="(slide === currentSlide) ? '#1E88E5' : '#000000'" *ngFor="let slide of slides"
         (click)="setTimeMarker(slide)" [style.margin-left]="markerPosition(slide)" svgIcon="marker"></mat-icon>
     </div>
   </div>

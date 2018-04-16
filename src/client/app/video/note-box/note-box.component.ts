@@ -5,7 +5,8 @@ import { Screenshot } from '../../service/model/screenshot';
 import { Subscription } from 'rxjs/Subscription';
 import * as SVG from 'svg.js';
 import { Doc } from 'svg.js';
-import { Annotation, DataType, PencilData, NoteData } from '../../service/model/annotation';
+import { Annotation, DataType, PencilData, NoteData, BookmarkData } from '../../service/model/annotation';
+import { PL_FAVORITE_PATH, PL_GENERIC_PATH, PL_IMPORTANT_PATH, PL_QUESTION_PATH, PL_REMEMBER_PATH } from '../../service/tools/bookmark-tool'
 import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
 import { G } from 'svg.js';
 import { OpenNote } from '../../store/annotation/annotation.actions';
@@ -84,6 +85,9 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
       this.slides.push(currentScreenshot)
 
     }
+    this.slides.sort((a, b) => {
+      return a.seconds - b.seconds
+    })
   }
 
   setAnnotations(data: Map<string, Annotation<DataType>[]>) {
@@ -96,6 +100,9 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
           let current: TimedAnnotation = { annotation: ann, seconds: (actualDate.getTime() - this.initialTime) / 1000 }
           currentAnnotations.push(current)
         }
+        currentAnnotations.sort((a, b) => {
+          return a.seconds - b.seconds
+        })
         this.annotations.set(slide.screenshot._id, currentAnnotations)
       }
     }
@@ -154,12 +161,12 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
                 transitionsSeconds = Math.min(transitionsSeconds, currentAnnotations[this.annotationIndex + 1].seconds - seconds)
               }
             }
-            let pencilAnnotation = actualAnnotation as Annotation<PencilData>
             transitionsSeconds /= this.speed
-            this.drawPencilAnnotation(pencilAnnotation, transitionsSeconds)
+            this.drawPencilAnnotation(actualAnnotation as Annotation<PencilData>, transitionsSeconds)
           } else if (actualAnnotation.type === 'note') {
-            let pencilAnnotation = actualAnnotation as Annotation<NoteData>
-            this.drawNoteAnnotation(pencilAnnotation)
+            this.drawNoteAnnotation(actualAnnotation as Annotation<NoteData>)
+          } else if (actualAnnotation.type === 'bookmark') {
+            this.drawBookmarkAnnotation(actualAnnotation as Annotation<BookmarkData>)
           }
         } else {
           break
@@ -172,6 +179,39 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     while (this.SVGCanvas.nativeElement.firstChild) {
       this.SVGCanvas.nativeElement.removeChild(this.SVGCanvas.nativeElement.firstChild);
     }
+  }
+
+  drawBookmarkAnnotation(annotation: Annotation<BookmarkData>) {
+    const placeholder = this.drawBookmarkPlaceholder(annotation.data.x, annotation.data.y, annotation.data.tag);
+    placeholder.id(annotation.uuid);
+  }
+
+
+  private drawBookmarkPlaceholder(x: number, y: number, tag: string): G {
+    const group = this.svgAnnotationContainer.group();
+    group.translate(x, y);
+    group.circle(PL_RADIUS).addClass('note-placeholder').fill('#333333').stroke({ color: lightenDarkenColor('#333333', 20), width: 5 });
+    let path = PL_GENERIC_PATH;
+    switch (tag) {
+      case 'generic':
+        path = PL_GENERIC_PATH;
+        break;
+      case 'important':
+        path = PL_IMPORTANT_PATH;
+        break;
+      case 'question':
+        path = PL_QUESTION_PATH;
+        break;
+      case 'remember':
+        path = PL_REMEMBER_PATH;
+        break;
+      case 'favorite':
+        path = PL_FAVORITE_PATH;
+        break;
+    }
+    group.path(path).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+
+    return group;
   }
 
   /*
@@ -201,7 +241,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
     Metodo che disegna appunti di tipo "nota"
   */
   drawNoteAnnotation(annotation: Annotation<NoteData>): void {
-    const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
+    const placeholder = this.drawNotePlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
     placeholder.id(annotation.uuid);
     this.addHandlers(placeholder, annotation.slideId, annotation.uuid);
   }
@@ -209,14 +249,14 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   /*
     Disegna il placeholder per appunti di tipo "nota"
   */
-  private drawPlaceholder(x: number, y: number, color: string): G {
+  private drawNotePlaceholder(x: number, y: number, color: string): G {
     const group = this.svgAnnotationContainer.group();
     group.translate(x, y);
     group.circle(PL_RADIUS).addClass('note-placeholder').fill({ color }).stroke({ color: lightenDarkenColor(color, 20), width: 5 });
-    // group.path(PL_ICON_PATH).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
-    group.path(PL_ICON_PATH).fill('#FFF').translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
+    group.path(PL_ICON_PATH).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
     return group;
   }
+
 
   private addHandlers(placeholder: G, slideId: string, annotationId: string) {
     placeholder.click(() => {

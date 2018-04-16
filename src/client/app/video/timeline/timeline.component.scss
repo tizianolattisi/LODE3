@@ -1,3 +1,5 @@
+@import '~style/variables.scss';
+
 $barWidth: 65vw;
 $barHeight: 25px;
 
@@ -7,6 +9,7 @@ $barHeight: 25px;
 	position:relative;
 	background: rgba(0,0,0,0.4);
 	box-shadow: 0 1px 0 rgba(255,255,255,0.1), inset 0 1px 1px rgba(0,0,0,1);
+	cursor: pointer;
 }
 
 .progress-bar span {
@@ -20,7 +23,7 @@ $barHeight: 25px;
 .viewed-bar{
 	z-index:10;
 	width:0%;
-	background: #1f7bdd;
+	background: $color-accent;
 }
 
 .markerRow{
@@ -41,7 +44,9 @@ $barHeight: 25px;
 	z-index:10;
 }
 
-
+.bookmark{
+	margin-top:-23px;
+}
 
 @media only screen and (max-width: 600px) {
     .progress-bar{

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { SetUpdatedTime, Play, Pause } from '../../store/video/video.actions'
 import { Screenshot } from '../../service/model/screenshot';
-// import { Observable } from 'rxjs/Observable';
+import { Annotation, BookmarkData } from '../../service/model/annotation'
 import { Subscription } from 'rxjs/Subscription';
 import { TrackerService } from '../../service/tracker.service';
 
@@ -24,6 +24,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
   startDate: number
   hasAnnotations: boolean
   currentSlide: Screenshot
+  bookmarks: Annotation<BookmarkData>[] = []
+
   private timeDrag: boolean = false
   private playing: boolean
   private jumpFrom: number = 0
@@ -67,6 +69,30 @@ export class TimelineComponent implements OnInit, OnDestroy {
         this.currentSlide = this.slides[data]
       }
     })
+
+    this.store.select(s => s.video.allAnnotations).subscribe(data => {
+      this.bookmarks = []
+      if (data !== undefined) {
+        let keys = Array.from(data.keys());
+        for (let key of keys) {
+          let annotations = data.get(key);
+          if (annotations !== undefined) {
+            for (let current of annotations) {
+              if (current.type === 'bookmark') {
+                console.log(current.uuid)
+                this.bookmarks.push(current as Annotation<BookmarkData>)
+              }
+            }
+          }
+        }
+      }
+    })
+  }
+
+  bookmarkPosition(bm: Annotation<BookmarkData>): string {
+    let date = new Date(bm.timestamp * 1000)
+    let sec = (date.getTime() - this.startDate) / 1000
+    return this.percentageViewed(sec)
   }
 
   timebarMouseDown(event: MouseEvent) {
@@ -122,6 +148,13 @@ export class TimelineComponent implements OnInit, OnDestroy {
     sec = (date.getTime() - this.startDate) / 1000
     return this.percentageViewed(sec)
 
+  }
+
+  setTimeBookmark(bm: Annotation<BookmarkData>) {
+    let date = new Date(bm.timestamp * 1000)
+    let sec = (date.getTime() - this.startDate) / 1000
+    this.store.dispatch(new SetUpdatedTime(sec))
+    this.viewedBar.nativeElement.style.width = this.percentageViewed(sec)
   }
 
   setTimeMarker(slide: Screenshot) {
