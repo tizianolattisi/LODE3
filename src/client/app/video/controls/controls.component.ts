@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Rx';
   styleUrls: ['./controls.component.scss']
 })
 
-/*
+/**
   Componente che implementa i controlli video (play/stop, FF, FR, volume, speed)
 */
 export class ControlsComponent implements OnInit, OnDestroy {
@@ -32,7 +32,6 @@ export class ControlsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
     this.videoSubscr = this.store.select(s => s.video).subscribe(data => {
       this.play = data.playing
       this.totalTime = data.totalTime

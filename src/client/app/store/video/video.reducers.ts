@@ -8,7 +8,6 @@ export type Action = VideoActions.All;
 const initialState: VideoState = {
   camUrl: '',
   pcUrl: '',
-
   playing: false,
   totalTime: 0,
   currentTime: 0,
@@ -103,6 +102,25 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
       return {
         ...state,
         hiddenHeader: action.payload
+      }
+
+    case VideoActions.RESET_DATA:
+      return {
+        ...state,
+        camUrl: '',
+        pcUrl: '',
+        playing: false,
+        totalTime: 0,
+        currentTime: 0,
+        updatedTime: 0,
+        speed: 1,
+        volume: true,
+        videoLayout: Layout.NONE,
+        hasAnnotations: false,
+        startTimestamp: 0,
+        showSlides: false,
+        hiddenHeader: false,
+        allAnnotations: new Map<string, Annotation<DataType>[]>()
       }
 
     default:

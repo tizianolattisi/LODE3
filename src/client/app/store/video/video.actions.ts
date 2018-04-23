@@ -16,6 +16,7 @@ export const SET_COMPLETE_ANNOTATIONS = '[Video] SET_COMPLETE_ANNOTATIONS'
 export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT'
 export const SHOW_SLIDES = '[Video] SHOW_SLIDES'
 export const HIDE_HEADER = '[Video] HIDE_HEADER'
+export const RESET_DATA = '[Video] RESET_DATA'
 
 export class SetVideoData implements Action {
   readonly type = SET_VIDEO_DATA;
@@ -81,6 +82,11 @@ export class SetCompleteAnnotations implements Action {
 
   constructor(public payload: Map<string, Annotation<DataType>[]>) { }
 }
+
+export class ResetData implements Action {
+  readonly type = RESET_DATA;
+}
+
 export type All
   = SetVideoData
   | Play
@@ -93,4 +99,5 @@ export type All
   | SetVideoLayout
   | SetCompleteAnnotations
   | ShowSlides
-  | HideHeader;
+  | HideHeader
+  | ResetData;

@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 import { TrackerService } from '../../service/tracker.service';
 import { MatDialog } from '@angular/material';
 import { NoteSliderComponent } from '../note-slider/note-slider.component'
+import { InfoDialogComponent } from '../../shared/info-dialog/info-dialog.component'
 
 @Component({
   selector: 'l3-lecture-viewer',
@@ -24,12 +25,16 @@ import { NoteSliderComponent } from '../note-slider/note-slider.component'
   styleUrls: ['./lecture-viewer.component.scss']
 })
 
+/**
+ * Componente principale del viewer. 
+ * Contiene tutti i sottocomponenti necessari per la visualizzazione della videolezione.
+ */
 export class LectureViewerComponent implements OnInit, OnDestroy {
 
   lecture: Lecture; // utilizzato per estrarre i dati della lezione
   layoutSelection: string; // determina la tipologia di player da visualizzare (lineare-tabulare)
   hasAnnotations: boolean // se true visualizza lo slider
-  openNotes$: Observable<{ slideId: string; annotationId: string; }[]>;
+  openNotes$: Observable<{ slideId: string; annotationId: string; }[]>; // note aperte
 
   private allAnnotations: Map<string, Annotation<DataType>[]> = new Map<string, Annotation<DataType>[]>()
   private nSlides: number = 0
@@ -42,7 +47,19 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
   private tokenSubs: Subscription
   private slidesSubs: Subscription
   private fetchVideoSubs: Subscription
+  private showSlidesSubs: Subscription
 
+  /**
+   * Metodo costruttore
+   * @constructor
+   * @param store - Store dei dati dell'utente
+   * @param cd - Change detector
+   * @param route - fornisce route attuale
+   * @param socketService - socket per l'estrazione delle annotazioni
+   * @param videoService - service per l'estrazione dei dati dal file xml
+   * @param tracker - classe per il tracking delle azioni dell'utente
+   * @param dialog - dialog per la visualizzazione delle note scritte
+   */
   constructor(
     private store: Store<AppState>,
     private cd: ChangeDetectorRef,
@@ -54,14 +71,17 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
   ) {
   }
 
+  /**
+   * Inizializzazione del componente. Prende nome del corso e della lezione ed estrae i file dal file XML.
+   * Il file XML viene richiesto a localhost:3000/lectures/nome_corso/nome_lezione/data.xml
+   */
   ngOnInit() {
     this.store.select(s => s.user.email).subscribe(data => {
-      this.tracker.sessionIdMaker(data)
+      this.tracker.sessionIdMaker(data) // setto l'id della sessione per il tracker con l'email dell'utente
     }).unsubscribe()
 
     this.videoFetchSubs = this.currentLectureSubs = this.store.select(s => s.lecture.currentLecture)
-      .subscribe(lecture => {
-        //estraggo dati lezione
+      .subscribe(lecture => { //estraggo dati lezione        
         this.lecture = lecture;
         if (lecture) {
           this.tracker.trackEvent("title", lecture.name, lecture.course)
@@ -76,17 +96,36 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
             })
           })
           // estrazione dei dati del video dal file XML
-          this.fetchVideoSubs = this.videoService.FetchVideoData(this.lecture.uuid).subscribe(data => {
-            let parser = new Parser()
-            parser.parseString(data, (err, result) => {
-              if (result.data.camvideo !== undefined)
-                result.data.camvideo[0].name = this.videoService.BASE_URL + '/' + this.lecture.uuid + '/video/' + result.data.camvideo[0].name
-              result.data.pcvideo[0].name = this.videoService.BASE_URL + '/' + this.lecture.uuid + '/video/' + result.data.pcvideo[0].name
-              this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid))
-              this.store.dispatch(new VideoActions.SetVideoData(result))
-              this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
-            });
-          })
+          this.fetchVideoSubs = this.videoService.FetchVideoData(this.lecture.course, this.lecture.name)
+            .catch((err: Response) => {
+              // se il file XML non è stato trovato mostro un alert
+              this.dialog.open(InfoDialogComponent, {
+                width: '100vw',
+                data: {
+                  title: 'Impossibile visualizzare la lezione',
+                  content: ""
+                }
+              })
+              return Observable.throw(err);
+            })
+            .subscribe(data => {
+              let parser = new Parser()
+              parser.parseString(data, (err, result) => {
+                if (result.data.camvideo !== undefined)
+                  result.data.camvideo[0].name = this.videoService.BASE_URL + '/lectures/' + this.lecture.course + '/' + this.lecture.name + '/' + result.data.camvideo[0].name
+                result.data.pcvideo[0].name = this.videoService.BASE_URL + '/lectures/' + this.lecture.course + '/' + this.lecture.name + '/' + result.data.pcvideo[0].name
+                if (result.data.info[0].annotations === undefined) {
+                  result.data.info[0].annotations = false
+                }
+                let timestamp = this.lecture.uuid.toString().substring(0, 8)
+                let date = new Date(parseInt(timestamp, 16) * 1000)
+                result.data.info[0].startDate = date.getTime() / 1000
+                result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
+                this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
+                this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
+                this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
+              });
+            })
         } else {
           this.lectureFetchSubs = this.route.params.first().subscribe(params => this.store.dispatch(new LectureActions.FetchLecture(params['lectureId'])));
         }
@@ -108,12 +147,13 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
         if (this.allAnnotations.size === this.nSlides) {
           // se ho estratto le annotazioni per ogni slide aggiorno lo store
           this.store.dispatch(new VideoActions.SetCompleteAnnotations(this.allAnnotations))
+          this.socketSubs.unsubscribe()
         }
       }
     });
     this.openNotes$ = this.store.select(s => s.annotation.openNotes);
-
-    this.store.select(s => s.video.showSlides).subscribe(data => {
+    this.showSlidesSubs = this.store.select(s => s.video.showSlides).subscribe(data => {
+      // dialog per il note slider
       if (data) {
         let dialog = this.dialog.open(NoteSliderComponent, {
           width: '100vw'
@@ -125,18 +165,30 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Il componente si disiscrive da tutte le Subscription
+   */
   ngOnDestroy() {
-    this.store.dispatch(new VideoActions.SetVideoLayout(Layout.NONE))
-    this.layoutSubs.unsubscribe()
-    this.currentLectureSubs.unsubscribe()
-    this.videoFetchSubs.unsubscribe()
-    if (this.lectureFetchSubs !== undefined) {
+    this.store.dispatch(new VideoActions.ResetData())
+    if (this.layoutSubs !== undefined)
+      this.layoutSubs.unsubscribe()
+    if (this.currentLectureSubs !== undefined)
+      this.currentLectureSubs.unsubscribe()
+    if (this.videoFetchSubs !== undefined)
+      this.videoFetchSubs.unsubscribe()
+    if (this.lectureFetchSubs !== undefined)
       this.lectureFetchSubs.unsubscribe()
+    if (this.tokenSubs !== undefined)
+      this.tokenSubs.unsubscribe()
+    if (this.slidesSubs !== undefined)
+      this.slidesSubs.unsubscribe()
+    if (this.fetchVideoSubs !== undefined)
+      this.fetchVideoSubs.unsubscribe()
+    if (this.showSlidesSubs !== undefined) {
+      this.showSlidesSubs.unsubscribe()
     }
-    this.socketSubs.unsubscribe()
-    this.tokenSubs.unsubscribe()
-    this.slidesSubs.unsubscribe()
-    this.fetchVideoSubs.unsubscribe()
-    this.socketService.close()
+    if (this.socketService !== undefined) {
+      this.socketService.close()
+    }
   }
 }
