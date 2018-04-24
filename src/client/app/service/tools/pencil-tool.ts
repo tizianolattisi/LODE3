@@ -1,9 +1,9 @@
-import {AppState} from '../../store/app-state';
-import {Store} from '@ngrx/store';
-import {Tool} from './tool';
-import {Annotation, PencilData} from '../model/annotation';
-import {ToggleSelection} from '../../store/annotation/annotation.actions';
-import {Path} from 'svg.js';
+import { AppState } from '../../store/app-state';
+import { Store } from '@ngrx/store';
+import { Tool } from './tool';
+import { Annotation, PencilData } from '../model/annotation';
+import { ToggleSelection } from '../../store/annotation/annotation.actions';
+import { Path } from 'svg.js';
 
 import 'rxjs/add/operator/combineLatest';
 
@@ -22,21 +22,21 @@ export class PencilTool extends Tool<PencilData> {
     super(store);
   }
 
-  onToolSelected(): void {}
+  onToolSelected(): void { }
 
-  onToolDeselected(): void {}
+  onToolDeselected(): void { }
 
-  onClick = (event: MouseEvent) => {}
+  onClick = (event: MouseEvent) => { }
 
   onDragStart = (event: any) => {
 
     this.currentPath = this.getAnnotationContainer().path(
       `M${this.normalizePointX(event.offsetX)} ${this.normalizePointY(event.offsetY)}`
     ) as Path;
-    this.currentPath.fill({color: 'none'});
+    this.currentPath.fill({ color: 'none' });
 
     this.getCurrentStroke().combineLatest(this.getCurrentColor()).subscribe(([width, color]) => {
-      this.currentPath.stroke({color, width});
+      this.currentPath.stroke({ color, width });
     });
   }
 
@@ -73,10 +73,10 @@ export class PencilTool extends Tool<PencilData> {
     this.currentPath = this.getAnnotationContainer().path(
       `M${this.normalizePointX(event.layerX)} ${this.normalizePointY(event.layerY)}`
     ) as Path;
-    this.currentPath.fill({color: 'none'});
+    this.currentPath.fill({ color: 'none' });
 
     this.getCurrentStroke().combineLatest(this.getCurrentColor()).subscribe(([width, color]) => {
-      this.currentPath.stroke({color, width});
+      this.currentPath.stroke({ color, width });
     });
   }
 
@@ -114,8 +114,8 @@ export class PencilTool extends Tool<PencilData> {
 
   drawAnnotation(annotation: Annotation<PencilData>): void {
     const path = this.getAnnotationContainer().path(annotation.data.path);
-    path.stroke({color: annotation.data.color, width: annotation.data.width});
-    path.fill({color: 'none'});
+    path.stroke({ color: annotation.data.color, width: annotation.data.width });
+    path.fill({ color: 'none' });
     this.addSelectionHadlers(path, annotation.uuid);
     path.id(annotation.uuid);
   }

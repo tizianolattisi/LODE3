@@ -1,49 +1,66 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
 import { SetUpdatedTime } from '../../store/video/video.actions'
 import * as SVG from 'svg.js';
 import { Doc } from 'svg.js';
-import { PL_FAVORITE_PATH, PL_GENERIC_PATH, PL_IMPORTANT_PATH, PL_QUESTION_PATH, PL_REMEMBER_PATH } from '../../service/tools/bookmark-tool'
-import { Annotation, DataType, PencilData, NoteData, BookmarkData } from '../../service/model/annotation';
-import { PL_ICON_PATH, PL_RADIUS, lightenDarkenColor } from '../../service/tools/note-tool'
-import { G } from 'svg.js';
+import { Annotation, DataType } from '../../service/model/annotation';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialogRef } from '@angular/material';
+import { SetAnnotationContainer, SetTools } from '../../store/editor/editor.actions';
+import { Tool } from '../../service/tools/tool';
+import { TOOLS } from '../../service/tools/tool-opaque-token';
 @Component({
   selector: 'note-slider',
   templateUrl: './note-slider.component.html',
   styleUrls: ['./note-slider.component.scss']
 })
+
+/**
+ * Slider che permette di vedere tutti gli screenshot con le relative annotazioni
+ */
 export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('SVGCanvas') SVGCanvas: ElementRef;
   @ViewChild('annotationContainer') annotationContainer: ElementRef;
 
-  startDate: number
-  slides: Screenshot[]
-  currentSlide: Screenshot
+  startDate: number // data inizio lezione
+  slides: Screenshot[] // screenshot catturati
+  currentSlide: Screenshot // screenshot attualmente visualizzato nello stream delle annotazioni
 
-  private svgAnnotationContainer: Doc
-  private allAnnotations: Map<string, Annotation<DataType>[]>
+  private svgAnnotationContainer: Doc // canvas su cui vengono inserite le annotazioni
+  private allAnnotations: Map<string, Annotation<DataType>[]> // tutte le annotazioni in formato <uuid_screenshot, annotations[]>
 
   private startDateSubs: Subscription
   private slideSubs: Subscription
   private annotationSubs: Subscription
 
+  /**
+   * Metodo costruttore
+   * @param store store con i dati della sessione
+   * @param dialogRef reference per essere considerato dialog
+   * @param tools Tools da utilizzare per visualizzare le annotazioni
+   */
   constructor(
     private store: Store<AppState>,
-    public dialogRef: MatDialogRef<NoteSliderComponent>
+    public dialogRef: MatDialogRef<NoteSliderComponent>,
+    @Inject(TOOLS) private tools: Tool<DataType>[]
   ) { }
 
+  /**
+   * Salva localmente il timestamp di inizio della lezione
+   */
   ngOnInit() {
-
     this.startDateSubs = this.store.select(s => s.video.startTimestamp).subscribe(data => {
       this.startDate = data
     })
+    this.store.dispatch(new SetTools(this.tools.map(t => t.getDescription())))
   }
 
+  /**
+   * Aggiunge a schermo, per ogni screenshot, le corrispondenti annotazioni
+   */
   private setCompleteSlides() {
     this.SVGCanvas.nativeElement.style.display = "block"
     if (this.slides !== undefined && this.allAnnotations !== undefined) {
@@ -55,14 +72,10 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
         let slideAnnotations = this.allAnnotations.get(actualSlide._id)
         if (slideAnnotations !== undefined) {
           for (let actualAnnotation of slideAnnotations) {
-            if (actualAnnotation.type === 'pencil') {
-              let pencilAnnotation = actualAnnotation as Annotation<PencilData>
-              this.drawPencilAnnotation(pencilAnnotation)
-            } else if (actualAnnotation.type === 'note') {
-              let pencilAnnotation = actualAnnotation as Annotation<NoteData>
-              this.drawNoteAnnotation(pencilAnnotation)
-            } else if (actualAnnotation.type === 'bookmark') {
-              this.drawBookmarkAnnotation(actualAnnotation as Annotation<BookmarkData>)
+            this.store.dispatch(new SetAnnotationContainer(this.svgAnnotationContainer));
+            const tool = this.getTool(actualAnnotation.type);
+            if (tool) {
+              tool.drawAnnotation(actualAnnotation);
             }
           }
           let actualSVG = this.SVGCanvas.nativeElement.cloneNode(true)
@@ -84,6 +97,24 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
+
+  /**
+   * Seleziona il tool corretto
+   * @param type nome del tool
+   * @returns tool da utilizzare, null se non esiste un tool con quel nome
+   */
+  private getTool(type: string): Tool<DataType> {
+    if (!this.tools) {
+      return null;
+    }
+    const index = this.tools.map(t => t.TYPE).indexOf(type);
+    return index !== -1 ? this.tools[index] : null;
+  }
+
+  /**
+   * Dopo l'inizializzazione salvo localmente gli screenshot e le annotazioni.
+   * Successivamente chiamo setCompleteSlides.
+   */
   public ngAfterViewInit(): void {
     this.slideSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
       this.slides = data
@@ -95,79 +126,26 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-
-  drawBookmarkAnnotation(annotation: Annotation<BookmarkData>) {
-    const placeholder = this.drawBookmarkPlaceholder(annotation.data.x, annotation.data.y, annotation.data.tag);
-    placeholder.id(annotation.uuid);
-  }
-
-
-  private drawBookmarkPlaceholder(x: number, y: number, tag: string): G {
-    const group = this.svgAnnotationContainer.group();
-    group.translate(x, y);
-    group.circle(PL_RADIUS).addClass('note-placeholder').fill('#333333').stroke({ color: lightenDarkenColor('#333333', 20), width: 5 });
-    let path = PL_GENERIC_PATH;
-    switch (tag) {
-      case 'generic':
-        path = PL_GENERIC_PATH;
-        break;
-      case 'important':
-        path = PL_IMPORTANT_PATH;
-        break;
-      case 'question':
-        path = PL_QUESTION_PATH;
-        break;
-      case 'remember':
-        path = PL_REMEMBER_PATH;
-        break;
-      case 'favorite':
-        path = PL_FAVORITE_PATH;
-        break;
-    }
-    group.path(path).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
-
-    return group;
-  }
-
-  /*
-    Metodo che disegna appunti di tipo "matita"
-  */
-  drawPencilAnnotation(annotation: Annotation<PencilData>): void {
-    const path = this.svgAnnotationContainer.path(annotation.data.path);
-    path.stroke({ color: annotation.data.color, width: annotation.data.width });
-    path.fill({ color: 'none' });
-    path.id(annotation.uuid);
-  }
-  /*
-    Metodo che disegna appunti di tipo "nota"
-  */
-  drawNoteAnnotation(annotation: Annotation<NoteData>): void {
-    const placeholder = this.drawPlaceholder(annotation.data.x, annotation.data.y, annotation.data.color);
-    placeholder.id(annotation.uuid);
-  }
-
-  /*
-    Disegna il placeholder per appunti di tipo "nota"
-  */
-  private drawPlaceholder(x: number, y: number, color: string): G {
-    const group = this.svgAnnotationContainer.group();
-    group.translate(x, y);
-    group.circle(PL_RADIUS).addClass('note-placeholder').fill({ color }).stroke({ color: lightenDarkenColor(color, 20), width: 5 });
-    group.path(PL_ICON_PATH).fill('#FFF').transform({ scaleX: 2, scaleY: 2 }).translate(PL_RADIUS / 4.5, PL_RADIUS / 4.5);
-
-    return group;
-  }
-
+  /**
+   * Aggiorna il currentTime con il timing dello screenshot
+   * @param actual Screenshot da cui ricavare il timing
+   */
   setTime(actual: Screenshot) {
     let timestamp = actual._id.toString().substring(0, 8)
     let date = new Date(parseInt(timestamp, 16) * 1000)
     this.store.dispatch(new SetUpdatedTime((date.getTime() - this.startDate) / 1000))
   }
 
+  /**
+  * Il componente si disiscrive da tutte le Subscription
+  */
   ngOnDestroy() {
-    this.startDateSubs.unsubscribe()
-    this.slideSubs.unsubscribe()
-    this.annotationSubs.unsubscribe()
+    if (this.startDateSubs !== undefined)
+      this.startDateSubs.unsubscribe()
+    if (this.slideSubs !== undefined)
+      this.slideSubs.unsubscribe()
+    if (this.annotationSubs !== undefined)
+      this.annotationSubs.unsubscribe()
   }
 
 }

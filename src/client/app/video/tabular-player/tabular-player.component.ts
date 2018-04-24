@@ -10,18 +10,22 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './tabular-player.component.html',
   styleUrls: ['./tabular-player.component.scss']
 })
+
+/**
+ * Componente con uno stream principale grande e due stream miniatura
+ */
 export class TabularPlayerComponent implements OnInit, OnDestroy {
 
-  camVideoUrl: Observable<string>
-  pcVideoUrl: Observable<string>
-  hasAnnotations: boolean
-  currentMainView: string = "pcVideo"
-  playing: boolean
-  mainWidth: string
-  thumbWidth: string
-  thumbHeight: string
+  camVideoUrl: Observable<string> // url dello stream della camera
+  pcVideoUrl: Observable<string> // url dello stream del pc
+  hasAnnotations: boolean // true se le annotazioni sono attive
+  currentMainView: string = "pcVideo" // indica quale stream è attualmente quello principale (pcVideo, camVideo o notes)
+  playing: boolean // true se il video è in esecuzione
+  mainWidth: string // larghezza della stream principale
+  thumbWidth: string // larghezza della miniatura
+  thumbHeight: string // altezza della miniatura
 
-  private hiddenHeader: boolean = false
+  private hiddenHeader: boolean = false // true se l'header è collassato
 
   private annotationsSubsc: Subscription
   private playingSubsc: Subscription
@@ -31,11 +35,17 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('firstThumb') firstThumb: ElementRef;
   @ViewChild('secondThumb') secondThumb: ElementRef;
 
-
+  /**
+   * Metodo costruttore
+   * @param store store con i dati della sessione
+   */
   constructor(
     private store: Store<AppState>
   ) { }
 
+  /**
+   * Estrae i dati necessari dallo store
+   */
   ngOnInit() {
     // prendo i valori dallo store
     this.camVideoUrl = this.store.select(s => s.video.camUrl)
@@ -65,17 +75,6 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     this.calculateAspectRatio()
   }
 
-  ngOnDestroy() {
-    let signalTimeSubs = this.store.select(s => s.video.currentTime).subscribe(data => {
-      this.store.dispatch(new SetUpdatedTime(data))
-    })
-
-    signalTimeSubs.unsubscribe()
-    this.annotationsSubsc.unsubscribe()
-    this.playingSubsc.unsubscribe()
-    this.headerSubsc.unsubscribe()
-  }
-
   /*
     Cambia la mainView. nThumb indica l'indice del thumbnail con cui effettuare lo switch
   */
@@ -100,6 +99,9 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Ruota la posizione delle stream in senso orario.
+   */
   rotateRight() {
     let wasPlaying = this.playing
     this.store.dispatch(new Pause())
@@ -127,6 +129,10 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Calcola la dimensione delle stream in modo tale che lo stream principale sfrutti maggior spazio
+   * disponibile sia orizzontalmente che verticalmente
+   */
   calculateAspectRatio() {
     let actualHeight = window.innerHeight - 220;
     if (this.hiddenHeader) {
@@ -144,5 +150,20 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
       this.thumbWidth = '16vw'
       this.thumbHeight = '9vw'
     }
+  }
+
+  /**
+   * Il componente si disiscrive da tutte le Subscription
+   */
+  ngOnDestroy() {
+    this.store.select(s => s.video.currentTime).subscribe(data => {
+      this.store.dispatch(new SetUpdatedTime(data))
+    }).unsubscribe()
+    if (this.annotationsSubsc !== undefined)
+      this.annotationsSubsc.unsubscribe()
+    if (this.playingSubsc !== undefined)
+      this.playingSubsc.unsubscribe()
+    if (this.headerSubsc !== undefined)
+      this.headerSubsc.unsubscribe()
   }
 }

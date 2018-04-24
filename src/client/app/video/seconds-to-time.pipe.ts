@@ -4,6 +4,10 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'secondsToTime',
     pure: true
 })
+
+/**
+ * Pipe che trasforma valori da secondi a stringhe nel formato HH:MM:SS
+ */
 export class SecondsToTimePipe implements PipeTransform {
 
     transform(value: number): string {

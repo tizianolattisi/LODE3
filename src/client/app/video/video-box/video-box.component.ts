@@ -21,37 +21,39 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
 
   @ViewChild('videoElement') videoElement: ElementRef;
 
-  private playing = false;
+  private playing = false; // true se il video è in esecuzione
+  loadingVideo = true // true se il video si sta caricando
 
   private playingSubsc: Subscription
   private volumeSubsc: Subscription
   private speedSubsc: Subscription
   private updateTimeSubsc: Subscription
 
-  loadingVideo = true
-
+  /**
+   * Metodo costruttore
+   * @param store store in cui vengono salvati i dati della sessione
+   */
   constructor(
     private store: Store<AppState>
   ) { }
 
+  /**
+   * Estrae i dati dallo store
+   */
   ngOnInit(): void {
-
     this.volumeSubsc = this.store.select(s => s.video.volume).subscribe(data => {
       this.videoElement.nativeElement.muted = !data
     })
-
     this.speedSubsc = this.store.select(s => s.video.speed).subscribe(data => {
       this.videoElement.nativeElement.playbackRate = data
     })
-
     // Caso time aggiornato da evento esterno
     this.updateTimeSubsc = this.store.select(s => s.video.updatedTime).subscribe(data => {
       this.videoElement.nativeElement.currentTime = data
     })
-
   }
 
-  /*
+  /**
     Avvia/ferma i due stream video in base al valore 'playing'.
  */
   playPause() {
@@ -62,7 +64,7 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*
+  /**
     Se lo stream video è master, aggiorna il valore "currentTime" dello store.
   */
   setCurrentTime() {
@@ -72,30 +74,35 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
   }
 
   /*
-    Quando viene distrutto il componente elimina tutte le subscription.
-  */
-  ngOnDestroy() {
-    if (this.playingSubsc !== undefined) {
-      this.playingSubsc.unsubscribe()
-    }
-    this.updateTimeSubsc.unsubscribe()
-    this.speedSubsc.unsubscribe()
-    this.volumeSubsc.unsubscribe()
-  }
-
-  /*
     Rende il video fullsceen
    */
   goFullscreen() {
     this.videoElement.nativeElement.webkitRequestFullScreen()
   }
 
+  /**
+   * Quando il video è stato caricato correttamente inizia ad ascoltare per azioni di tipo play/pause
+   */
   startVideoListening() {
     this.loadingVideo = false
-
+    this.videoElement.nativeElement.removeAttribute('controls')
     this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
       this.playing = data
       this.playPause();
     })
+  }
+
+  /**
+   Quando viene distrutto il componente elimina tutte le subscription.
+ */
+  ngOnDestroy() {
+    if (this.playingSubsc !== undefined)
+      this.playingSubsc.unsubscribe()
+    if (this.updateTimeSubsc !== undefined)
+      this.updateTimeSubsc.unsubscribe()
+    if (this.speedSubsc !== undefined)
+      this.speedSubsc.unsubscribe()
+    if (this.volumeSubsc !== undefined)
+      this.volumeSubsc.unsubscribe()
   }
 }

@@ -11,26 +11,33 @@ import { SetUpdatedTime } from '../../store/video/video.actions'
   styleUrls: ['./linear-player.component.scss']
 })
 
-/*
-  Componente con gli stream posizionati orizzontalmente
+/**
+  Componente con gli stream posizionati orizzontalmente e di dimensione uguale
 */
 export class LinearPlayerComponent implements OnInit, OnDestroy {
 
-  camVideoUrl: Observable<string>
-  pcVideoUrl: Observable<string>
-  hasAnnotations: boolean
-  hasCamVideo: boolean
-  streamWidth: string
-  hiddenHeader: boolean = false
+  camVideoUrl: Observable<string> // url dello stream della camera
+  pcVideoUrl: Observable<string> // url dello stream del pc
+  hasAnnotations: boolean // true se è necessario visualizzare lo stream delle annotazioni
+  hasCamVideo: boolean // true se è necessario visualizzare lo stream della camera
+  streamWidth: string // larghezza di un singolo stream
+  hiddenHeader: boolean = false // true se l'header è collassato
 
   private camVideoSubsc: Subscription
   private annotationsSubsc: Subscription
   private headerSubsc: Subscription
 
+  /**
+   * Metodo costruttore
+   * @param store store in cui vengono salvati i dati della sessione
+   */
   constructor(
     private store: Store<AppState>
   ) { }
 
+  /**
+   * Setta gli url e calcola la dimensione corretta degli stream
+   */
   ngOnInit() {
     // prendo i valori dallo store
     this.camVideoUrl = this.store.select(s => s.video.camUrl)
@@ -49,6 +56,10 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Calcola la dimensione corretta per gli stream video. 
+   * Sfrutta più spazio possibile orizzontalmente facendo sempre apparire a schermo i controlli.
+   */
   calculateAspectRatio() {
     let actualHeight = window.innerHeight - 220;
     if (this.hiddenHeader) {
@@ -64,18 +75,27 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Ogni volta che la pagina subisce un resize aggiorno la dimensione degli stream
+   */
   onResize() {
     this.calculateAspectRatio()
   }
 
+  /**
+   * Il componente si disiscrive da tutte le Subscription
+   */
   ngOnDestroy() {
-
     let signalTimeSubs = this.store.select(s => s.video.currentTime).subscribe(data => {
       this.store.dispatch(new SetUpdatedTime(data))
     })
-    signalTimeSubs.unsubscribe()
-    this.annotationsSubsc.unsubscribe()
-    this.camVideoSubsc.unsubscribe()
-    this.headerSubsc.unsubscribe()
+    if (signalTimeSubs !== undefined)
+      signalTimeSubs.unsubscribe()
+    if (this.annotationsSubsc !== undefined)
+      this.annotationsSubsc.unsubscribe()
+    if (this.camVideoSubsc !== undefined)
+      this.camVideoSubsc.unsubscribe()
+    if (this.headerSubsc !== undefined)
+      this.headerSubsc.unsubscribe()
   }
 }
