@@ -52,6 +52,9 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     this.pcVideoUrl = this.store.select(s => s.video.pcUrl)
     this.annotationsSubsc = this.store.select(s => s.video.hasAnnotations).subscribe(data => {
       this.hasAnnotations = data
+      if (!data) {
+        this.secondThumb.nativeElement.style.display = 'none'
+      }
     })
 
     this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
@@ -143,8 +146,9 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     let height = Math.min(actualHeight, (actualWidth * (width / 100) * (9 / 16)))
     if (height === actualHeight) {
       this.mainWidth = (height * (16 / 9)) + 'px'
-      this.thumbHeight = height / 3 + 'px'
-      this.thumbWidth = (height / 3 * (16 / 9)) + 'px'
+      let thumbHeight = ((height / 3) * 100) / window.innerWidth
+      this.thumbHeight = thumbHeight + 'vw'
+      this.thumbWidth = (thumbHeight * (16 / 9)) + 'vw'
     } else {
       this.mainWidth = width + '%'
       this.thumbWidth = '16vw'

@@ -90,7 +90,7 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.SVGCanvas.nativeElement.style.display = "none"
-    this.store.select(s => s.lecture.currentSlideIndex).subscribe(data => {
+    this.store.select(s => s.video.screenshotIndex).subscribe(data => {
       if (this.slides !== undefined) {
         this.currentSlide = this.slides[data]
       }

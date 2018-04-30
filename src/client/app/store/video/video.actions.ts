@@ -17,6 +17,7 @@ export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT'
 export const SHOW_SLIDES = '[Video] SHOW_SLIDES'
 export const HIDE_HEADER = '[Video] HIDE_HEADER'
 export const RESET_DATA = '[Video] RESET_DATA'
+export const SET_SCREENSHOT_INDEX = '[Video] SET_SCREENSHOT_INDEX'
 
 export class SetVideoData implements Action {
   readonly type = SET_VIDEO_DATA;
@@ -32,9 +33,14 @@ export class Pause implements Action {
   readonly type = PAUSE;
 }
 
-
 export class SetUpdatedTime implements Action {
   readonly type = SET_UPDATED_TIME;
+
+  constructor(public payload: number) { }
+}
+
+export class SetScreenshotIndex implements Action {
+  readonly type = SET_SCREENSHOT_INDEX;
 
   constructor(public payload: number) { }
 }
@@ -100,4 +106,5 @@ export type All
   | SetCompleteAnnotations
   | ShowSlides
   | HideHeader
-  | ResetData;
+  | ResetData
+  | SetScreenshotIndex;

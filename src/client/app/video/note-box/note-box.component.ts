@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as SVG from 'svg.js';
 import { Doc } from 'svg.js';
 import { Annotation, DataType } from '../../service/model/annotation';
-import { SetCurrentSlide } from '../../store/lecture/lecture.actions'
+import { SetScreenshotIndex } from '../../store/video/video.actions'
 import { SetAnnotationContainer, SetTools } from '../../store/editor/editor.actions';
 import { Tool } from '../../service/tools/tool';
 import { TOOLS } from '../../service/tools/tool-opaque-token';
@@ -59,7 +59,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
    * Setta le variabili globali prendendole dallo store
    */
   ngOnInit() {
-    this.store.dispatch(new SetCurrentSlide(-1))
+    this.store.dispatch(new SetScreenshotIndex(-1))
     this.svgAnnotationContainer = SVG.adopt(this.SVGCanvas.nativeElement) as Doc;
     this.store.select(s => s.video.startTimestamp).subscribe(data => this.initialTime = data)
     this.slidesSubsc = this.store.select(s => s.lecture.slides).subscribe(data => {
@@ -136,7 +136,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
         this.currentSlide = this.slides[this.screenshotIndex].screenshot
         this.annotationIndex = 0
         this.clearSVG()
-        this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
+        this.store.dispatch(new SetScreenshotIndex(this.screenshotIndex))
       }
       this.drawSVG(seconds)
     }
@@ -163,7 +163,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
         this.annotationIndex = 0
         this.drawSVG(seconds)
       }
-      this.store.dispatch(new SetCurrentSlide(this.screenshotIndex))
+      this.store.dispatch(new SetScreenshotIndex(this.screenshotIndex))
     }
   }
 

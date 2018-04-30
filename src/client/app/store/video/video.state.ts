@@ -21,6 +21,7 @@ export interface VideoState {
   videoLayout: Layout;
   showSlides: boolean;
   hiddenHeader: boolean;
+  screenshotIndex: number;
 
   startTimestamp: number;
   hasAnnotations: boolean;

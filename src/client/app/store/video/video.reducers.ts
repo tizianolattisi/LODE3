@@ -19,6 +19,7 @@ const initialState: VideoState = {
   startTimestamp: 0,
   showSlides: false,
   hiddenHeader: false,
+  screenshotIndex: -1,
   allAnnotations: new Map<string, Annotation<DataType>[]>()
 }
 
@@ -98,6 +99,12 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         showSlides: action.payload
       }
 
+    case VideoActions.SET_SCREENSHOT_INDEX:
+      return {
+        ...state,
+        screenshotIndex: action.payload
+      }
+
     case VideoActions.HIDE_HEADER:
       return {
         ...state,
@@ -120,7 +127,8 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         startTimestamp: 0,
         showSlides: false,
         hiddenHeader: false,
-        allAnnotations: new Map<string, Annotation<DataType>[]>()
+        allAnnotations: new Map<string, Annotation<DataType>[]>(),
+        screenshotIndex: -1
       }
 
     default:

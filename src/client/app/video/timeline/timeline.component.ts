@@ -67,7 +67,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
       this.slides = data
     })
 
-    this.currentSlideSubsc = this.store.select(s => s.lecture.currentSlideIndex).subscribe(data => {
+    this.currentSlideSubsc = this.store.select(s => s.video.screenshotIndex).subscribe(data => {
       if (this.slides !== undefined) {
         this.currentSlide = this.slides[data]
       }

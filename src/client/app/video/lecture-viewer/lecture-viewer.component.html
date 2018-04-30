@@ -1,12 +1,10 @@
-<div l3FxFullHeight>
-    <div class="player">
-        <linear-player *ngIf="layoutSelection === 'LINEAR3' ||layoutSelection ===  'LINEAR2' || layoutSelection === 'NONE'"></linear-player>
-        <tabular-player *ngIf="layoutSelection === 'TABULAR3' || layoutSelection === 'TABULAR2'"></tabular-player>
-    </div>
-    <div fxLayout="row" fxLayout.xs="column" id="toolbar" color="primary" fxLayoutAlign="center center">
-        <controls></controls>
-        <timeline></timeline>
-    </div>
+<div class="player">
+    <linear-player *ngIf="layoutSelection === 'LINEAR3' ||layoutSelection ===  'LINEAR2' || layoutSelection === 'NONE'"></linear-player>
+    <tabular-player *ngIf="layoutSelection === 'TABULAR3' || layoutSelection === 'TABULAR2'"></tabular-player>
+</div>
+<div fxLayout="row" fxLayout.xs="column" id="toolbar" color="primary" fxLayoutAlign="center center">
+    <controls></controls>
+    <timeline></timeline>
 </div>
 
 <ng-container *ngFor="let noteInfo of openNotes$ | async">

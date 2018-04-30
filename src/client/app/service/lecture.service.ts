@@ -14,19 +14,11 @@ export class LectureService {
   constructor(private http: HttpClient) { }
 
   getLectures(live?: boolean): Observable<Lecture[]> {
-    /*
-    return this.http.get<Lecture[]>(`http://lode.disi.unitn.it/cad/api/lecture?live=${live ? 'true' : 'false'}`)
-      .catch(toApiErrorResponse);
-    */
     return this.http.get<Lecture[]>(`/api/lecture?live=${live ? 'true' : 'false'}`)
       .catch(toApiErrorResponse);
   }
 
   getLecture(lectureId: string): Observable<Lecture> {
-    /*
-    return this.http.get<string>(`http://lode.disi.unitn.it/cad/api/lecture/${lectureId}`)
-      .catch(toApiErrorResponse);
-    */
     return this.http.get<string>(`/api/lecture/${lectureId}`)
       .catch(toApiErrorResponse);
   }
