@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   has3Stream: boolean = true
   isCollapsed: boolean = false
   currentLayout: string = ''
+  hasAnnotations: boolean = false
 
   @ViewChild('content') content: ElementRef;
 
@@ -50,6 +51,10 @@ export class AppComponent implements OnInit {
       this.currentLayout = Layout[data]
       if (data === Layout.LINEAR2 || data === Layout.TABULAR2)
         this.has3Stream = false
+    })
+
+    this.store.select(s => s.video.hasAnnotations).subscribe(data => {
+      this.hasAnnotations = data
     })
   }
 

@@ -16,7 +16,7 @@
               <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
             </mat-button-toggle>
           </mat-button-toggle-group>
-          <button mat-raised-button style='margin-left:24px' (click)="showSlides()">Annotations gallery</button>
+          <button *ngIf="hasAnnotations" mat-raised-button style='margin-left:24px' (click)="showSlides()">Annotations gallery</button>
           <div fxFlexOffset="24px">
             <button mat-icon-button>
               <mat-icon class="black-icon" svgIcon="info" (click)="showInfo()"></mat-icon>

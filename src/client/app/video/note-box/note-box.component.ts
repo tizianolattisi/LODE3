@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, Inject, Renderer2 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
@@ -47,10 +47,12 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
 
   /**
    * Metodo costruttore
+   * @param renderer renderer per la manipolazione del DOM
    * @param store store in cui vengono salvati i dati della sessione
    * @param tools Tools da utilizzare per visualizzare le annotazioni
    */
   constructor(
+    private renderer: Renderer2,
     private store: Store<AppState>,
     @Inject(TOOLS) private tools: Tool<DataType>[]
   ) { }
@@ -198,16 +200,17 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
               transitionsSeconds /= this.speed
               //ANIMAZIONE
               if (this.playing) {
-                let path = this.SVGCanvas.nativeElement.getElementById(actualAnnotation.uuid)
+                let id = '#a' + actualAnnotation.uuid
+                let path = this.renderer.selectRootElement(id)
                 var length = path.getTotalLength();
-                path.style.transition = path.style.WebkitTransition =
-                  'none';
-                path.style.strokeDasharray = length + ' ' + length;
-                path.style.strokeDashoffset = length;
+                this.renderer.setStyle(path, 'transition', 'none')
+                this.renderer.setStyle(path, 'WebkitTransition', 'none')
+                this.renderer.setStyle(path, 'strokeDasharray', length + ' ' + length)
+                this.renderer.setStyle(path, 'strokeDashoffset', length)
                 path.getBoundingClientRect();
-                path.style.transition = path.style.WebkitTransition =
-                  'stroke-dashoffset ' + transitionsSeconds + 's ease-in-out';
-                path.style.strokeDashoffset = '0';
+                this.renderer.setStyle(path, 'transition', 'stroke-dashoffset ' + transitionsSeconds + 's ease-in-out')
+                this.renderer.setStyle(path, 'WebkitTransition', 'stroke-dashoffset ' + transitionsSeconds + 's ease-in-out')
+                this.renderer.setStyle(path, 'strokeDashoffset', '0')
               }
             }
           }
@@ -235,9 +238,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
    * Cancella tutte le annotazioni attualmente presenti nel canvas
    */
   clearSVG() {
-    while (this.SVGCanvas.nativeElement.firstChild) {
-      this.SVGCanvas.nativeElement.removeChild(this.SVGCanvas.nativeElement.firstChild);
-    }
+    this.SVGCanvas.nativeElement.innerHTML = '';
   }
 
   /**

@@ -39,10 +39,12 @@ export class NoteReaderComponent implements OnChanges {
     if (this.noteInfo) {
       this.store.select(s => s.video.allAnnotations).subscribe(data => {
         let actual = data.get(this.noteInfo.slideId)
-        for (let x of actual) {
-          if (x.uuid === this.noteInfo.annotationId) {
-            this.note = x as Annotation<NoteData>
-            break
+        if (actual !== undefined) {
+          for (let x of actual) {
+            if (x.uuid === this.noteInfo.annotationId) {
+              this.note = x as Annotation<NoteData>
+              break
+            }
           }
         }
       })

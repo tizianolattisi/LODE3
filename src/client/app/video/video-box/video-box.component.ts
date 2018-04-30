@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy, Renderer2 } from '@angular/core';
 import { SetCurrentTime } from '../../store/video/video.actions'
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
@@ -31,9 +31,11 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
 
   /**
    * Metodo costruttore
+   * @param renderer renderer per la manipolazione del DOM
    * @param store store in cui vengono salvati i dati della sessione
    */
   constructor(
+    private renderer: Renderer2,
     private store: Store<AppState>
   ) { }
 
@@ -85,7 +87,7 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
    */
   startVideoListening() {
     this.loadingVideo = false
-    this.videoElement.nativeElement.removeAttribute('controls')
+    this.renderer.removeAttribute(this.videoElement.nativeElement, 'controls')
     this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
       this.playing = data
       this.playPause();

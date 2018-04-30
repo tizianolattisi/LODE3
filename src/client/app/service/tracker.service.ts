@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 
+/** 
+ * Service che permette di tenere traccia delle azioni dell'utente nel viewer
+*/
 @Injectable()
 export class TrackerService {
 
-  sessionId: string = null;
-  userName: string = '';
+  sessionId: string = null; // id della sessione
+  userName: string = ''; // username dell'utente
 
   constructor() {
   }
 
+  /**
+   * Genera un id per la sessione e setta l'username
+   * @param user username dell'utente
+   */
   sessionIdMaker(user: string) {
     var randomPool = new Uint8Array(32);
     crypto.getRandomValues(randomPool);
@@ -21,6 +28,12 @@ export class TrackerService {
     this.sessionId = hex;
   }
 
+  /**
+   * Invia un log per un determinato evento
+   * @param type tipo di evento
+   * @param value1 primo valore dell'evento
+   * @param value2 secondo valore dell'evento
+   */
   trackEvent(type, value1, value2) {
     var href = window.location.href;
     var arr = href.split("/");

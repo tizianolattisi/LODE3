@@ -117,7 +117,7 @@ export class PencilTool extends Tool<PencilData> {
     path.stroke({ color: annotation.data.color, width: annotation.data.width });
     path.fill({ color: 'none' });
     this.addSelectionHadlers(path, annotation.uuid);
-    path.id(annotation.uuid);
+    path.id('a' + annotation.uuid); // query selector non accetta id che inizino con un numero
   }
 
   addSelectionHadlers(path: any, uuid: string) {

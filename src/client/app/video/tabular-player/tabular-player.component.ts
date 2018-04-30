@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, Renderer2 } from '@angular/core';
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -37,9 +37,11 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
 
   /**
    * Metodo costruttore
+   * @param renderer renderer per la manipolazione del DOM
    * @param store store con i dati della sessione
    */
   constructor(
+    private renderer: Renderer2,
     private store: Store<AppState>
   ) { }
 
@@ -53,7 +55,8 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     this.annotationsSubsc = this.store.select(s => s.video.hasAnnotations).subscribe(data => {
       this.hasAnnotations = data
       if (!data) {
-        this.secondThumb.nativeElement.style.display = 'none'
+        this.secondThumb.nativeElement.innerHTML = ''
+        this.renderer.setStyle(this.secondThumb.nativeElement, 'display', 'none')
       }
     })
 
@@ -71,16 +74,18 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     let main = this.mainView.nativeElement
 
     // setto come primo elemento dei container i video
-    thumb1.insertBefore(thumb1.childNodes[1], thumb1.childNodes[0])
-    thumb2.insertBefore(thumb2.childNodes[1], thumb2.childNodes[0])
-    main.insertBefore(main.childNodes[1], main.childNodes[0])
+    this.renderer.insertBefore(thumb1, thumb1.childNodes[1], thumb1.childNodes[0])
+    if (this.hasAnnotations)
+      this.renderer.insertBefore(thumb2, thumb2.childNodes[1], thumb2.childNodes[0])
+    this.renderer.insertBefore(main, main.childNodes[1], main.childNodes[0])
 
     this.calculateAspectRatio()
   }
 
-  /*
-    Cambia la mainView. nThumb indica l'indice del thumbnail con cui effettuare lo switch
-  */
+  /**
+   * Cambia lo stream principale
+   * @param nThumb indica l'indice del thumbnail con cui effettuare lo switch
+   */
   changeThumb(nThumb: number) {
     let wasPlaying = this.playing
     this.store.dispatch(new Pause())
@@ -93,8 +98,8 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
     let main = this.mainView.nativeElement
     let smallElem = thumb.childNodes[0]
     let mainElem = main.childNodes[0]
-    main.insertBefore(smallElem, main.childNodes[0])
-    thumb.insertBefore(mainElem, thumb.childNodes[0])
+    this.renderer.insertBefore(main, smallElem, main.childNodes[0])
+    this.renderer.insertBefore(thumb, mainElem, thumb.childNodes[0])
 
     this.currentMainView = main.childNodes[0].id
     if (wasPlaying) {
@@ -118,11 +123,11 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
       let firstElem = first.childNodes[0]
       let secondElem = second.childNodes[0]
 
-      main.insertBefore(firstElem, main.childNodes[0])
-      second.insertBefore(mainElem, second.childNodes[0])
-      first.insertBefore(secondElem, first.childNodes[0])
-
+      this.renderer.insertBefore(main, firstElem, main.childNodes[0])
+      this.renderer.insertBefore(second, mainElem, second.childNodes[0])
+      this.renderer.insertBefore(first, secondElem, first.childNodes[0])
       this.currentMainView = main.childNodes[0].id
+
     } else {
       this.changeThumb(1)
     }

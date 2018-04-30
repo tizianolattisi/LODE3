@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, OnDestroy, Inject, Renderer2 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { Screenshot } from '../../service/model/screenshot';
@@ -38,11 +38,13 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Metodo costruttore
+   * @param renderer renderer per la manipolazione del DOM
    * @param store store con i dati della sessione
    * @param dialogRef reference per essere considerato dialog
    * @param tools Tools da utilizzare per visualizzare le annotazioni
    */
   constructor(
+    private renderer: Renderer2,
     private store: Store<AppState>,
     public dialogRef: MatDialogRef<NoteSliderComponent>,
     @Inject(TOOLS) private tools: Tool<DataType>[]
@@ -62,11 +64,9 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
    * Aggiunge a schermo, per ogni screenshot, le corrispondenti annotazioni
    */
   private setCompleteSlides() {
-    this.SVGCanvas.nativeElement.style.display = "block"
+    this.renderer.setStyle(this.SVGCanvas.nativeElement, 'display', 'block')
     if (this.slides !== undefined && this.allAnnotations !== undefined) {
-      while (this.annotationContainer.nativeElement.firstChild) {
-        this.annotationContainer.nativeElement.removeChild(this.annotationContainer.nativeElement.firstChild);
-      }
+      this.SVGCanvas.nativeElement.innerHTML = '';
       for (let actualSlide of this.slides) {
         this.svgAnnotationContainer = SVG.adopt(this.SVGCanvas.nativeElement) as Doc;
         let slideAnnotations = this.allAnnotations.get(actualSlide._id)
@@ -79,17 +79,15 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }
           let actualSVG = this.SVGCanvas.nativeElement.cloneNode(true)
-          var divContainer = document.createElement("div");
-          divContainer.style.height = "8vw"
-          divContainer.appendChild(actualSVG)
-          this.annotationContainer.nativeElement.appendChild(divContainer)
-          while (this.SVGCanvas.nativeElement.firstChild) {
-            this.SVGCanvas.nativeElement.removeChild(this.SVGCanvas.nativeElement.firstChild);
-          }
+          var divContainer = this.renderer.createElement('div');
+          this.renderer.setStyle(divContainer, 'height', '8vw')
+          this.renderer.appendChild(divContainer, actualSVG)
+          this.renderer.appendChild(this.annotationContainer.nativeElement, divContainer)
+          this.SVGCanvas.nativeElement.innerHTML = '';
         }
       }
     }
-    this.SVGCanvas.nativeElement.style.display = "none"
+    this.renderer.setStyle(this.SVGCanvas.nativeElement, 'display', 'none')
     this.store.select(s => s.video.screenshotIndex).subscribe(data => {
       if (this.slides !== undefined) {
         this.currentSlide = this.slides[data]
@@ -147,5 +145,4 @@ export class NoteSliderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.annotationSubs !== undefined)
       this.annotationSubs.unsubscribe()
   }
-
 }

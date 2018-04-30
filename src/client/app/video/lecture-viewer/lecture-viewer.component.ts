@@ -170,6 +170,7 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.store.dispatch(new VideoActions.ResetData())
+    this.dialog.closeAll()
     if (this.layoutSubs !== undefined)
       this.layoutSubs.unsubscribe()
     if (this.currentLectureSubs !== undefined)
@@ -184,11 +185,9 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
       this.slidesSubs.unsubscribe()
     if (this.fetchVideoSubs !== undefined)
       this.fetchVideoSubs.unsubscribe()
-    if (this.showSlidesSubs !== undefined) {
+    if (this.showSlidesSubs !== undefined)
       this.showSlidesSubs.unsubscribe()
-    }
-    if (this.socketService !== undefined) {
+    if (this.socketService !== undefined)
       this.socketService.close()
-    }
   }
 }
