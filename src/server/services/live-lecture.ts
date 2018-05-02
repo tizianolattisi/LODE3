@@ -127,7 +127,9 @@ export class LiveLecture {
             lecture.save()
               .then(l => {
                 // Update next screenshot available
-                this.screenshotStatus = 'no-updates';
+                if (this.screenshotStatus==='fetch-pending') {
+                  this.screenshotStatus = 'no-updates';
+                }
 
                 const screenshootComplete: IScreenshotComplete = {...lectureScreenshot, img: image};
                 this.nextScreenshot$.next(screenshootComplete);
