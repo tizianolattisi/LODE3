@@ -26,7 +26,7 @@ router.get(PATH, (req, res, next) => {
   } else {
     // Exclude live lectures from result list
     Lecture.find({uuid: {$nin: LiveLectureService.getLiveLectureIds()}})
-      .sort([['uuid', 'descending']])
+      .sort('-uuid')
       .then((lectures: Lecture[]) => res.send(lectures.map(l => l.toJSON())))
       .catch(err => next(err));
   }
