@@ -6,7 +6,7 @@
         <video controls="controls" #videoElement (loadeddata)="startVideoListening()" (timeupdate)="setCurrentTime()" [src]="videoUrl"
             type="video/mp4"></video>
     </div>
-    <div *ngIf="allowFullscreen && !loadingVideo" style="margin-top:58%;">
+    <div *ngIf="allowFullscreen && !loadingVideo">
         <button mat-raised-button id="fullscreenButton" (click)="goFullscreen()">
             Go Fullscreen
             <mat-icon svgIcon="expand"></mat-icon>

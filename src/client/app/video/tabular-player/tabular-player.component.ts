@@ -142,7 +142,7 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
    * disponibile sia orizzontalmente che verticalmente
    */
   calculateAspectRatio() {
-    let actualHeight = window.innerHeight - 220;
+    let actualHeight = window.innerHeight - 205;
     if (this.hiddenHeader) {
       actualHeight += 60
     }
@@ -162,7 +162,7 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Il componente si disiscrive da tutte le Subscription
+   * Il componente si disiscrive da tutte le Subscription e aggiorna il currentTime
    */
   ngOnDestroy() {
     this.store.select(s => s.video.currentTime).subscribe(data => {

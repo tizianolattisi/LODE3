@@ -61,7 +61,7 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
    * Sfrutta più spazio possibile orizzontalmente facendo sempre apparire a schermo i controlli.
    */
   calculateAspectRatio() {
-    let actualHeight = window.innerHeight - 220;
+    let actualHeight = window.innerHeight - 205;
     if (this.hiddenHeader) {
       actualHeight += 60
     }
@@ -83,7 +83,7 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Il componente si disiscrive da tutte le Subscription
+   * Il componente si disiscrive da tutte le Subscription e aggiorna il currentTime
    */
   ngOnDestroy() {
     let signalTimeSubs = this.store.select(s => s.video.currentTime).subscribe(data => {

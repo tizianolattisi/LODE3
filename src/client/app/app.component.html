@@ -18,11 +18,11 @@
           </mat-button-toggle-group>
           <button *ngIf="hasAnnotations" mat-raised-button style='margin-left:24px' (click)="showSlides()">Annotations gallery</button>
           <div fxFlexOffset="24px">
-            <button mat-icon-button>
-              <mat-icon class="black-icon" svgIcon="info" (click)="showInfo()"></mat-icon>
+            <button mat-icon-button (click)="showInfo()">
+              <mat-icon class="black-icon" svgIcon="info"></mat-icon>
             </button>
-            <button mat-icon-button>
-              <mat-icon class="black-icon" svgIcon="help" (click)="showHelp()"></mat-icon>
+            <button mat-icon-button (click)="showHelp()">
+              <mat-icon class="black-icon" svgIcon="help"></mat-icon>
             </button>
           </div>
         </div>

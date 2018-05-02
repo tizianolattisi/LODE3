@@ -1,16 +1,16 @@
 <div fxLayout="row">
-  <button mat-icon-button>
-    <mat-icon class="black-icon" svgIcon="step-rewind" (click)="fastRewind()"></mat-icon>
+  <button mat-icon-button (click)="fastRewind()">
+    <mat-icon class="black-icon" svgIcon="step-rewind"></mat-icon>
   </button>
-  <button mat-icon-button>
-    <mat-icon class="black-icon" svgIcon="{{(play) ? 'pause' : 'play-arrow'}}" (click)="playPause()"></mat-icon>
+  <button mat-icon-button (click)="playPause()">
+    <mat-icon class="black-icon" svgIcon="{{(play) ? 'pause' : 'play-arrow'}}"></mat-icon>
   </button>
-  <button mat-icon-button>
-    <mat-icon class="black-icon" svgIcon="step-forward" (click)="fastForward()"></mat-icon>
+  <button mat-icon-button (click)="fastForward()">
+    <mat-icon class="black-icon" svgIcon="step-forward"></mat-icon>
   </button>
   <!-- Selezione volume -->
-  <button mat-icon-button>
-    <mat-icon class="black-icon" (click)="muteUnmute()" md-menu-origin svgIcon="{{(volume) ? 'volume-high' : 'volume-off'}}"></mat-icon>
+  <button mat-icon-button (click)="muteUnmute()">
+    <mat-icon class="black-icon" md-menu-origin svgIcon="{{(volume) ? 'volume-high' : 'volume-off'}}"></mat-icon>
   </button>
   <!-- Menu selezione velocità riproduzione -->
   <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
