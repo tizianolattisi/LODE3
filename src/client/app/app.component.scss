@@ -6,18 +6,18 @@
 }
 
 .menu-button{
-  background-color: $color-primary
+  background-color: $color-primary;
 }
 
 .app-title {
   font-weight: bold;
-  color: white;
+  color: $color-secondary;
   cursor: pointer;
 }
 
 .title {
   font-family:  Roboto,"Helvetica Neue",sans-serif; 
-  color: black;
+  color: $color-secondary;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
@@ -25,11 +25,15 @@
 
 .lecture-info{
   font: 400 17px/20px Roboto,"Helvetica Neue",sans-serif; 
-  color: black;
+  color: $color-secondary;
 }
 
 .user-info {
-  color: white;
+  color: $color-secondary;
+}
+
+.color-icon{
+  color: $color-secondary;
 }
 
 .info-text{

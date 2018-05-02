@@ -1,8 +1,12 @@
-$color-error: #F44336;
-$color-success: #4CAF50;
+@import '~@angular/material/theming';
+@import './styles.scss';
 
-$color-light: #fafafa;
 
-$color-primary: #FFD600;
-$color-secondary: #000000;
-$color-accent: #1E88E5;
+// Create your Sass color vars (will be available in all the project)
+$color-primary: mat-color($l3-app-primary);
+$color-accent: mat-color($l3-app-accent);
+$color-secondary: $l3-app-secondary;
+$color-error: $l3-app-error;
+$color-success: $l3-app-success;
+$color-light: $l3-app-light;
+

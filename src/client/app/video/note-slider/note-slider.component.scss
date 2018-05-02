@@ -1,3 +1,5 @@
+@import '~style/variables.scss';
+
 *, *:before, *:after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -5,7 +7,7 @@
 }
 
 .active {
-  outline: 5px solid #1f7bdd;
+  outline: 5px solid $color-accent;
     outline-offset: -5px;
 }
 

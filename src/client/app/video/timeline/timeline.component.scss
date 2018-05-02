@@ -1,5 +1,4 @@
 @import '~style/variables.scss';
-
 $barWidth: 65vw;
 $barHeight: 25px;
 
@@ -35,13 +34,18 @@ $barHeight: 25px;
 .time {
 	margin-right: 0.8em;
 	margin-left: 0.8em;
-	color: black !important;
+	color: $color-secondary !important;
+}
+
+.active{
+	color: $color-accent !important;
 }
 
 .marker {
 	position: absolute;
 	cursor: pointer;
 	z-index:10;
+	color: $color-secondary;
 }
 
 .bookmark{

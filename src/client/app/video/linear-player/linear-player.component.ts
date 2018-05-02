@@ -61,7 +61,7 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
    * Sfrutta più spazio possibile orizzontalmente facendo sempre apparire a schermo i controlli.
    */
   calculateAspectRatio() {
-    let actualHeight = window.innerHeight - 205;
+    let actualHeight = window.innerHeight - 215;
     if (this.hiddenHeader) {
       actualHeight += 60
     }

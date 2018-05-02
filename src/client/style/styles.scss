@@ -1,5 +1,3 @@
-// @import "../../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "./variables.scss";
 html,
 body,
 main {
@@ -18,6 +16,10 @@ main {
 // hue.
 $l3-app-primary: mat-palette($mat-yellow, A700);
 $l3-app-accent: mat-palette($mat-blue, 600, 500, 500);
+$l3-app-secondary: #000000;
+$l3-app-error: #F44336;
+$l3-app-success: #4CAF50;
+$l3-app-light: #fafafa;
 // Create the theme object (a Sass map containing all of the palettes).
 $l3-app-theme: mat-light-theme($l3-app-primary, $l3-app-accent);
 // Include theme styles for core and each component used in your app.

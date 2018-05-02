@@ -142,7 +142,7 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
    * disponibile sia orizzontalmente che verticalmente
    */
   calculateAspectRatio() {
-    let actualHeight = window.innerHeight - 205;
+    let actualHeight = window.innerHeight - 215;
     if (this.hiddenHeader) {
       actualHeight += 60
     }

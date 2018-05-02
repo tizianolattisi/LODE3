@@ -1,5 +1,7 @@
+@import '~style/variables.scss';
+
 .black-icon{
-    color: black;
+    color: $color-secondary;
     vertical-align: middle;
 }
 

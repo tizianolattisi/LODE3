@@ -10,19 +10,19 @@
         <div *ngIf="isInViewer " fxFlexOffset="24px">
           <mat-button-toggle-group (change)="changeVideoLayout(layoutSelection.value)" #layoutSelection="matButtonToggleGroup" value="{{currentLayout}}">
             <mat-button-toggle value="{{has3Stream? 'TABULAR3' : 'TABULAR2'}}">
-              <mat-icon class="black-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
+              <mat-icon class="color-icon" svgIcon="{{has3Stream? 'tabular3' : 'tabular2'}}"></mat-icon>
             </mat-button-toggle>
             <mat-button-toggle value="{{has3Stream? 'LINEAR3' : 'LINEAR2'}}">
-              <mat-icon class="black-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
+              <mat-icon class="color-icon" svgIcon="{{has3Stream? 'linear3' : 'linear2'}}"></mat-icon>
             </mat-button-toggle>
           </mat-button-toggle-group>
           <button *ngIf="hasAnnotations" mat-raised-button style='margin-left:24px' (click)="showSlides()">Annotations gallery</button>
           <div fxFlexOffset="24px">
             <button mat-icon-button (click)="showInfo()">
-              <mat-icon class="black-icon" svgIcon="info"></mat-icon>
+              <mat-icon class="color-icon" svgIcon="info"></mat-icon>
             </button>
             <button mat-icon-button (click)="showHelp()">
-              <mat-icon class="black-icon" svgIcon="help"></mat-icon>
+              <mat-icon class="color-icon" svgIcon="help"></mat-icon>
             </button>
           </div>
         </div>
@@ -42,15 +42,15 @@
 
           <ng-container *ngIf="(email$ | async) ">
             <div fxLayout fxLayoutAlign="center center" class="user-info">
-              <mat-icon svgIcon="account"></mat-icon>
+              <mat-icon class="color-icon" svgIcon="account"></mat-icon>
               <span fxFlexOffset="6px" class="mat-body-1">{{email$ |async}}</span>
             </div>
             <button mat-icon-button (click)="onLogout()" fxFlexOffset="6px" class="user-info">
-              <mat-icon svgIcon="logout"></mat-icon>
+              <mat-icon class="color-icon" svgIcon="logout"></mat-icon>
             </button>
           </ng-container>
           <button *ngIf="isInViewer" mat-icon-button (click)="collapseNavbar()">
-            <mat-icon svgIcon="menu"></mat-icon>
+            <mat-icon class="color-icon" svgIcon="menu"></mat-icon>
           </button>
         </div>
       </div>

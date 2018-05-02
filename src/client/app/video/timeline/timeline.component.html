@@ -11,8 +11,8 @@
       <span class="viewed-bar" #viewedBar></span>
     </div>
     <div *ngIf="hasAnnotations" fxLayout="row" class="markerRow">
-      <mat-icon class="marker grow" [style.color]="(slide === currentSlide) ? '#1E88E5' : '#000000'" *ngFor="let slide of slides"
-        (click)="setTimeMarker(slide)" [style.margin-left]="markerPosition(slide)" svgIcon="marker"></mat-icon>
+      <mat-icon class="marker grow" [ngClass]="{'active' : currentSlide === slide}" *ngFor="let slide of slides" (click)="setTimeMarker(slide)"
+        [style.margin-left]="markerPosition(slide)" svgIcon="marker"></mat-icon>
     </div>
   </div>
   <span class="time mat-body-1">
