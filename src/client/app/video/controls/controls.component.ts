@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppState } from '../../store/app-state';
 import { Store } from '@ngrx/store';
-import { Play, Pause, MuteAudio, UnmuteAudio, SetSpeed, SetUpdatedTime } from '../../store/video/video.actions'
+import { Play, Pause, SetVolume, SetSpeed, SetUpdatedTime } from '../../store/video/video.actions'
 import { Subscription } from 'rxjs/Subscription';
 import { TrackerService } from '../../service/tracker.service';
 import { Observable } from 'rxjs/Rx';
@@ -19,7 +19,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   play: boolean // true se gli stream sono in esecuzione
   totalTime: number // lunghezza degli stream
-  volume: boolean // true se il volume è attivato
+  volume: number // true se il volume è attivato
   speed: number // velocità di riproduzione degli stream
   currentTime: number // tempo attuale
 
@@ -109,12 +109,21 @@ export class ControlsComponent implements OnInit, OnDestroy {
    * Se l'audio è attivo viene disattivato, altrimenti viene riattivato.
    */
   muteUnmute() {
-    this.tracker.trackEvent("mute", this.currentTime, !this.volume && "off" || "on");
-    if (this.volume) {
-      this.store.dispatch(new MuteAudio())
+    this.tracker.trackEvent("mute", this.currentTime, !(this.volume === 0) && "off" || "on");
+    if (this.volume !== 0) {
+      this.store.dispatch(new SetVolume(0))
     } else {
-      this.store.dispatch(new UnmuteAudio())
+      this.store.dispatch(new SetVolume(1))
     }
+  }
+
+  /**
+   * Setta il volume in base al valore attuale dello slider
+   * @param event evento di modifica del valore dello slider
+   */
+  setVolume(event) {
+    this.store.dispatch(new SetVolume(event.value))
+    this.tracker.trackEvent("mute", this.currentTime, !(this.volume === 0) && "off" || "on")
   }
 
   /**

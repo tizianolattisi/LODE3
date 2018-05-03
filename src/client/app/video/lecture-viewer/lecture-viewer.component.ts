@@ -84,6 +84,7 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
       .subscribe(lecture => { //estraggo dati lezione        
         this.lecture = lecture;
         if (lecture) {
+          const VIDEO_PATH = this.videoService.BASE_URL + '/lectures/' + this.lecture.course + '/' + this.lecture.name + '/'
           this.tracker.trackEvent("title", lecture.name, lecture.course)
           this.tokenSubs = this.store.select(s => s.user.token).subscribe(token => {
             this.socketService.open(token); // apro soket per annotazioni
@@ -112,15 +113,15 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
               let parser = new Parser()
               parser.parseString(data, (err, result) => {
                 if (result.data.camvideo !== undefined)
-                  result.data.camvideo[0].name = this.videoService.BASE_URL + '/lectures/' + this.lecture.course + '/' + this.lecture.name + '/' + result.data.camvideo[0].name
-                result.data.pcvideo[0].name = this.videoService.BASE_URL + '/lectures/' + this.lecture.course + '/' + this.lecture.name + '/' + result.data.pcvideo[0].name
+                  result.data.camvideo[0].name = VIDEO_PATH + result.data.camvideo[0].name
+                result.data.pcvideo[0].name = VIDEO_PATH + result.data.pcvideo[0].name
                 if (result.data.info[0].annotations === undefined) {
                   result.data.info[0].annotations = false
                 }
                 let timestamp = this.lecture.uuid.toString().substring(0, 8)
                 let date = new Date(parseInt(timestamp, 16) * 1000)
                 result.data.info[0].startDate = date.getTime() / 1000
-                result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
+                //result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
                 this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
                 this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
                 this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'

@@ -13,7 +13,7 @@ const initialState: VideoState = {
   currentTime: 0,
   updatedTime: 0,
   speed: 1,
-  volume: true,
+  volume: 1,
   videoLayout: Layout.NONE,
   hasAnnotations: false,
   startTimestamp: 0,
@@ -69,16 +69,10 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         speed: action.payload
       };
 
-    case VideoActions.MUTE_AUDIO:
+    case VideoActions.SET_VOLUME:
       return {
         ...state,
-        volume: false
-      };
-
-    case VideoActions.UNMUTE_AUDIO:
-      return {
-        ...state,
-        volume: true
+        volume: action.payload
       };
 
     case VideoActions.SET_COMPLETE_ANNOTATIONS:
@@ -121,7 +115,7 @@ export function videoReducer(state: VideoState = initialState, action: Action): 
         currentTime: 0,
         updatedTime: 0,
         speed: 1,
-        volume: true,
+        volume: 1,
         videoLayout: Layout.NONE,
         hasAnnotations: false,
         startTimestamp: 0,

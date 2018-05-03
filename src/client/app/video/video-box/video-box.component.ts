@@ -44,7 +44,7 @@ export class VideoBoxComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.volumeSubsc = this.store.select(s => s.video.volume).subscribe(data => {
-      this.videoElement.nativeElement.muted = !data
+      this.videoElement.nativeElement.volume = data
     })
     this.speedSubsc = this.store.select(s => s.video.speed).subscribe(data => {
       this.videoElement.nativeElement.playbackRate = data

@@ -10,8 +10,7 @@ export const PAUSE = '[Video] PAUSE';
 export const SET_CURRENT_TIME = '[Video] SET_CURRENT_TIME';
 export const SET_UPDATED_TIME = '[Video] SET_UPDATED_TIME';
 export const SET_SPEED = '[Video] SET_SPEED';
-export const MUTE_AUDIO = '[Video] MUTE_AUDIO';
-export const UNMUTE_AUDIO = '[Video] UNMUTE_AUDIO';
+export const SET_VOLUME = '[Video] SET_VOLUME';
 export const SET_COMPLETE_ANNOTATIONS = '[Video] SET_COMPLETE_ANNOTATIONS'
 export const SET_VIDEO_LAYOUT = '[Video] SET_VIDEO_LAYOUT'
 export const SHOW_SLIDES = '[Video] SHOW_SLIDES'
@@ -57,12 +56,10 @@ export class SetSpeed implements Action {
   constructor(public payload: number) { }
 }
 
-export class MuteAudio implements Action {
-  readonly type = MUTE_AUDIO;
-}
+export class SetVolume implements Action {
+  readonly type = SET_VOLUME;
 
-export class UnmuteAudio implements Action {
-  readonly type = UNMUTE_AUDIO;
+  constructor(public payload: number) { }
 }
 
 export class SetVideoLayout implements Action {
@@ -99,8 +96,7 @@ export type All
   | Pause
   | SetCurrentTime
   | SetUpdatedTime
-  | MuteAudio
-  | UnmuteAudio
+  | SetVolume
   | SetSpeed
   | SetVideoLayout
   | SetCompleteAnnotations

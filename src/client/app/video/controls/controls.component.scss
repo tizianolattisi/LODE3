@@ -1,5 +1,25 @@
 @import '~style/variables.scss';
 
+.volume-slider{
+    position: absolute;
+    margin-top: -115px;
+    margin-left: 115px;
+    height: 10px;
+    background-color: $color-primary;
+    display:none;
+    border-radius: 25px;
+    z-index:3;
+}
+.volume-slider:hover{
+    display: block;
+}
+#volume-button:hover + .volume-slider {
+    display: block;
+}
+#volume-button{
+    z-index:4;
+}
+
 .black-icon{
     color: $color-secondary;
     vertical-align: middle;

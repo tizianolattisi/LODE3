@@ -9,9 +9,10 @@
     <mat-icon class="black-icon" svgIcon="step-forward"></mat-icon>
   </button>
   <!-- Selezione volume -->
-  <button mat-icon-button (click)="muteUnmute()">
-    <mat-icon class="black-icon" md-menu-origin svgIcon="{{(volume) ? 'volume-high' : 'volume-off'}}"></mat-icon>
+  <button id="volume-button" mat-icon-button (click)="muteUnmute()">
+    <mat-icon class="black-icon" md-menu-origin svgIcon="{{(volume !== 0) ? 'volume-high' : 'volume-off'}}"></mat-icon>
   </button>
+  <mat-slider [value]="volume" (change)="setVolume($event)" class="volume-slider" vertical min="0" max="1" step="0.01" value="100"></mat-slider>
   <!-- Menu selezione velocità riproduzione -->
   <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
     <mat-icon class="black-icon" svgIcon="video-speed"></mat-icon>
