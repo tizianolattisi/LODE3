@@ -24,7 +24,6 @@ export class LectureService {
   }
 
   getLectureByName(course: string, title): Observable<Lecture> {
-    console.log("sono in getlecture")
     return this.http.get<string>(`/api/video/${course}/${title}`)
       .catch(toApiErrorResponse);
   }

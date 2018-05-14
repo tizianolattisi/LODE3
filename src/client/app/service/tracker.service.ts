@@ -9,16 +9,23 @@ export class TrackerService {
 
   sessionId: string = null; // id della sessione
   userName: string = ''; // username dell'utente
+  socket: SocketIOClient.Socket
+  isActive: boolean = true
 
   constructor() {
+    var href = window.location.href;
+    var arr = href.split("/");
+    var url = arr[0] + "//" + arr[2] + "/trackevent";
+    this.socket = io.connect(url);
   }
 
   /**
    * Genera un id per la sessione e setta l'username
    * @param user username dell'utente
    */
-  sessionIdMaker(user: string) {
-    user = 'cicici'
+  sessionIdMaker(user: string, active: boolean) {
+    this.userName = user
+    this.isActive = active
     var randomPool = new Uint8Array(32);
     crypto.getRandomValues(randomPool);
     var hex = '';
@@ -36,19 +43,16 @@ export class TrackerService {
    * @param value2 secondo valore dell'evento
    */
   trackEvent(type, value1, value2) {
-    this.sessionIdMaker('dd')
-    var href = window.location.href;
-    var arr = href.split("/");
-    var url = arr[0] + "//" + arr[2] + "/trackevent";
-    var socket = io(url);
-    socket.emit('log', {
-      type: type,
-      sessionId: this.sessionId,
-      userName: this.userName,
-      value1: value1,
-      value2: value2,
-      timestamp: new Date()
-    });
+    if (this.socket && this.isActive) {
+      this.socket.emit('log', {
+        type: type,
+        sessionId: this.sessionId,
+        userName: this.userName,
+        value1: value1,
+        value2: value2,
+        timestamp: new Date()
+      });
+    }
   }
 
 }

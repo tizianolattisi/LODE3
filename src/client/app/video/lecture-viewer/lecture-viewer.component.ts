@@ -14,7 +14,7 @@ import { Annotation, DataType } from '../../service/model/annotation';
 import { FetchAnnotations } from '../../store/annotation/annotation.actions';
 import { WsFromServerEvents } from '../../service/model/ws-msg';
 import { Observable } from 'rxjs/Observable';
-// import { TrackerService } from '../../service/tracker.service';
+import { TrackerService } from '../../service/tracker.service';
 import { MatDialog } from '@angular/material';
 import { NoteSliderComponent } from '../note-slider/note-slider.component'
 import { InfoDialogComponent } from '../../shared/info-dialog/info-dialog.component'
@@ -63,7 +63,7 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private socketService: SocketService,
     private videoService: VideoService,
-    // private tracker: TrackerService,
+    private tracker: TrackerService,
     public dialog: MatDialog
   ) {
   }
@@ -98,8 +98,11 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
             if (result.data.info[0].logging === undefined) {
               result.data.info[0].logging = false
             }
-            result.data.info[0].startDate = 0
+            if (result.data.info[0].startDate === undefined) {
+              result.data.info[0].startDate = 0
+            }
             this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
+            result.data.info[0].logging = result.data.info[0].logging.toString() === 'true'
             if (this.hasAnnotations) {
               // se le annotazioni sono attivate le estrae dal DB
               var values = params['content'].split('/')
@@ -113,14 +116,20 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
                   this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
                   this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
                   this.tokenSubs = this.store.select(s => s.user.token).subscribe(token => {
-                    this.socketService.open(token); // apro soket per annotazioni
-                    this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
-                      this.nSlides = data.length
-                      for (let x of data) {
-                        // prendo annotazioni per ciascuna slide
-                        this.store.dispatch(new FetchAnnotations({ lectureId: lecture.uuid, slideId: x._id }));
-                      }
-                    })
+                    if (token !== '') {
+                      this.socketService.open(token); // apro soket per annotazioni
+                      this.store.select(s => s.user.email).subscribe(data => {
+                        this.tracker.sessionIdMaker(data, result.data.info[0].logging)
+                        this.tracker.trackEvent("title", lecture.name, lecture.course)
+                      }).unsubscribe()
+                      this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
+                        this.nSlides = data.length
+                        for (let x of data) {
+                          // prendo annotazioni per ciascuna slide
+                          this.store.dispatch(new FetchAnnotations({ lectureId: lecture.uuid, slideId: x._id }));
+                        }
+                      })
+                    }
                   })
                   // prendo annotazioni dal socket
                   this.socketSubs = this.socketService.onReceive().subscribe(msg => {
@@ -160,6 +169,8 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
                 course: result.data.info[0].course,
                 uuid: ''
               }
+              this.tracker.sessionIdMaker('default', result.data.info[0].logging)
+              this.tracker.trackEvent("title", lecture.name, lecture.course)
               this.store.dispatch(new LectureActions.SetCurrentLecture(lecture))
               this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
             }
