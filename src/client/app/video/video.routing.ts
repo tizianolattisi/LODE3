@@ -5,11 +5,6 @@ export const videoRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/lecture-list'
-  },
-  {
-    path: ':lectureId',
-    pathMatch: 'full',
     component: LectureViewerComponent
   }
 ];

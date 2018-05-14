@@ -1,8 +1,8 @@
-import {ScreenshotStatus} from './lecture.state';
-import {ErrorResponse} from '../../service/model/error-response';
-import {Action} from '@ngrx/store';
-import {Lecture} from '../../service/model/lecture';
-import {Screenshot} from '../../service/model/screenshot';
+import { ScreenshotStatus } from './lecture.state';
+import { ErrorResponse } from '../../service/model/error-response';
+import { Action } from '@ngrx/store';
+import { Lecture } from '../../service/model/lecture';
+import { Screenshot } from '../../service/model/screenshot';
 
 
 export const enum ActionTypes {
@@ -11,6 +11,7 @@ export const enum ActionTypes {
   SET_LECTURE_LIST = '[Lecture] SET_LECTURE_LIST',
 
   FETCH_LECTURE = '[Lecture] FETCH_LECTURE',
+  FETCH_LECTURE_BY_NAME = '[Lecture] FETCH_LECTURE_BY_NAME',
   FETCH_LECTURE_ERROR = '[Lecture] FETCH_LECTURE_ERROR',
   SET_CURRENT_LECTURE = '[Lecture] SET_CURRENT_LECTURE',
   SET_CURRENT_PIN = '[Lecture] SET_CURRENT_PIN',
@@ -46,13 +47,13 @@ export class UpdateLectureList implements Action {
 export class SetLectureList implements Action {
   readonly type = ActionTypes.SET_LECTURE_LIST;
 
-  constructor(public payload: {live: Lecture[], lectures: Lecture[]}) {}
+  constructor(public payload: { live: Lecture[], lectures: Lecture[] }) { }
 }
 
 export class UpdateLectureListError implements Action {
   readonly type = ActionTypes.UPDATE_LECTURE_LIST_ERROR;
 
-  constructor(public payload: ErrorResponse) {}
+  constructor(public payload: ErrorResponse) { }
 }
 
 // Specific lecture info ////////////////////////////////////////////
@@ -60,25 +61,31 @@ export class UpdateLectureListError implements Action {
 export class FetchLecture implements Action {
   readonly type = ActionTypes.FETCH_LECTURE;
 
-  constructor(public payload: string) {}
+  constructor(public payload: string) { }
+}
+
+export class FetchLectureByName implements Action {
+  readonly type = ActionTypes.FETCH_LECTURE_BY_NAME;
+
+  constructor(public payload: { course: string, title: string }) { }
 }
 
 export class FetchLectureError implements Action {
   readonly type = ActionTypes.FETCH_LECTURE_ERROR;
 
-  constructor(public payload: ErrorResponse) {}
+  constructor(public payload: ErrorResponse) { }
 }
 
 export class SetCurrentLecture implements Action {
   readonly type = ActionTypes.SET_CURRENT_LECTURE;
 
-  constructor(public payload: Lecture) {}
+  constructor(public payload: Lecture) { }
 }
 
 export class SetCurrentPin implements Action {
   readonly type = ActionTypes.SET_CURRENT_PIN;
 
-  constructor(public payload: string) {}
+  constructor(public payload: string) { }
 }
 
 // User screenshots ///////////////////////////////////////////////
@@ -86,25 +93,25 @@ export class SetCurrentPin implements Action {
 export class FetchUserScreenshots implements Action {
   readonly type = ActionTypes.FETCH_USER_SCREENSHOTS;
 
-  constructor(public payload: string) {}
+  constructor(public payload: string) { }
 }
 
 export class FetchUserScreenshotsError implements Action {
   readonly type = ActionTypes.FETCH_USER_SCREENSHOTS_ERROR;
 
-  constructor(public payload: ErrorResponse) {}
+  constructor(public payload: ErrorResponse) { }
 }
 
 export class SetUserScreenshots implements Action {
   readonly type = ActionTypes.SET_USER_SCREENSHOTS;
 
-  constructor(public payload: Screenshot[]) {}
+  constructor(public payload: Screenshot[]) { }
 }
 
 export class SetUserScreenshotsImg implements Action {
   readonly type = ActionTypes.SET_USER_SCREENSHOTS_IMG;
 
-  constructor(public payload: Screenshot[]) {}
+  constructor(public payload: Screenshot[]) { }
 }
 
 
@@ -113,31 +120,31 @@ export class SetUserScreenshotsImg implements Action {
 export class AddScreenshot implements Action {
   readonly type = ActionTypes.ADD_SCREENSHOT;
 
-  constructor(public payload: string) {}
+  constructor(public payload: string) { }
 }
 
 export class GetScreenshotComplete implements Action {
   readonly type = ActionTypes.GET_SCREENSHOT_COMPLETE;
 
-  constructor(public payload: Screenshot) {}
+  constructor(public payload: Screenshot) { }
 }
 
 export class GetScreenshotError implements Action {
   readonly type = ActionTypes.GET_SCREENSHOT_ERROR;
 
-  constructor(public payload: any) {}
+  constructor(public payload: any) { }
 }
 
 export class SetSlides implements Action {
   readonly type = ActionTypes.SET_SLIDES;
 
-  constructor(public payload: Screenshot[]) {}
+  constructor(public payload: Screenshot[]) { }
 }
 
 export class SetCurrentSlide implements Action {
   readonly type = ActionTypes.SET_CURRENT_SLIDE;
 
-  constructor(public payload: number) {}
+  constructor(public payload: number) { }
 }
 
 export class PrevSlide implements Action {
@@ -151,19 +158,19 @@ export class NextSlide implements Action {
 export class GetScreenshot implements Action {
   readonly type = ActionTypes.GET_SCREENSHOT;
 
-  constructor(public payload: {lectureId: string; pin: string}) {}
+  constructor(public payload: { lectureId: string; pin: string }) { }
 }
 
 export class GetBlankPage implements Action {
   readonly type = ActionTypes.GET_BLANK_PAGE;
 
-  constructor(public payload: {lectureId: string; pin: string}) {}
+  constructor(public payload: { lectureId: string; pin: string }) { }
 }
 
 export class SetScreenshotStatus implements Action {
   readonly type = ActionTypes.SET_SCREENSHOT_STATUS;
 
-  constructor(public payload: ScreenshotStatus) {}
+  constructor(public payload: ScreenshotStatus) { }
 }
 
 // Pdf download //////////////////////////////////////////////
@@ -179,7 +186,7 @@ export class DownloadPdfSuccess implements Action {
 export class DownloadPdfError implements Action {
   readonly type = ActionTypes.DOWNLOAD_PDF_ERROR;
 
-  constructor(public payload: ErrorResponse) {}
+  constructor(public payload: ErrorResponse) { }
 }
 
 
@@ -189,6 +196,7 @@ export type All
   | SetLectureList
   | UpdateLectureListError
   | FetchLecture
+  | FetchLectureByName
   | FetchLectureError
   | SetCurrentLecture
   | SetCurrentPin

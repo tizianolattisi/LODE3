@@ -1,10 +1,10 @@
-import {Router} from '@angular/router';
-import {Lecture} from '../service/model/lecture';
-import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {AppState} from '../store/app-state';
-import {LectureService} from '../service/lecture.service';
+import { Router } from '@angular/router';
+import { Lecture } from '../service/model/lecture';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { AppState } from '../store/app-state';
+import { LectureService } from '../service/lecture.service';
 
 import * as Lectureactions from '../store/lecture/lecture.actions';
 
@@ -27,7 +27,7 @@ export class LectureListComponent implements OnInit {
     private store: Store<AppState>,
     private router: Router,
     private lectureService: LectureService,
-    private cd: ChangeDetectorRef) {}
+    private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
 
@@ -61,9 +61,7 @@ export class LectureListComponent implements OnInit {
   }
 
   viewLecture(lecture: Lecture) {
-    // Save current lecture
-    this.store.dispatch(new Lectureactions.SetCurrentLecture(lecture));
-    this.router.navigate(['video', lecture.uuid]);
+    this.router.navigate(['video'], { queryParams: { 'content': 'lectures/' + lecture.course + '/' + lecture.name } });
   }
 
 }

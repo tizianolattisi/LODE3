@@ -1,13 +1,13 @@
 import * as chalk from 'chalk';
-import {Router} from 'express';
-import {Lecture, Screenshot, IScreenshotComplete, IScreenshot} from '../models/db/Lecture';
-import {ErrorResponse} from '../models/api/ErrorResponse';
-import {LiveLectureService} from '../services/live.lecture.service';
-import {User} from '../models/db/User';
-import {Annotation, IAnnotation} from '../models/db/Annnotation';
-import {PdfCreator} from '../services/pdf-creator';
-import {STORAGE_PATH, STORAGE_SLIDES_FOLDER} from '../commons/config';
-import {ObjectId} from 'bson';
+import { Router } from 'express';
+import { Lecture, Screenshot, IScreenshotComplete, IScreenshot } from '../models/db/Lecture';
+import { ErrorResponse } from '../models/api/ErrorResponse';
+import { LiveLectureService } from '../services/live.lecture.service';
+import { User } from '../models/db/User';
+import { Annotation, IAnnotation } from '../models/db/Annnotation';
+import { PdfCreator } from '../services/pdf-creator';
+import { STORAGE_PATH, STORAGE_SLIDES_FOLDER } from '../commons/config';
+import { ObjectId } from 'bson';
 
 const PATH = '/lecture';
 
@@ -25,7 +25,7 @@ router.get(PATH, (req, res, next) => {
     res.send(lectures);
   } else {
     // Exclude live lectures from result list
-    Lecture.find({uuid: {$nin: LiveLectureService.getLiveLectureIds()}})
+    Lecture.find({ uuid: { $nin: LiveLectureService.getLiveLectureIds() } })
       .sort([['uuid', 'descending']])
       .then((lectures: Lecture[]) => res.send(lectures.map(l => l.toJSON())))
       .catch(err => next(err));
@@ -47,7 +47,7 @@ router.get(PATH + '/:lectureId', (req, res, next) => {
     res.send(lecture);
   } else {
     // Find lecture in db
-    Lecture.findOne({uuid: lectureId})
+    Lecture.findOne({ uuid: lectureId })
       .then(l => {
         if (!l) {
           return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
@@ -59,6 +59,23 @@ router.get(PATH + '/:lectureId', (req, res, next) => {
 
 });
 
+/**
+ * Get basic data of a lecture (name, ...) using course name and title of the lecture for the video player.
+ */
+router.get('/video/:course/:title', (req, res, next) => {
+  console.log("sono in api")
+  const courseName = req.params['course'];
+  const titleName = req.params['title'];
+  // Find lecture in db
+  Lecture.findOne({ course: courseName, name: titleName })
+    .then(l => {
+      if (!l) {
+        return res.status(404).send(new ErrorResponse('not-found', 'Lecture not found'));
+      }
+      res.send(l.toJSON())
+    })
+    .catch(err => next(err));
+});
 /**
  * Get screenshots of a user.
  */
@@ -87,7 +104,7 @@ router.get(PATH + '/:lectureId/myscreenshots', (req, res, next) => {
       const userScreenshots = userLecture.screenshots || [];
 
       // Get all info about screenshots
-      Lecture.findOne({uuid: lectureId})
+      Lecture.findOne({ uuid: lectureId })
         .then(lecture => {
 
           if (!lecture) {
@@ -160,7 +177,7 @@ router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
         if (userLecture) {
           userLecture.screenshots.push(blankId);
         } else { // First screenshot for this lecture
-          user.lectures.push({uuid: lectureId, screenshots: [blankId]});
+          user.lectures.push({ uuid: lectureId, screenshots: [blankId] });
         }
 
         user.save()
@@ -201,7 +218,7 @@ router.get(PATH + '/:lectureId/screenshot', (req, res, next) => {
                 );
               }
             } else { // First screenshot for this lecture
-              user.lectures.push({uuid: lectureId, screenshots: [screenshot._id]});
+              user.lectures.push({ uuid: lectureId, screenshots: [screenshot._id] });
             }
 
             user.save()
@@ -272,14 +289,14 @@ router.get(PATH + '/:lectureId/pdf', (req, res, next) => {
           return res.status(400).send(new ErrorResponse('not-found', 'User lecture not found'));
         }
 
-        Lecture.findOne({uuid: lectureId})
+        Lecture.findOne({ uuid: lectureId })
           .then(lecture => {
 
             if (!lecture) {
               return res.status(400).send(new ErrorResponse('not-found', 'Lecture not found'));
             }
 
-            Annotation.find({userId, lectureId})
+            Annotation.find({ userId, lectureId })
               .then((annotations: IAnnotation[] = []) => {
 
                 // Merge user's lecture screenshots ids with extra info
@@ -331,4 +348,4 @@ router.get(PATH + '/:lectureId/pdf', (req, res, next) => {
   }
 });
 
-export {router as LectureRouter, PATH as LECTURE_PATH};
+export { router as LectureRouter, PATH as LECTURE_PATH };

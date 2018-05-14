@@ -18,6 +18,7 @@ export class TrackerService {
    * @param user username dell'utente
    */
   sessionIdMaker(user: string) {
+    user = 'cicici'
     var randomPool = new Uint8Array(32);
     crypto.getRandomValues(randomPool);
     var hex = '';
@@ -35,6 +36,7 @@ export class TrackerService {
    * @param value2 secondo valore dell'evento
    */
   trackEvent(type, value1, value2) {
+    this.sessionIdMaker('dd')
     var href = window.location.href;
     var arr = href.split("/");
     var url = arr[0] + "//" + arr[2] + "/trackevent";

@@ -23,6 +23,12 @@ export class LectureService {
       .catch(toApiErrorResponse);
   }
 
+  getLectureByName(course: string, title): Observable<Lecture> {
+    console.log("sono in getlecture")
+    return this.http.get<string>(`/api/video/${course}/${title}`)
+      .catch(toApiErrorResponse);
+  }
+
   verifyPin(lectureId: string, pin: string): Observable<boolean> {
     return this.http.post<void>(`/api/lecture/${lectureId}/verifypin`, { pin })
       .map(res => true)

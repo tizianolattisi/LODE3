@@ -1,18 +1,19 @@
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {of} from 'rxjs/observable/of';
-import {AppState} from '../app-state';
-import {LectureService} from '../../service/lecture.service';
-import {Lecture} from '../../service/model/lecture';
-import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
-import {Observable} from 'rxjs/Observable';
-import {Store} from '@ngrx/store';
-import {Screenshot} from '../../service/model/screenshot';
-import {ClearAnnotationWorkspace} from '../annotation/annotation.actions';
-import {saveAs} from 'file-saver';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { of } from 'rxjs/observable/of';
+import { AppState } from '../app-state';
+import { LectureService } from '../../service/lecture.service';
+import { Lecture } from '../../service/model/lecture';
+import { Injectable } from '@angular/core';
+import { Actions, Effect } from '@ngrx/effects';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { Screenshot } from '../../service/model/screenshot';
+import { ClearAnnotationWorkspace } from '../annotation/annotation.actions';
+import { saveAs } from 'file-saver';
 import {
   ActionTypes,
   FetchLecture,
+  FetchLectureByName,
   FetchUserScreenshots,
   GetScreenshot,
   SetCurrentLecture,
@@ -41,7 +42,7 @@ export class LectureEffects {
     .switchMap(payload => Observable.forkJoin([
       this.lectureService.getLectures(),
       this.lectureService.getLectures(true)])
-      .map((lectures: Lecture[][]) => new LectureActions.SetLectureList({lectures: lectures[0], live: lectures[1]}))
+      .map((lectures: Lecture[][]) => new LectureActions.SetLectureList({ lectures: lectures[0], live: lectures[1] }))
       .catch(err => Observable.of(new LectureActions.UpdateLectureListError(err)))
     );
 
@@ -55,6 +56,15 @@ export class LectureEffects {
     .map(a => a.payload)
     .switchMap(lectureId =>
       this.lectureService.getLecture(lectureId)
+        .map((lecture: Lecture) => new LectureActions.SetCurrentLecture(lecture))
+        .catch(err => Observable.of(new LectureActions.FetchLectureError(err)))
+    );
+
+  @Effect()
+  fetchCurrentLectureByName$ = this.actions$.ofType<FetchLectureByName>(ActionTypes.FETCH_LECTURE_BY_NAME)
+    .map(a => a.payload)
+    .switchMap(data =>
+      this.lectureService.getLectureByName(data.course, data.title)
         .map((lecture: Lecture) => new LectureActions.SetCurrentLecture(lecture))
         .catch(err => Observable.of(new LectureActions.FetchLectureError(err)))
     );
@@ -83,7 +93,7 @@ export class LectureEffects {
         .catch(err => Observable.of(new LectureActions.FetchUserScreenshotsError(err))) // TODO different action
     );
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   getScreenshot$ = this.actions$.ofType<GetScreenshot>(ActionTypes.GET_SCREENSHOT)
     .map(a => a.payload)
     .do(payload => {
@@ -103,7 +113,7 @@ export class LectureEffects {
 
     });
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   getBlankPage$ = this.actions$.ofType<GetBlankPage>(ActionTypes.GET_BLANK_PAGE)
     .map(a => a.payload)
     .do(payload => {
@@ -136,5 +146,5 @@ export class LectureEffects {
     private lectureService: LectureService,
     private store: Store<AppState>,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 }

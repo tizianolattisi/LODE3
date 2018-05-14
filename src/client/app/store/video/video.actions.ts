@@ -3,10 +3,8 @@ import { Layout } from './video.state'
 import { Annotation, DataType } from '../../service/model/annotation';
 
 export const SET_VIDEO_DATA = '[VIDEO] SET_VIDEO_DATA'
-
 export const PLAY = '[Video] PLAY';
 export const PAUSE = '[Video] PAUSE';
-
 export const SET_CURRENT_TIME = '[Video] SET_CURRENT_TIME';
 export const SET_UPDATED_TIME = '[Video] SET_UPDATED_TIME';
 export const SET_SPEED = '[Video] SET_SPEED';

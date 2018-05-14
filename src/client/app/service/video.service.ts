@@ -7,13 +7,12 @@ export class VideoService {
   public BASE_URL: string
   constructor(
     private http: HttpClient) {
-    this.BASE_URL = 'http://localhost:3000'
+    this.BASE_URL = ''
   }
 
-  FetchVideoData(course: string, name: string): Observable<string> {
-
-    let url = this.BASE_URL + '/lectures/' + course + '/' + name + "/data.xml"
-    return this.http.get(url, { responseType: 'text' })
+  FetchVideoData(path: string): Observable<string> {
+    this.BASE_URL = 'http://localhost:3000/' + path + '/'
+    return this.http.get(this.BASE_URL + "data.xml", { responseType: 'text' })
 
   }
 }
