@@ -103,77 +103,76 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
             }
             this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
             result.data.info[0].logging = result.data.info[0].logging.toString() === 'true'
-            if (this.hasAnnotations) {
-              // se le annotazioni sono attivate le estrae dal DB
-              var values = params['content'].split('/')
-              this.store.dispatch(new LectureActions.FetchLectureByName({ course: values[1], title: values[2] }))
-              this.store.select(s => s.lecture.currentLecture).subscribe(lecture => {
-                if (lecture) {
-                  let timestamp = lecture.uuid.toString().substring(0, 8)
-                  let date = new Date(parseInt(timestamp, 16) * 1000)
-                  result.data.info[0].startDate = date.getTime() / 1000
-                  result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
-                  this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
-                  this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
-                  this.tokenSubs = this.store.select(s => s.user.token).subscribe(token => {
-                    if (token !== '') {
-                      this.socketService.open(token); // apro soket per annotazioni
-                      this.store.select(s => s.user.email).subscribe(data => {
-                        this.tracker.sessionIdMaker(data, result.data.info[0].logging)
-                        this.tracker.trackEvent("title", lecture.name, lecture.course)
-                      }).unsubscribe()
-                      this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
-                        this.nSlides = data.length
-                        for (let x of data) {
-                          // prendo annotazioni per ciascuna slide
-                          this.store.dispatch(new FetchAnnotations({ lectureId: lecture.uuid, slideId: x._id }));
-                        }
-                      })
-                    }
-                  })
-                  // prendo annotazioni dal socket
-                  this.socketSubs = this.socketService.onReceive().subscribe(msg => {
-                    if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
-                      const anns: Annotation<DataType>[] = msg.data;
-                      if (anns.length > 0) {
-                        let slideuuid = anns[0].slideId
-                        this.allAnnotations.set(slideuuid, anns)
+            this.tokenSubs = this.store.select(s => s.user.token).subscribe(token => {
+              if (this.hasAnnotations && token !== null && token !== '') {
+                // se le annotazioni sono attivate le estrae dal DB
+                var values = params['content'].split('/')
+                this.store.dispatch(new LectureActions.FetchLectureByName({ course: values[1], title: values[2] }))
+                this.store.select(s => s.lecture.currentLecture).subscribe(lecture => {
+                  if (lecture) {
+                    let timestamp = lecture.uuid.toString().substring(0, 8)
+                    let date = new Date(parseInt(timestamp, 16) * 1000)
+                    result.data.info[0].startDate = date.getTime() / 1000
+                    result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
+                    this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
+                    this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
 
+                    this.socketService.open(token); // apro soket per annotazioni
+                    this.store.select(s => s.user.email).subscribe(data => {
+                      this.tracker.sessionIdMaker(data, result.data.info[0].logging)
+                      this.tracker.trackEvent("title", lecture.name, lecture.course)
+                    }).unsubscribe()
+                    this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
+                      this.nSlides = data.length
+                      for (let x of data) {
+                        // prendo annotazioni per ciascuna slide
+                        this.store.dispatch(new FetchAnnotations({ lectureId: lecture.uuid, slideId: x._id }));
                       }
-                      if (this.allAnnotations.size === this.nSlides) {
-                        // se ho estratto le annotazioni per ogni slide aggiorno lo store
-                        this.store.dispatch(new VideoActions.SetCompleteAnnotations(this.allAnnotations))
-                        this.socketSubs.unsubscribe()
-                      }
+                    })
+                  }
+                })
+                // prendo annotazioni dal socket
+                this.socketSubs = this.socketService.onReceive().subscribe(msg => {
+                  if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
+                    const anns: Annotation<DataType>[] = msg.data;
+                    if (anns.length > 0) {
+                      let slideuuid = anns[0].slideId
+                      this.allAnnotations.set(slideuuid, anns)
+
                     }
-                  });
-                  this.openNotes$ = this.store.select(s => s.annotation.openNotes);
-                  this.showSlidesSubs = this.store.select(s => s.video.showSlides).subscribe(data => {
-                    // dialog per il note slider
-                    if (data) {
-                      let dialog = this.dialog.open(NoteSliderComponent, {
-                        width: '100vw'
-                      });
-                      dialog.afterClosed().subscribe(result => {
-                        this.store.dispatch(new VideoActions.ShowSlides(false))
-                      });
+                    if (this.allAnnotations.size === this.nSlides) {
+                      // se ho estratto le annotazioni per ogni slide aggiorno lo store
+                      this.store.dispatch(new VideoActions.SetCompleteAnnotations(this.allAnnotations))
+                      this.socketSubs.unsubscribe()
                     }
-                  })
+                  }
+                });
+                this.openNotes$ = this.store.select(s => s.annotation.openNotes);
+                this.showSlidesSubs = this.store.select(s => s.video.showSlides).subscribe(data => {
+                  // dialog per il note slider
+                  if (data) {
+                    let dialog = this.dialog.open(NoteSliderComponent, {
+                      width: '100vw'
+                    });
+                    dialog.afterClosed().subscribe(result => {
+                      this.store.dispatch(new VideoActions.ShowSlides(false))
+                    });
+                  }
+                })
+              } else {
+                // se le annotazioni non sono attivate estrae i dati solo dal file XML
+                let lecture: Lecture = {
+                  live: false,
+                  name: result.data.info[0].title,
+                  course: result.data.info[0].course,
+                  uuid: ''
                 }
-              })
-            } else {
-              // se le annotazioni non sono attivate estrae i dati solo dal file XML
-              let lecture: Lecture = {
-                live: false,
-                name: result.data.info[0].title,
-                course: result.data.info[0].course,
-                uuid: ''
+                this.tracker.sessionIdMaker('default', result.data.info[0].logging)
+                this.tracker.trackEvent("title", lecture.name, lecture.course)
+                this.store.dispatch(new LectureActions.SetCurrentLecture(lecture))
+                this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
               }
-              this.tracker.sessionIdMaker('default', result.data.info[0].logging)
-              this.tracker.trackEvent("title", lecture.name, lecture.course)
-              this.store.dispatch(new LectureActions.SetCurrentLecture(lecture))
-              this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
-            }
+            })
           })
         });
     })
