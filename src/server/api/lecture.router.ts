@@ -63,7 +63,6 @@ router.get(PATH + '/:lectureId', (req, res, next) => {
  * Get basic data of a lecture (name, ...) using course name and title of the lecture for the video player.
  */
 router.get('/video/:course/:title', (req, res, next) => {
-  console.log("sono in api")
   const courseName = req.params['course'];
   const titleName = req.params['title'];
   // Find lecture in db
@@ -76,11 +75,41 @@ router.get('/video/:course/:title', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+/**
+ * Get all annotations of the user
+ */
+router.get(PATH + '/:lectureId/myannotations', (req, res, next) => {
+  const userId = req.user.id;
+  const lecID = req.params['lectureId'];
+
+  User.findById(userId)
+    .then(user => {
+      if (!user) {
+        return res.status(404).send(new ErrorResponse('not-found', 'User not found'));
+      }
+      if (!user.lectures) {
+        return res.json([]);
+      }
+      const userLecture = user.lectures.filter(l => l.uuid === lecID)[0];
+      if (!userLecture) {
+        return res.json([]);
+      }
+      Annotation.find({ lectureId: lecID })
+        .then(annotations => {
+          if (!annotations) {
+            return res.status(404).send(new ErrorResponse('not-found', 'Annotations not found'));
+          }
+          return res.json(annotations)
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
 /**
  * Get screenshots of a user.
  */
 router.get(PATH + '/:lectureId/myscreenshots', (req, res, next) => {
-
   const userId = req.user.id;
   const lectureId = req.params['lectureId'];
 

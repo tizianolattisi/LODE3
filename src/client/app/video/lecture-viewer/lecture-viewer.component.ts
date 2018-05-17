@@ -6,13 +6,11 @@ import * as LectureActions from '../../store/lecture/lecture.actions'
 import * as VideoActions from '../../store/video/video.actions'
 import { Lecture } from '../../service/model/lecture';
 import { VideoService } from '../../service/video.service'
+import { LectureService } from '../../service/lecture.service'
 import { Parser } from 'xml2js';
 import { Layout } from '../../store/video/video.state'
 import { Subscription } from 'rxjs/Subscription';
-import { SocketService } from '../../service/socket.service';
 import { Annotation, DataType } from '../../service/model/annotation';
-import { FetchAnnotations } from '../../store/annotation/annotation.actions';
-import { WsFromServerEvents } from '../../service/model/ws-msg';
 import { Observable } from 'rxjs/Observable';
 import { TrackerService } from '../../service/tracker.service';
 import { MatDialog } from '@angular/material';
@@ -35,14 +33,10 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
   hasAnnotations: boolean // se true visualizza lo slider
   openNotes$: Observable<{ slideId: string; annotationId: string; }[]>; // note aperte
 
-  private allAnnotations: Map<string, Annotation<DataType>[]> = new Map<string, Annotation<DataType>[]>()
-  private nSlides: number = 0
-
   private currentLectureSubs: Subscription
   private layoutSubs: Subscription
   private videoFetchSubs: Subscription
   private lectureFetchSubs: Subscription
-  private socketSubs: Subscription
   private tokenSubs: Subscription
   private slidesSubs: Subscription
   private fetchVideoSubs: Subscription
@@ -53,7 +47,6 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
    * @constructor
    * @param store - Store dei dati dell'utente
    * @param route - fornisce route attuale
-   * @param socketService - socket per l'estrazione delle annotazioni
    * @param videoService - service per l'estrazione dei dati dal file xml
    * @param tracker - classe per il tracking delle azioni dell'utente
    * @param dialog - dialog per la visualizzazione delle note scritte
@@ -61,8 +54,8 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<AppState>,
     private route: ActivatedRoute,
-    private socketService: SocketService,
     private videoService: VideoService,
+    private lectureService: LectureService,
     private tracker: TrackerService,
     public dialog: MatDialog
   ) {
@@ -116,37 +109,22 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
                     result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
                     this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
                     this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
-
-                    this.socketService.open(token); // apro soket per annotazioni
-                    this.store.select(s => s.user.email).subscribe(data => {
-                      this.tracker.sessionIdMaker(data, result.data.info[0].logging)
-                      this.tracker.trackEvent("title", lecture.name, lecture.course)
-                    }).unsubscribe()
-                    this.slidesSubs = this.store.select(s => s.lecture.slides).subscribe(data => {
-                      this.nSlides = data.length
-                      for (let x of data) {
-                        // prendo annotazioni per ciascuna slide
-                        this.store.dispatch(new FetchAnnotations({ lectureId: lecture.uuid, slideId: x._id }));
-                      }
+                    // estraggo annotazioni
+                    this.lectureService.getUserAnnotations(lecture.uuid).subscribe(data => {
+                      let allAnnotations = new Map<string, Annotation<DataType>[]>()
+                      data.forEach((item) => {
+                        const key = item.slideId;
+                        const collection = allAnnotations.get(key);
+                        if (!collection) {
+                          allAnnotations.set(key, [item]);
+                        } else {
+                          collection.push(item);
+                        }
+                      })
+                      this.store.dispatch(new VideoActions.SetCompleteAnnotations(allAnnotations))
                     })
                   }
                 })
-                // prendo annotazioni dal socket
-                this.socketSubs = this.socketService.onReceive().subscribe(msg => {
-                  if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
-                    const anns: Annotation<DataType>[] = msg.data;
-                    if (anns.length > 0) {
-                      let slideuuid = anns[0].slideId
-                      this.allAnnotations.set(slideuuid, anns)
-
-                    }
-                    if (this.allAnnotations.size === this.nSlides) {
-                      // se ho estratto le annotazioni per ogni slide aggiorno lo store
-                      this.store.dispatch(new VideoActions.SetCompleteAnnotations(this.allAnnotations))
-                      this.socketSubs.unsubscribe()
-                    }
-                  }
-                });
                 this.openNotes$ = this.store.select(s => s.annotation.openNotes);
                 this.showSlidesSubs = this.store.select(s => s.video.showSlides).subscribe(data => {
                   // dialog per il note slider
@@ -167,11 +145,13 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
                   course: result.data.info[0].course,
                   uuid: ''
                 }
-                this.tracker.sessionIdMaker('default', result.data.info[0].logging)
-                this.tracker.trackEvent("title", lecture.name, lecture.course)
                 this.store.dispatch(new LectureActions.SetCurrentLecture(lecture))
                 this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
               }
+              this.store.select(s => s.user.email).subscribe(data => {
+                this.tracker.sessionIdMaker(data, result.data.info[0].logging)
+                this.tracker.trackEvent("title", result.data.info[0].title, result.data.info[0].course)
+              }).unsubscribe()
             })
           })
         });
@@ -204,7 +184,5 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
       this.fetchVideoSubs.unsubscribe()
     if (this.showSlidesSubs !== undefined)
       this.showSlidesSubs.unsubscribe()
-    if (this.socketService !== undefined)
-      this.socketService.close()
   }
 }

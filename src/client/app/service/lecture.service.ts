@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Rx';
 import { ErrorResponse } from './model/error-response';
 import { of } from 'rxjs/observable/of';
 import { Screenshot } from './model/screenshot';
+import { Annotation, DataType } from './model/annotation'
 
 @Injectable()
 export class LectureService {
@@ -50,6 +51,11 @@ export class LectureService {
 
   getUserScreenshots(lectureId: string): Observable<Screenshot[]> {
     return this.http.get<string>(`/api/lecture/${lectureId}/myscreenshots`)
+      .catch(toApiErrorResponse);
+  }
+
+  getUserAnnotations(lectureId: string): Observable<Annotation<DataType>[]> {
+    return this.http.get<string>(`/api/lecture/${lectureId}/myannotations`)
       .catch(toApiErrorResponse);
   }
 

@@ -13,6 +13,5 @@ export class VideoService {
   FetchVideoData(path: string): Observable<string> {
     this.BASE_URL = 'http://localhost:3000/' + path + '/'
     return this.http.get(this.BASE_URL + "data.xml", { responseType: 'text' })
-
   }
 }
