@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app-state';
 import { ActivatedRoute } from '@angular/router';
@@ -48,6 +49,8 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
    * @param store - Store dei dati dell'utente
    * @param route - fornisce route attuale
    * @param videoService - service per l'estrazione dei dati dal file xml
+   * @param lectureService - service per l'estrazione delle annotazioni
+   * @param router - router per effettuare il redirect
    * @param tracker - classe per il tracking delle azioni dell'utente
    * @param dialog - dialog per la visualizzazione delle note scritte
    */
@@ -56,6 +59,7 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private videoService: VideoService,
     private lectureService: LectureService,
+    private router: Router,
     private tracker: TrackerService,
     public dialog: MatDialog
   ) {
@@ -71,20 +75,23 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
       this.fetchVideoSubs = this.videoService.FetchVideoData(videoPath)
         .catch((err: Response) => {
           // se il file XML non è stato trovato mostro un alert
-          this.dialog.open(InfoDialogComponent, {
+          let dialog = this.dialog.open(InfoDialogComponent, {
             width: '100vw',
             data: {
               title: 'Impossibile visualizzare la lezione',
               content: ""
             }
           })
+          dialog.afterClosed().subscribe(() => {
+            this.router.navigate(['']);
+          });
           return Observable.throw(err);
         })
         .subscribe(data => {
           let parser = new Parser()
           parser.parseString(data, (err, result) => {
-            result.data.camvideo[0].name = this.videoService.BASE_URL + result.data.camvideo[0].name
-            result.data.pcvideo[0].name = this.videoService.BASE_URL + result.data.pcvideo[0].name
+            result.data.camvideo[0].name = this.videoService.BASE_URL + '/' + result.data.camvideo[0].name
+            result.data.pcvideo[0].name = this.videoService.BASE_URL + '/' + result.data.pcvideo[0].name
             if (result.data.info[0].annotations === undefined) {
               result.data.info[0].annotations = false
             }
@@ -106,7 +113,6 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
                     let timestamp = lecture.uuid.toString().substring(0, 8)
                     let date = new Date(parseInt(timestamp, 16) * 1000)
                     result.data.info[0].startDate = date.getTime() / 1000
-                    result.data.info[0].startDate = 1519814600000 // uuid restituisce data sbagliata, setto valore a mano per il momento
                     this.store.dispatch(new VideoActions.SetVideoData(result)) // setto i parametri del viewer ottenuti dal file xml
                     this.store.dispatch(new LectureActions.FetchUserScreenshots(lecture.uuid)) // estraggo gli screenshot dell'utente
                     // estraggo annotazioni

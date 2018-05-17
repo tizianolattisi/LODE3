@@ -26,6 +26,13 @@ export class AppComponent implements OnInit {
   isCollapsed: boolean = false
   currentLayout: string = ''
   hasAnnotations: boolean = false
+  infoText: string = "Lode (Lectures On DEmand) è un software di acquisizione e riproduzione di videolezioni sviluppato da " +
+    "<a href='http://latemar.science.unitn.it'>Marco Ronchetti</a> e collaboratori presso l'Università degli Studi di Trento." +
+    "<br/> Per dettagli si veda <a href='http://latemar.science.unitn.it/LODE'>il sito del progetto.</a>"
+  helpText: string = "Il video può essere controllato dai pulsanti posizionati sotto lo stesso, che permettono di avviare/fermare la riproduzione," +
+    "modificare la velocità (1x, 1.3x, 2x), escludere l'audio, saltare indietro o in avanti di 10 secondi." +
+    "<br/> Il layout può essere modificato con i pulsanti sulla barra soprastante, mostrando i due stream video con" +
+    " la stessa dimensione, oppure visualizzando uno stream principale più grande.<br/> La barra di avanzamento riporta la posizione corrente nel video."
 
   @ViewChild('content') content: ElementRef;
 
@@ -87,9 +94,7 @@ export class AppComponent implements OnInit {
       width: '100vw',
       data: {
         title: 'About Lode',
-        content: "  Lode (Lectures On DEmand) è un software di acquisizione e riproduzione di videolezioni sviluppato da " +
-          "<a href='http://latemar.science.unitn.it'>Marco Ronchetti</a> e collaboratori presso l'Università degli Studi di Trento." +
-          "<br/> Per dettagli si veda <a href='http://latemar.science.unitn.it/LODE'>il sito del progetto</a>"
+        content: this.infoText
       }
 
     })
@@ -100,11 +105,7 @@ export class AppComponent implements OnInit {
       width: '100vw',
       data: {
         title: 'Utilizzo del player',
-        content: "Il video può essere controllato dai pulsanti posizionati sotto lo stesso, che permettono di avviare/fermare la riproduzione," +
-          "modificare la velocità (1x, 1.3x, 2x), escludere l'audio, saltare indietro o in avanti di 10 secondi." +
-          "<br/> Il layout può essere modificato con i pulsanti sulla barra soprastante, mostrando i due stream video con" +
-          " la stessa dimensione, oppure visualizzando uno stream principale più grande." +
-          "<br/> La barra di avanzamento riporta la posizione corrente nel video."
+        content: this.helpText
       }
     })
   }

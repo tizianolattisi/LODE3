@@ -37,6 +37,7 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   private currentTimeSubsc: Subscription
   private playingSubsc: Subscription
   private speedSubsc: Subscription
+  private startTimeSubsc: Subscription
 
   private initialTime: number //date che indica l'inizio della registrazione della lezione
   private screenshotIndex: number = -1 // indice dello screenshot attualmente visualizzato
@@ -63,18 +64,18 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.store.dispatch(new SetScreenshotIndex(-1))
     this.svgAnnotationContainer = SVG.adopt(this.SVGCanvas.nativeElement) as Doc;
-    this.store.select(s => s.video.startTimestamp).subscribe(data => this.initialTime = data)
+    this.startTimeSubsc = this.store.select(s => s.video.startTimestamp).subscribe(data => this.initialTime = data)
     this.slidesSubsc = this.store.select(s => s.lecture.slides).subscribe(data => {
       this.setSlides(data)
-      this.annotationSubsc = this.store.select(s => s.video.allAnnotations).subscribe(data => {
-        this.setAnnotations(data)
-      })
-      this.updatedTimeSubsc = this.store.select(s => s.video.updatedTime).subscribe(data => {
-        this.updateView(data)
-      })
-      this.currentTimeSubsc = this.store.select(s => s.video.currentTime).subscribe(data => {
-        this.setCurrentView(data)
-      })
+    })
+    this.annotationSubsc = this.store.select(s => s.video.allAnnotations).subscribe(data => {
+      this.setAnnotations(data)
+    })
+    this.updatedTimeSubsc = this.store.select(s => s.video.updatedTime).subscribe(data => {
+      this.updateView(data)
+    })
+    this.currentTimeSubsc = this.store.select(s => s.video.currentTime).subscribe(data => {
+      this.setCurrentView(data)
     })
     this.playingSubsc = this.store.select(s => s.video.playing).subscribe(data => {
       this.playing = data
@@ -273,6 +274,8 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
       this.playingSubsc.unsubscribe()
     if (this.speedSubsc !== undefined)
       this.speedSubsc.unsubscribe()
+    if (this.startTimeSubsc !== undefined)
+      this.startTimeSubsc.unsubscribe()
   }
 }
 
