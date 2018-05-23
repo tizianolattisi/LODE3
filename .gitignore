@@ -220,3 +220,5 @@ typings/
 
 err.log
 out.log
+
+out-tsc/*
