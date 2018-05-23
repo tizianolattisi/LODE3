@@ -15,6 +15,7 @@
     "client:test": "ng test",
     "client:lint": "ng lint",
     "client:e2e": "ng e2e",
+    "server:start": "node dist/server/index.js",
     "server:start:w": "nodemon dist/server/index.js",
     "server:build": "tsc -p src/server/tsconfig.app.json && npm run server:postbuild",
     "server:build:w": "tsc -p src/server/tsconfig.app.json -w",
