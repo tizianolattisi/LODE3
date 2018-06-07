@@ -193,7 +193,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       if (msg.event === WsFromServerEvents.ANNOTATION_GET) {
 
         // Annotations from server
-        const anns: Annotation<DataType>[] = msg.data;
+        const anns: Annotation<DataType>[] = JSON.parse(msg.data);
         const res = this.convertAnnotations(anns);
 
 
