@@ -113,9 +113,8 @@ export class PencilTool extends Tool<PencilData> {
   }
 
   drawAnnotation(annotation: Annotation<PencilData>): void {
-    let data = JSON.parse(annotation.data);
-    const path = this.getAnnotationContainer().path(data.path);
-    path.stroke({color: annotation.data.color, width: data.width});
+    const path = this.getAnnotationContainer().path(annotation.data.path);
+    path.stroke({color: annotation.data.color, width: annotation.data.width});
     path.fill({color: 'none'});
     this.addSelectionHadlers(path, annotation.uuid);
     path.id(annotation.uuid);
