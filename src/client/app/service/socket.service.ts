@@ -36,10 +36,13 @@ export class SocketService implements OnInit {
   }
 
   close() {
+    if (this.stompClient) {
+      this.stompClient.disconnect();
+    }
   }
 
   isOpen(): boolean {
-    return true;
+    return this.stompClient!=null && this.stompClient.isOpen;
   }
 
   onReceive(): Observable<WsMsg> {
@@ -47,7 +50,11 @@ export class SocketService implements OnInit {
   }
 
   send(eventType: WsFromClientEvents, data: any){
-    this.stompClient.send("/api/annotation/" + eventType.toString() , {}, JSON.stringify(data));
+    if (this.stompClient.isOpen) {
+      this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data));
+    } else {
+      throw new Error('Socket is closed!');
+    }
   }
 
   private initListen(token: string) {
@@ -56,6 +63,15 @@ export class SocketService implements OnInit {
     this.stompClient.connect({}, function(frame) {
       that.stompClient.subscribe("/annotation-get", data => {
         that.observer.next({event: WsFromServerEvents.ANNOTATION_GET, data: data.body});
+      });
+      that.stompClient.subscribe("/annotation-add-fail", data => {
+        that.observer.next({event: WsFromServerEvents.ANNOTATION_ADD_FAIL, data: data.body});
+      });
+      that.stompClient.subscribe("/annotation-edit-fail", data => {
+        that.observer.next({event: WsFromServerEvents.ANNOTATION_EDIT_FAIL, data: data.body});
+      });
+      that.stompClient.subscribe("/annotation-delete-fail", data => {
+        that.observer.next({event: WsFromServerEvents.ANNOTATION_DELETE_FAIL, data: data.body});
       });
     });
 
