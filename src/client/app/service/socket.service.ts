@@ -53,7 +53,8 @@ export class SocketService implements OnInit {
     if (this.stompClient.isOpen) {
       this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data));
     } else {
-      throw new Error('Socket is closed!');
+      // XXX: bad strategy
+      setTimeout(this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data)), 3000);
     }
   }
 
