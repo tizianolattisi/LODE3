@@ -16,6 +16,8 @@ export class SocketService implements OnInit {
   private stompClient;
   private observer: Subject<WsMsg>;
 
+  private token: string;
+
   constructor() {
     this.observer = new Subject();
   }
@@ -25,6 +27,8 @@ export class SocketService implements OnInit {
   }
 
   open(token: string) {
+
+    this.token = token;
 
     // Close previous socket if exists
     this.close();
@@ -42,7 +46,7 @@ export class SocketService implements OnInit {
   }
 
   isOpen(): boolean {
-    return this.stompClient!=null && this.stompClient.isOpen;
+    return this.stompClient!=null && this.stompClient.connected;
   }
 
   onReceive(): Observable<WsMsg> {
@@ -50,11 +54,12 @@ export class SocketService implements OnInit {
   }
 
   send(eventType: WsFromClientEvents, data: any){
-    if (this.stompClient.isOpen) {
-      this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data));
+    if (this.stompClient.connected) {
+      this.stompClient.send("/api/annotation/" + eventType.toString(), {'X-auth':this.token }, JSON.stringify(data));
     } else {
+      console.log("!this.stompClient.connected");
       // XXX: bad strategy
-      setTimeout(this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data)), 3000);
+      //setTimeout(this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data)), 5000);
     }
   }
 
