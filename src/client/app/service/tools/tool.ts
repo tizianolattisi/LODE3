@@ -68,7 +68,7 @@ export abstract class Tool<T extends DataType> { // T is the type of data produc
           const ann: Annotation<T> = {
             uuid: this.generateUUID(),
             lectureId: lecture.uuid,
-            slideId: slides[index]._id,
+            slideId: slides[index].uuid,
             type: this.TYPE,
             timestamp: Math.round(Date.now() / 1000),
             data: data

@@ -177,7 +177,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
         if (index !== -1 && this.currentSlide) {
           // Fetch annotations // TODO if not already done
-          this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide._id}));
+          this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide.uuid}));
         }
 
         this.cd.detectChanges();
@@ -216,12 +216,11 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     // Load current annotations
     this.annotationSubscr = this.store.select(s => s.annotation.annotations)
       .filter(() => !!this.currentSlide)
-      .map(anns => anns[this.currentSlide._id])
+      .map(anns => anns[this.currentSlide.uuid])
       // .filter(anns => !!anns)
       .subscribe(anns => {
 
         this.clearAnnotationContainer();
-
 
         this.currentAnnotations = Object.keys(anns || {}).map(uuid => anns[uuid]);
         this.currentAnnotations.forEach(a => {

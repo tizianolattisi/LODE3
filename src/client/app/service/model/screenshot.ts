@@ -1,5 +1,5 @@
 export interface Screenshot {
-  _id: string;
+  uuid: string;
   fileName: string;
   name?: string;
   timestamp: number;
