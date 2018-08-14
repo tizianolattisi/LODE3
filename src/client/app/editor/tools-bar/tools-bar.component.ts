@@ -45,15 +45,15 @@ export class ToolsBarComponent implements OnInit, OnDestroy {
     this.tag$ = this.store.select(s => s.editor.tag);
     this.selectedToolTypeSubscr = this.store.select(s => s.editor.selectedTool).subscribe(toolType => {
       this.selectedToolType = toolType;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
     this.selectedToolColorSubscr = this.store.select(s => s.editor.color).subscribe(toolColor => {
       this.selectedToolColor = toolColor;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
     this.selectedToolTagSubscr = this.store.select(s => s.editor.tag).subscribe(toolTag => {
       this.selectedToolTag = toolTag;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
   }
 
