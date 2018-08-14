@@ -147,13 +147,13 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
           this.route.params.first().subscribe(params => this.store.dispatch(new LectureActions.FetchLecture(params['lectureId'])));
         }
 
-        this.cd.detectChanges();
+        this.cd.markForCheck();
       });
 
     // Init slides (listen for slides of the lecture present in the store)
     this.slidesSubscr = this.store.select(s => s.lecture.slides).subscribe(slides => {
       this.slides = slides;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
 
   }
@@ -162,7 +162,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     // Listen for status of "take screenshot" action
     this.screenshotStatusSubscr = this.store.select(s => s.lecture.snapshotStatus).subscribe(s => {
       this.screenshotStatus = s;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
 
     // Listen for the current screenshot to show
@@ -176,11 +176,12 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         this.clearAnnotationContainer();
 
         if (index !== -1 && this.currentSlide) {
+          console.log("****************************");
           // Fetch annotations // TODO if not already done
           this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide.uuid}));
         }
 
-        this.cd.detectChanges();
+        this.cd.markForCheck();
       });
 
   }
@@ -209,7 +210,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         msg.event === WsFromServerEvents.ANNOTATION_DELETE_FAIL) {
         this.snackBar.open('An error occurred while saving the annotation', 'Ok');
       }
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
 
 
@@ -229,7 +230,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             tool.drawAnnotation(a);
           }
         });
-        this.cd.detectChanges();
+        this.cd.markForCheck();
       });
 
 
@@ -253,7 +254,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             this.svgAnnotationContainer.rect(bbox.width, bbox.height).addClass('bbox').move(bbox.x, bbox.y);
           });
 
-        this.cd.detectChanges();
+        this.cd.markForCheck();
       });
 
   }
@@ -283,7 +284,7 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
   onTabSelect(tab: string) {
     this.currentTab = (this.currentTab === tab) ? null : tab;
-    this.cd.detectChanges();
+    this.cd.markForCheck();
   }
 
   onSlidePrev() {

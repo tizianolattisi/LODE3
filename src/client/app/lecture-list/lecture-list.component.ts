@@ -43,7 +43,7 @@ export class LectureListComponent implements OnInit {
     this.lectureService.verifyPin(lecture.uuid, this.pin)
       .subscribe(valid => {
         this.invalidPin = !valid;
-        this.cd.detectChanges();
+        this.cd.markForCheck();
 
         if (!this.invalidPin) {
           // Save pin, current lecture and go to editor

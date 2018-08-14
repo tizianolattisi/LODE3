@@ -26,7 +26,7 @@ export class LateralBarDownloadComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.pendingSubscr = this.store.select(s => s.lecture.dowloadPdfPending).subscribe(pending => {
       this.pending = pending;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
 
     this.success$ = this.store.select(s => s.lecture.dowloadPdfSuccess);

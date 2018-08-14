@@ -32,13 +32,13 @@ export class LateralBarAnnotationsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.annsSubscr = this.store.select(s => s.annotation.annotations).subscribe(anns => {
       this.annotations = {};
-      this.cd.detectChanges();
+      this.cd.markForCheck();
       this.annotations = anns;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
     this.selectionSubscr = this.store.select(s => s.annotation.selectedAnnotations).subscribe(selection => {
       this.selection = selection;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
   }
 
