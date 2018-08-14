@@ -108,7 +108,8 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     this.initLecture();
 
     // Collect data about the slides of the current lecture
-    this.initSlides();
+    // wait for socket...
+    setTimeout(() =>this.initSlides(), 1000);
 
   }
 
