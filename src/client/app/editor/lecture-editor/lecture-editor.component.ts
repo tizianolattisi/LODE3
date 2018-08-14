@@ -176,7 +176,6 @@ export class LectureEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         this.clearAnnotationContainer();
 
         if (index !== -1 && this.currentSlide) {
-          console.log("****************************");
           // Fetch annotations // TODO if not already done
           this.store.dispatch(new FetchAnnotations({lectureId: this.lecture.uuid, slideId: this.currentSlide.uuid}));
         }
