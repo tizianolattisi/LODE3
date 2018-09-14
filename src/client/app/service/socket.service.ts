@@ -10,7 +10,7 @@ import SockJS from 'sockjs-client';
 export class SocketService implements OnInit {
 
 
-  private serverUrl = 'http://localhost:8080/socket';
+  private serverUrl = '/socket';
 
   //private socket: SocketIOClient.Socket;
   private stompClient;
@@ -55,11 +55,9 @@ export class SocketService implements OnInit {
 
   send(eventType: WsFromClientEvents, data: any){
     if (this.stompClient.connected) {
-      this.stompClient.send("/api/annotation/" + eventType.toString(), {'X-auth':this.token }, JSON.stringify(data));
+      this.stompClient.send("/api/annotation/" + eventType.toString(), {'X-auth':this.token}, JSON.stringify(data));
     } else {
       console.log("!this.stompClient.connected");
-      // XXX: bad strategy
-      //setTimeout(this.stompClient.send("/api/annotation/" + eventType.toString(), {}, JSON.stringify(data)), 5000);
     }
   }
 
