@@ -1,7 +1,7 @@
 <div (window:resize)="calculateAspectRatio()" fxLayout="row" fxLayoutGap="2em" fxLayoutAlign="center center">
   <div fxLayout="column" fxLayoutGap="2vw">
     <div id="firstThumb" [style.width]='thumbWidth' [style.height]='thumbHeight' class="thumbnail" #firstThumb (click)="changeThumb(1)">
-      <video-box id="camVideo" [allowFullscreen]="currentMainView === 'camVideo'" [videoUrl]='camVideoUrl | async' [isMaster]="true"></video-box>
+      <video-box id="pcVideo" [allowFullscreen]="currentMainView === 'pcVideo'" [videoUrl]='pcVideoUrl | async'></video-box>
     </div>
     <button id="rotateButton" mat-raised-button (click)="rotateRight() ">
       Rotate views
@@ -12,6 +12,7 @@
     </div>
   </div>
   <div class="content" [style.width]='mainWidth' #mainView>
-    <video-box id="pcVideo" [allowFullscreen]="currentMainView === 'pcVideo'" [videoUrl]='pcVideoUrl | async'></video-box>
+    <video-box id="camVideo" [allowFullscreen]="currentMainView === 'camVideo'" [videoUrl]='camVideoUrl | async'
+      [isMaster]="true"></video-box>
   </div>
 </div>

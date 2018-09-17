@@ -19,7 +19,7 @@ export class TabularPlayerComponent implements OnInit, OnDestroy {
   camVideoUrl: Observable<string> // url dello stream della camera
   pcVideoUrl: Observable<string> // url dello stream del pc
   hasAnnotations: boolean // true se le annotazioni sono attive
-  currentMainView: string = "pcVideo" // indica quale stream è attualmente quello principale (pcVideo, camVideo o notes)
+  currentMainView: string = "camVideo" // indica quale stream è attualmente quello principale (pcVideo, camVideo o notes)
   playing: boolean // true se il video è in esecuzione
   mainWidth: string // larghezza della stream principale
   thumbWidth: string // larghezza della miniatura

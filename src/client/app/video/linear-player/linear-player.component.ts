@@ -19,11 +19,11 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
   camVideoUrl: Observable<string> // url dello stream della camera
   pcVideoUrl: Observable<string> // url dello stream del pc
   hasAnnotations: boolean // true se è necessario visualizzare lo stream delle annotazioni
-  hasCamVideo: boolean // true se è necessario visualizzare lo stream della camera
+  hasPcVideo: boolean // true se è necessario visualizzare lo stream del pc
   streamWidth: string // larghezza di un singolo stream
   hiddenHeader: boolean = false // true se l'header è collassato
 
-  private camVideoSubsc: Subscription
+  private pcVideoSubsc: Subscription
   private annotationsSubsc: Subscription
   private headerSubsc: Subscription
 
@@ -42,8 +42,8 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
     // prendo i valori dallo store
     this.camVideoUrl = this.store.select(s => s.video.camUrl)
     this.pcVideoUrl = this.store.select(s => s.video.pcUrl)
-    this.camVideoSubsc = this.camVideoUrl.subscribe(data => {
-      this.hasCamVideo = (data !== '')
+    this.pcVideoSubsc = this.pcVideoUrl.subscribe(data => {
+      this.hasPcVideo = (data !== '')
       this.calculateAspectRatio()
     })
     this.annotationsSubsc = this.store.select(s => s.video.hasAnnotations).subscribe(data => {
@@ -66,7 +66,7 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
       actualHeight += 60
     }
     const actualWidth = window.innerWidth;
-    let width = this.hasAnnotations ? (this.hasCamVideo ? 33 : 49) : 49
+    let width = this.hasAnnotations ? (this.hasPcVideo ? 33 : 49) : 90
     let height = Math.min(actualHeight, (actualWidth * (width / 100) * (9 / 16)))
     if (height === actualHeight) {
       this.streamWidth = (height * (16 / 9)) + 'px'
@@ -93,8 +93,8 @@ export class LinearPlayerComponent implements OnInit, OnDestroy {
       signalTimeSubs.unsubscribe()
     if (this.annotationsSubsc !== undefined)
       this.annotationsSubsc.unsubscribe()
-    if (this.camVideoSubsc !== undefined)
-      this.camVideoSubsc.unsubscribe()
+    if (this.pcVideoSubsc !== undefined)
+      this.pcVideoSubsc.unsubscribe()
     if (this.headerSubsc !== undefined)
       this.headerSubsc.unsubscribe()
   }

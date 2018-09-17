@@ -3,8 +3,8 @@
         <div *ngIf="loadingVideo" class="loading-container">
             <h3 class="loading-text">Please wait. Loading data.</h3>
         </div>
-        <video controls="controls" #videoElement (loadeddata)="startVideoListening()" (timeupdate)="setCurrentTime()" [src]="videoUrl"
-            type="video/mp4"></video>
+        <video [ngStyle]="{'display': loadingVideo ? 'none' : 'block'}" controls="controls" #videoElement (loadeddata)="startVideoListening()"
+            (timeupdate)="setCurrentTime()" [src]="videoUrl" type="video/mp4"></video>
     </div>
     <div *ngIf="allowFullscreen && !loadingVideo">
         <button mat-raised-button id="fullscreenButton" (click)="goFullscreen()">

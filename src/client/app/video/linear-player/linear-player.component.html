@@ -1,10 +1,10 @@
 <div (window:resize)="calculateAspectRatio()" class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center center"
   fxLayoutGap="1em" fxLayoutGap.xs="0.2em">
 
-  <div *ngIf="hasCamVideo" class="content margin-left" [style.width]='streamWidth'>
+  <div  class="content margin-left" [style.width]='streamWidth'>
     <video-box [videoUrl]='camVideoUrl | async'></video-box>
   </div>
-  <div class="content" [style.width]='streamWidth'>
+  <div *ngIf="hasPcVideo" class="content" [style.width]='streamWidth'>
     <video-box [videoUrl]='pcVideoUrl | async' [isMaster]="true" [style.width]='streamWidth'></video-box>
   </div>
 

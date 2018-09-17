@@ -91,7 +91,9 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
           let parser = new Parser()
           parser.parseString(data, (err, result) => {
             result.data.camvideo[0].name = this.videoService.BASE_URL + '/' + result.data.camvideo[0].name
-            result.data.pcvideo[0].name = this.videoService.BASE_URL + '/' + result.data.pcvideo[0].name
+            if (result.data.pcvideo !== undefined) {
+              result.data.pcvideo[0].name = this.videoService.BASE_URL + '/' + result.data.pcvideo[0].name
+            }
             if (result.data.info[0].annotations === undefined) {
               result.data.info[0].annotations = false
             }
@@ -100,6 +102,12 @@ export class LectureViewerComponent implements OnInit, OnDestroy {
             }
             if (result.data.info[0].startDate === undefined) {
               result.data.info[0].startDate = 0
+            }
+            // calcolo layout pagina
+            if (result.data.info[0].layout !== undefined && result.data.info[0].layout.toString().toUpperCase() === 'LINEAR') {
+              result.data.info[0].layout = result.data.info[0].annotations.toString() === 'true' ? (result.data.pcvideo !== undefined ? Layout.LINEAR3 : Layout.LINEAR2) : (result.data.pcvideo !== undefined ? Layout.LINEAR2 : Layout.NONE)
+            } else {
+              result.data.info[0].layout = result.data.info[0].annotations.toString() === 'true' ? (result.data.pcvideo !== undefined ? Layout.TABULAR3 : Layout.TABULAR2) : (result.data.pcvideo !== undefined ? Layout.TABULAR2 : Layout.NONE)
             }
             this.hasAnnotations = result.data.info[0].annotations.toString() === 'true'
             result.data.info[0].logging = result.data.info[0].logging.toString() === 'true'
