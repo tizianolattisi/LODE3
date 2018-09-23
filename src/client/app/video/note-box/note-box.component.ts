@@ -101,7 +101,6 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
             return a.seconds - b.seconds
         })
         this.setAnnotations()
-        console.log("in setSlide leggo che slide è: " + this.slides.length)
     }
 
     /**
@@ -126,7 +125,6 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
                     this.annotations.set(slide.screenshot._id, currentAnnotations)
                 }
             }
-            console.log("in annotations leggo che annotations è: " + this.annotations.size)
         }).unsubscribe()
     }
 
@@ -178,8 +176,6 @@ export class NoteBoxComponent implements OnInit, OnDestroy {
      * @param seconds 
      */
     drawSVG(seconds: number) {
-        console.log("in annotations leggo che slide è: " + this.slides.length)
-        console.log("in drawSVG leggo che annotations è: " + this.annotations.size)
         this.store.dispatch(new SetAnnotationContainer(this.svgAnnotationContainer));
         if (this.currentSlide !== undefined) {
             let currentAnnotations = this.annotations.get(this.currentSlide._id)
