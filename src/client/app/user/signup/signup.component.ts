@@ -1,14 +1,14 @@
-import {ErrorResponse} from '../../service/model/error-response';
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {Observable} from 'rxjs/Rx';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store/app-state';
-import {Credentials} from '../../service/model/credentials';
+import { ErrorResponse } from '../../service/model/error-response';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app-state';
+import { Credentials } from '../../service/model/credentials';
 
 import * as UserActions from '../../store/user/user.actions';
-import {emailValidator} from '../email.validator';
-import {passwordValidator} from '../password.validator';
+import { emailValidator } from '../email.validator';
+import { passwordValidator } from '../password.validator';
 
 @Component({
   selector: 'l3-signup',
@@ -52,8 +52,8 @@ export class SignupComponent implements OnInit {
     // Check password matching
     if (credentials.password !== (credentials as any).password_retype) {
 
-      this.form.controls['password'].setErrors({'passwordmismatch': 'Passwords does not match'});
-      this.form.controls['password_retype'].setErrors({'passwordmismatch': 'Passwords does not match'});
+      this.form.controls['password'].setErrors({ 'passwordmismatch': 'Passwords does not match' });
+      this.form.controls['password_retype'].setErrors({ 'passwordmismatch': 'Passwords does not match' });
 
     } else {
       this.store.dispatch(new UserActions.Signup(credentials));

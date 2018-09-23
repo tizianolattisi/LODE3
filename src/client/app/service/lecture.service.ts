@@ -3,7 +3,7 @@ import { Lecture } from './model/lecture';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { toApiErrorResponse } from './to-error-response';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { ErrorResponse } from './model/error-response';
 import { of } from 'rxjs/observable/of';
 import { Screenshot } from './model/screenshot';

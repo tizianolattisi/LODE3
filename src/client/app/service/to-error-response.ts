@@ -1,6 +1,6 @@
-import {ErrorResponse} from './model/error-response';
-import {HttpErrorResponse} from '@angular/common/http';
-import {Observable} from 'rxjs/Rx';
+import { ErrorResponse } from './model/error-response';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Handle an http error response from APIs and convert it into a {@link ErrorResponse}.

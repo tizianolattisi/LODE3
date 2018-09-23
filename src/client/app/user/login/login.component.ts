@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs/Rx';
-import {ErrorResponse} from '../../service/model/error-response';
-import {Credentials} from '../../service/model/credentials';
-import {AppState} from '../../store/app-state';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { ErrorResponse } from '../../service/model/error-response';
+import { Credentials } from '../../service/model/credentials';
+import { AppState } from '../../store/app-state';
 
 import * as UserActions from '../../store/user/user.actions';
 import { emailValidator } from '../email.validator';

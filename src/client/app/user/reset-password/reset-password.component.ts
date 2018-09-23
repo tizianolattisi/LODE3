@@ -1,11 +1,11 @@
-import {ActivatedRoute} from '@angular/router';
-import {ErrorResponse} from '../../service/model/error-response';
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {Observable} from 'rxjs/Rx';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store/app-state';
-import {passwordValidator} from '../password.validator';
+import { ActivatedRoute } from '@angular/router';
+import { ErrorResponse } from '../../service/model/error-response';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app-state';
+import { passwordValidator } from '../password.validator';
 
 import * as UserActions from '../../store/user/user.actions';
 
@@ -40,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit() {
 
-    this.route.data.subscribe((data: {code: string}) => {
+    this.route.data.subscribe((data: { code: string }) => {
       this.code = data.code;
     });
 
@@ -55,8 +55,8 @@ export class ResetPasswordComponent implements OnInit {
     // Check password matching
     if (credentials.password !== (credentials as any).password_retype) {
 
-      this.form.controls['password'].setErrors({'passwordmismatch': 'Passwords does not match'});
-      this.form.controls['password_retype'].setErrors({'passwordmismatch': 'Passwords does not match'});
+      this.form.controls['password'].setErrors({ 'passwordmismatch': 'Passwords does not match' });
+      this.form.controls['password_retype'].setErrors({ 'passwordmismatch': 'Passwords does not match' });
 
     } else {
       this.store.dispatch(new UserActions.ChangePasswordWithCode({

@@ -4,8 +4,8 @@ import { Store } from '@ngrx/store';
 import { Play, Pause, SetVolume, SetSpeed, SetUpdatedTime } from '../../store/video/video.actions'
 import { Subscription } from 'rxjs/Subscription';
 import { TrackerService } from '../../service/tracker.service';
-import { Observable } from 'rxjs/Rx';
-
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/interval';
 @Component({
   selector: 'controls',
   templateUrl: './controls.component.html',
@@ -25,6 +25,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   private videoSubscr: Subscription
   private layoutSubscr: Subscription
+  private aliveSub: Subscription
 
   /**
    * Metodo costruttore
@@ -52,7 +53,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
     this.layoutSubscr = this.store.select(s => s.video.videoLayout).subscribe(data => {
       this.tracker.trackEvent("layout", this.currentTime, data.toString());
     })
-    Observable.interval(300000).subscribe(x => {
+    this.aliveSub = Observable.interval(300000).subscribe(x => {
       this.tracker.trackEvent("alive", this.currentTime, new Date());
     });
   }
@@ -144,5 +145,8 @@ export class ControlsComponent implements OnInit, OnDestroy {
       this.videoSubscr.unsubscribe()
     if (this.layoutSubscr !== undefined)
       this.layoutSubscr.unsubscribe()
+    if (this.aliveSub !== undefined)
+      this.aliveSub.unsubscribe()
+
   }
 }
